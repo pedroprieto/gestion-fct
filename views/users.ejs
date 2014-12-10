@@ -1,0 +1,40 @@
+{
+  "collection" : {
+    "href" : "<%=site%>",
+    "version" : "1.0",
+    
+    "links" : [
+      {"rel" : "author", "href" : "mailto:mamund@yahoo.com", "prompt" : "Author"},
+      {"rel" : "profile", "href" : "http://amundsen.com/media-types/collection/profiles/tasks/", "prompt" : "Profile"}
+    ],    
+    
+    "queries" : [
+      {"rel" : "all", "href" : "<%=site%>;all", "prompt" : "Todas"},
+      {"rel" : "open", "href" : "<%=site%>;open", "prompt" : "Open tasks"},
+      {"rel" : "closed", "href" : "<%=site%>;closed", "prompt" : "Closed tasks"},
+      {"rel" : "date-range", "href" : "<%=site%>;date-range", "prompt" : "Date Range",
+        "data" : [
+          {"name" : "date-start", "value" : "", "prompt" : "Start Date"},
+          {"name" : "date-stop", "value" : "", "prompt" : "Stop Date"}
+        ]
+      }
+    ],
+    
+    "template" : {
+      "data" : [
+        {"name" : "name", "value" : "", "prompt" : "Nombre"}
+      ]
+    },
+    "items" : [
+      <%for(i=0,x=items.length;i<x;i++) {%>
+      {
+        "href" : "<%=site%>users/<%=items[i].name%>",
+        "data" : [
+          {"name" : "name", "value" : "<%=items[i].name%>", "prompt" : "Nombre"}     
+        ]
+      }
+      <% if(i<items.length-1){%>,<% } %>
+      <% } %>
+    ]
+  }
+}
