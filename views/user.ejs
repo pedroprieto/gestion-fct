@@ -6,22 +6,22 @@
     "links" : [
       {"rel" : "author", "href" : "mailto:pedpral@gmail.com", "prompt" : "Author"}
     ],    
-    
+        
     "template" : {
       "data" : [
         {"name" : "name", "value" : "", "prompt" : "Nombre"}
       ]
     },
     "items" : [
-      <%for(i=0,x=items.length;i<x;i++) {%>
       {
-        "href" : "<%=site%>/<%=items[i].name%>",
+        "href" : "<%=site%>/<%=item.name%>",
         "data" : [
-          {"name" : "name", "value" : "<%=items[i].name%>", "prompt" : "Nombre"}     
-        ]
+          {"name" : "name", "value" : "<%=item.name%>", "prompt" : "Nombre"}     
+        ],
+	"links" : [
+	  {"rel" : "collection", "href" : "<%=site%>/<%=item.name%>/fcts", "prompt" : "Lista FCTs"}
+	]
       }
-      <% if(i<items.length-1){%>,<% } %>
-      <% } %>
     ]
   }
 }

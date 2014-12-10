@@ -31,7 +31,7 @@ var users = require('./resources/users.js');
 users.controller(app,'/users',baseUrl);
 
 var user = require('./resources/user.js');
-user.controller(app,'/users/:id');
+user.controller(app,'/users/:id',baseUrl);
 
 // dynamically include routes (Controller)
 /*fs.readdirSync('./resources').forEach(function (file) {

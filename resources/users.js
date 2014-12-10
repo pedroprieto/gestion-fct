@@ -12,8 +12,7 @@ module.exports.controller = function(app,route,baseUrl) {
       //res.send(users);
       res.header('content-type',contentType);
       res.render('users', {
-	  title: 'User List',
-	  site: baseUrl,
+	  site: baseUrl + "users",
 	  items: users
       }); 
 	 
