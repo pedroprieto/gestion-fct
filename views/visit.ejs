@@ -1,0 +1,27 @@
+{
+  "collection" : {
+    "href" : "<%=site%>",
+    "version" : "1.0",
+
+    "links" : [
+      {"rel" : "author", "href" : "mailto:pedpral@gmail.com", "prompt" : "Author"},
+      {"rel" : "collection", "prompt" : "Visits",  "href" : "<%=site%>/../../visits"},
+      {"rel" : "collection", "prompt" : "FM 34",  "href" : "<%=site%>/../../fm34s"}
+    ],   
+        
+    "items" : [
+      {
+        "href" : "<%=site%>/<%=item._id%>",
+        "data" : [
+	  {"name" : "empresa", "value" : "<%=item.empresa%>", "prompt" : "Empresa"},
+	  {"name" : "tipo", "value" : "<%=item.tipo%>", "prompt" : "Tipo"},
+	  {"name" : "distancia", "value" : "<%=item.distancia%>", "prompt" : "Distancia"},
+	  {"name" : "fecha", "value" : "<%=item.fecha%>", "prompt" : "Fecha"},
+	  {"name" : "hora_salida", "value" : "<%=item.hora_salida%>", "prompt" : "Hora de salida"},
+	  {"name" : "hora_regreso", "value" : "<%=item.hora_regreso%>", "prompt" : "Hora de regreso"},
+	  {"name" : "localidad", "value" : "<%=item.localidad%>", "prompt" : "Localidad"}
+        ]
+      } 
+    ]
+  }
+}

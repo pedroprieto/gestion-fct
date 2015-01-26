@@ -5,7 +5,8 @@
     
     "links" : [
       {"rel" : "author", "href" : "mailto:pedpral@gmail.com", "prompt" : "Author"},
-      {"rel" : "collection", "prompt" : "Visits",  "href" : "<%=site%>/../visits"}
+      {"rel" : "collection", "prompt" : "Visits",  "href" : "<%=site%>/../visits"},
+      {"rel" : "collection", "prompt" : "FM 34",  "href" : "<%=site%>/../fm34s"}
     ],    
     
     "template" : {
@@ -22,7 +23,7 @@
     "items" : [
       <%for(i=0,x=items.length;i<x;i++) {%>
       {
-        "href" : "<%=site%>/<%=items[i].empresa%>",
+        "href" : "<%=site%>/<%=items[i]._id%>",
         "data" : [
           {"name" : "empresa", "value" : "<%=items[i].empresa%>", "prompt" : "Empresa"},
 	  {"name" : "tipo", "value" : "<%=items[i].tipo%>", "prompt" : "Tipo"},

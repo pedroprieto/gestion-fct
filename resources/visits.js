@@ -67,6 +67,13 @@ module.exports.controller = function(app,route,baseUrl) {
       item.hora_salida = hora_salida;
       item.hora_regreso = hora_regreso;
       item.localidad = localidad;
+      item.save(function (err, item) {
+	  if (err) {
+	      return console.error(err);
+	      res.status=400;
+	      res.send('error');  
+	  }	  
+      });
 
 
       // Creamos fm 34
@@ -74,20 +81,55 @@ module.exports.controller = function(app,route,baseUrl) {
       f = new Date(fecha);
       var day = f.getDay();
       diff = f.getDate() - day + (day == 0 ? -6:1);
+      // TODO: mejorar
       fecha_lunes_semana = new Date(f.setDate(diff));
-      console.log(fecha_lunes_semana);
-      
-      
-      item.save(function (err, item) {
-	  if (err) {
-	      return console.error(err);
-	      res.status=400;
-	      res.send('error');  
-	  } else {
+      f = new Date(fecha_lunes_semana);
+      day = f.getDay();
+      diff2 = f.getDate() + 6;
+      fecha_domingo_semana = new Date(f.setDate(diff2));
+      var fm34doc;
+      fm34.findOne({ semanaDe: fecha_lunes_semana}, function (err,f) {
+	  if (err) return handleError(err);
+	  if (f) {
+	      f.visitas.push(item);
+	      f.save(),
 	      res.redirect('/visits/', 302);
-	  }
+	  } else {
+	      // Creamos fm34
+	      fm34doc = new fm34();
+	      fm34doc.semanaDe = fecha_lunes_semana;
+	      fm34doc.semanaAl = fecha_domingo_semana;
+	      fm34doc.visitas.push(item);
+
+	      fm34doc.save(function (err, item) {
+		  if (err) {
+		      return console.error(err);
+		      res.status=400;
+		      res.send('error');  
+		  } else {
+		      res.redirect('/visits/', 302);
+		  }
     
+	      });
+	  }
       });
+
+      
+
+
+      /* visit.find(function (err,visits) {
+      if (err) return console.error(err);
+      //res.send(users);
+      res.header('content-type',contentType);
+      res.render('visits', {
+	  site: baseUrl + "visits",
+	  items: visits
+      });
+	 
+    });*/
+      
+      
+      
 
       
       

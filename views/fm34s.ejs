@@ -1,0 +1,28 @@
+{
+  "collection" : {
+    "href" : "<%=site%>",
+    "version" : "1.0",
+    
+    "links" : [
+      {"rel" : "author", "href" : "mailto:pedpral@gmail.com", "prompt" : "Author"},
+      {"rel" : "collection", "prompt" : "Visits",  "href" : "<%=site%>/../visits"},
+      {"rel" : "collection", "prompt" : "Visits",  "href" : "<%=site%>/../fm34s"}
+    ],    
+    
+    "items" : [
+      <%for(i=0,x=items.length;i<x;i++) {%>
+      {
+        "href" : "<%=site%>/<%=items[i].id%>",
+        "data" : [
+          {"name" : "semanaDe", "value" : "<%=items[i].semanaDe%>", "prompt" : "Semana de"},
+	  {"name" : "semanaAl", "value" : "<%=items[i].semanaAl%>", "prompt" : "Semana al"}
+        ],
+	"links" : [
+	  {"rel" : "collection", "prompt" : "Consultar FM",  "href" : "<%=site%>/<%=items[i].id%>"}
+	]
+      }
+      <% if(i<items.length-1){%>,<% } %>
+    <% } %>
+    ]
+  }
+}

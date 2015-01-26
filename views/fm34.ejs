@@ -1,0 +1,37 @@
+{
+  "collection" : {
+    "href" : "<%=site%>",
+    "version" : "1.0",
+
+    "links" : [
+      {"rel" : "author", "href" : "mailto:pedpral@gmail.com", "prompt" : "Author"},
+      {"rel" : "collection", "prompt" : "Visits",  "href" : "<%=site%>/../../visits"},
+      {"rel" : "collection", "prompt" : "FM 34",  "href" : "<%=site%>/../../fm34s"}
+    ],   
+        
+    "items" : [
+      {
+        "href" : "<%=site%>/<%=item._id%>",
+        "data" : [
+          {"name" : "semanaDe", "value" : "<%=item.semanaDe%>", "prompt" : "Semana de"},
+	  {"name" : "semanaAl", "value" : "<%=item.semanaAl%>", "prompt" : "Semana al"}
+        ]
+      } <% if(item.visitas.length){%>,<% } %>
+      <%for(i=0,x=item.visitas.length;i<x;i++) {%>
+      {
+        "href" : "<%=site%>/../visits/<%=item.visitas[i]._id%>",
+        "data" : [
+	  {"name" : "empresa", "value" : "<%=item.visitas[i].empresa%>", "prompt" : "Empresa"},
+	  {"name" : "tipo", "value" : "<%=item.visitas[i].tipo%>", "prompt" : "Tipo"},
+	  {"name" : "distancia", "value" : "<%=item.visitas[i].distancia%>", "prompt" : "Distancia"},
+	  {"name" : "fecha", "value" : "<%=item.visitas[i].fecha%>", "prompt" : "Fecha"},
+	  {"name" : "hora_salida", "value" : "<%=item.visitas[i].hora_salida%>", "prompt" : "Hora de salida"},
+	  {"name" : "hora_regreso", "value" : "<%=item.visitas[i].hora_regreso%>", "prompt" : "Hora de regreso"},
+	  {"name" : "localidad", "value" : "<%=item.visitas[i].localidad%>", "prompt" : "Localidad"} 
+        ]
+      }
+      <% if(i<item.visitas.length-1){%>,<% } %>
+    <% } %>
+    ]
+  }
+}

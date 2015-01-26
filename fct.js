@@ -39,6 +39,18 @@ user.controller(app,'/users/:id',baseUrl);
 var visits = require('./resources/visits.js');
 visits.controller(app,'/visits',baseUrl);
 
+// Visit item
+var visit = require('./resources/visit.js');
+visit.controller(app,'/visits/:id',baseUrl);
+
+// FM34s collection
+var fm34s = require('./resources/fm34s.js');
+fm34s.controller(app,'/fm34s',baseUrl);
+
+// FM 34 item
+var fm34 = require('./resources/fm34.js');
+fm34.controller(app,'/fm34s/:id',baseUrl);
+
 // FCTs collection
 //var fcts = require('./resources/fcts.js');
 //fcts.controller(app,'/users/:id/fcts',baseUrl);
