@@ -27,11 +27,21 @@ app.use(express.static(__dirname + '/public'));
 
 
 // Resources and routes
+// Users collection
 var users = require('./resources/users.js');
 users.controller(app,'/users',baseUrl);
 
+// User item
 var user = require('./resources/user.js');
 user.controller(app,'/users/:id',baseUrl);
+
+// Visits collection
+var users = require('./resources/visits.js');
+users.controller(app,'/visits',baseUrl);
+
+// FCTs collection
+//var fcts = require('./resources/fcts.js');
+//fcts.controller(app,'/users/:id/fcts',baseUrl);
 
 // dynamically include routes (Controller)
 /*fs.readdirSync('./resources').forEach(function (file) {
