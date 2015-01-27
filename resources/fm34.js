@@ -22,4 +22,32 @@ module.exports.controller = function(app,route,baseUrl) {
 
     });
 
+    /**
+     * GET para versión DOCX del FM34
+     */
+    app.get(route + "/docx", function(req, res) {
+
+	fs=require('fs');
+	Docxtemplater=require('docxtemplater');
+
+	//Load the docx file as a binary
+	content=fs
+	    .readFileSync(__dirname+"/../office_templates/prueba.docx","binary")
+
+	doc=new Docxtemplater(content);
+
+	//set the templateVariables
+	doc.setData({ "semanaDe":"Pedro" });
+
+	//apply them (replace all occurences of {first_name} by Hipp, ...)
+	doc.render();
+
+	var buf = doc.getZip()
+            .generate({type:"nodebuffer"});
+
+	res.sendFile(buf);
+	
+
+    });
+
 }

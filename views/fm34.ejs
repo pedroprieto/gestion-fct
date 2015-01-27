@@ -15,7 +15,10 @@
         "data" : [
           {"name" : "semanaDe", "value" : "<%=item.semanaDe%>", "prompt" : "Semana de"},
 	  {"name" : "semanaAl", "value" : "<%=item.semanaAl%>", "prompt" : "Semana al"}
-        ]
+        ],
+	"links" : [
+	  {"rel" : "other", "href" : "<%=site%>/<%=item._id%>/docx", "prompt" : "Docx"}	
+	]
       } <% if(item.visitas.length){%>,<% } %>
       <%for(i=0,x=item.visitas.length;i<x;i++) {%>
       {
