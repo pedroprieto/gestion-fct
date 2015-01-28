@@ -4,8 +4,7 @@
     "version" : "1.0",
 
     "links" : [
-      {"rel" : "author", "href" : "mailto:pedpral@gmail.com", "prompt" : "Author"},
-      {"rel" : "collection", "prompt" : "Visits",  "href" : "<%=site%>/../../visits"},
+      {"rel" : "collection", "prompt" : "Visitas",  "href" : "<%=site%>/../../visits"},
       {"rel" : "collection", "prompt" : "FM 34",  "href" : "<%=site%>/../../fm34s"}
     ],   
         
@@ -17,7 +16,7 @@
 	  {"name" : "semanaAl", "value" : "<%=item.semanaAl%>", "prompt" : "Semana al"}
         ],
 	"links" : [
-	  {"rel" : "other", "href" : "<%=site%>/<%=item._id%>/docx", "prompt" : "Docx"}	
+	  {"rel" : "profile", "href" : "<%=site%>/<%=item._id%>/docx", "prompt" : "Generar Docx"}	
 	]
       } <% if(item.visitas.length){%>,<% } %>
       <%for(i=0,x=item.visitas.length;i<x;i++) {%>
