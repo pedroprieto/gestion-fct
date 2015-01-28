@@ -49,7 +49,7 @@ fm34s.controller(app,'/fm34s',baseUrl);
 
 // FM 34 item
 var fm34 = require('./resources/fm34.js');
-fm34.controller(app,'/fm34s/:id',baseUrl);
+fm34.controller(app,'/fm34s/items/:id',baseUrl);
 
 // FCTs collection
 //var fcts = require('./resources/fcts.js');

@@ -1,12 +1,7 @@
 //var mongoose = require('mongoose');
 var fm34 = require('../models/fm34');
+var fecha = require('../aux/convert_date.js');
 
-function fecha(d) {
-    var curr_date = d.getDate();
-    var curr_month = d.getMonth() + 1;
-    var curr_year = d.getFullYear();
-    return curr_date + "-" + curr_month + "-" + curr_year;
-}
 
 module.exports.controller = function(app,route,baseUrl) {
 
@@ -32,7 +27,7 @@ module.exports.controller = function(app,route,baseUrl) {
     app.get(route + "/docx", function(req, res) {
 	var id = req.params.id;
 	fs=require('fs');
-	Docxtemplater=require('docxtemplater');
+ 	Docxtemplater=require('docxtemplater');
 
 	//Load the docx file as a binary
 	content=fs
@@ -44,26 +39,12 @@ module.exports.controller = function(app,route,baseUrl) {
 	    if (err) return console.error(err);
 
 	    //set the templateVariables
-	    // Construir el array de visitas quitando el formato de fecha
-	    visitas = new Array();
-	    for (i=0;i<fm34.visitas.length;i++) {
-		x=fm34.visitas[i];
-		var a = {
-		    fecha: fecha(x.fecha),
-		    hora_salida: x.hora_salida,
-		    hora_regreso: x.hora_regreso,
-		    empresa: x.empresa,
-		    localidad: x.localidad,
-		    distancia: x.distancia,
-		    tipo: x.tipo
-		};
-		visitas.push(a);
-	    }
 	    
 	    doc.setData({
-		"semanaDe": fecha(fm34.semanaDe),
-		"semanaAl": fecha(fm34.semanaAl),
-		"visits" : visitas
+		"fm34s" : [
+		    // Para cambiar el formato de la fecha
+		    JSON.parse(JSON.stringify(fm34,fecha.reemplaza))
+		]
 	    });
 
 	    //apply them (replace all occurences of {first_name} by Hipp, ...)
@@ -86,8 +67,6 @@ module.exports.controller = function(app,route,baseUrl) {
 		    }
 		});
 	    });
-
-
 	    
 	});
 

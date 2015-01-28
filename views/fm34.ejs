@@ -12,17 +12,19 @@
       {
         "href" : "<%=site%>/<%=item._id%>",
         "data" : [
+	  {"name" : "type", "value" : "fm34", "prompt" : "FM 34"},
           {"name" : "semanaDe", "value" : "<%=item.semanaDe%>", "prompt" : "Semana de"},
 	  {"name" : "semanaAl", "value" : "<%=item.semanaAl%>", "prompt" : "Semana al"}
         ],
 	"links" : [
-	  {"rel" : "profile", "href" : "<%=site%>/<%=item._id%>/docx", "prompt" : "Generar Docx"}	
+	  {"rel" : "profile", "href" : "<%=site%>/items/<%=item._id%>/docx", "prompt" : "Generar Docx"}	
 	]
       } <% if(item.visitas.length){%>,<% } %>
       <%for(i=0,x=item.visitas.length;i<x;i++) {%>
       {
         "href" : "<%=site%>/../visits/<%=item.visitas[i]._id%>",
         "data" : [
+	  {"name" : "type", "value" : "visita", "prompt" : "Visita"},
 	  {"name" : "empresa", "value" : "<%=item.visitas[i].empresa%>", "prompt" : "Empresa"},
 	  {"name" : "tipo", "value" : "<%=item.visitas[i].tipo%>", "prompt" : "Tipo"},
 	  {"name" : "distancia", "value" : "<%=item.visitas[i].distancia%>", "prompt" : "Distancia"},

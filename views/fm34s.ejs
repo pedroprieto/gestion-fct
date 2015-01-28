@@ -5,14 +5,15 @@
     
     "links" : [
       {"rel" : "collection", "prompt" : "Visitas",  "href" : "<%=site%>/../visits"},
-      {"rel" : "collection", "prompt" : "FM 34",  "href" : "<%=site%>/../fm34s"}
+      {"rel" : "collection", "prompt" : "FM 34",  "href" : "<%=site%>/../fm34s"},
+      {"rel" : "profile", "href" : "<%=site%>/docx", "prompt" : "Generar Docx de todos los FM34"}
     ],    
     
     "items" : [
       <%for(i=0,x=items.length;i<x;i++) {%>
       {
 	"links" : [
-	  {"rel" : "collection", "prompt" : "Consultar FM 34",  "href" : "<%=site%>/<%=items[i].id%>"}
+	  {"rel" : "collection", "prompt" : "Consultar FM 34",  "href" : "<%=site%>/items/<%=items[i].id%>"}
 	]
       }
       <% if(i<items.length-1){%>,<% } %>
