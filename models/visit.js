@@ -7,7 +7,8 @@ visitSchema = new Schema( {
     fecha: Date,
     hora_salida: String,
     hora_regreso: String,
-    localidad: String    
+    localidad: String,
+    impresion: String
 }),
 Visit = mongoose.model('visit', visitSchema);
 

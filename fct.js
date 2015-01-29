@@ -11,7 +11,7 @@ var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/fct');
 
 // Global variables
-var baseUrl = 'http://localhost:3000/';
+var baseUrl = 'http://localhost:3000';
 contentType = 'application/json';
 
 app.use(partials());
@@ -52,8 +52,8 @@ var fm34 = require('./resources/fm34.js');
 fm34.controller(app,'/fm34s/items/:id',baseUrl);
 
 // FCTs collection
-//var fcts = require('./resources/fcts.js');
-//fcts.controller(app,'/users/:id/fcts',baseUrl);
+var fcts = require('./resources/fcts.js');
+fcts.controller(app,'/fcts',baseUrl);
 
 // dynamically include routes (Controller)
 /*fs.readdirSync('./resources').forEach(function (file) {

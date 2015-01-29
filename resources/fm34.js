@@ -14,7 +14,7 @@ module.exports.controller = function(app,route,baseUrl) {
 	    if (err) return console.error(err);
 	    res.header('content-type',contentType);
 	    res.render('fm34', {
-		site: baseUrl + "fm34s",
+		site: baseUrl + route,
 		item: fm34
 	    });  
 	});

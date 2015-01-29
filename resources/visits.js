@@ -13,7 +13,7 @@ module.exports.controller = function(app,route,baseUrl) {
       //res.send(users);
       res.header('content-type',contentType);
       res.render('visits', {
-	  site: baseUrl + "visits",
+	  site: baseUrl + route,
 	  items: visits
       });
 	 

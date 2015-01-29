@@ -1,0 +1,41 @@
+{
+  "collection" : {
+    "href" : "<%=site%>",
+    "version" : "1.0",
+    
+    "links" : [
+      {"rel" : "collection", "prompt" : "FCTs",  "href" : "<%=site%>/../fcts"},
+      {"rel" : "collection", "prompt" : "Visitas",  "href" : "<%=site%>/../visits"},
+      {"rel" : "collection", "prompt" : "FM 34",  "href" : "<%=site%>/../fm34s"}
+    ],    
+    
+    "template" : {
+      "data" : [
+        {"name" : "tutor", "value" : "", "prompt" : "Tutor"},
+	{"name" : "ciclo", "value" : "", "prompt" : "Ciclo"},
+	{"name" : "empresa", "value" : "", "prompt" : "Empresa"},
+	{"name" : "instructor", "value" : "", "prompt" : "Instructor"},
+	{"name" : "alumno", "value" : "", "prompt" : "Alumno"},
+	{"name" : "grupo", "value" : "", "prompt" : "Grupo"},
+	{"name" : "periodo", "value" : "", "prompt" : "Período"}
+      ]
+    },
+    "items" : [
+      <%for(i=0,x=items.length;i<x;i++) {%>
+      {
+        "href" : "<%=site%>/<%=items[i]._id%>",
+        "data" : [
+	  {"name" : "tutor", "value" : "<%=items[i].tutor%>", "prompt" : "Tutor"},
+	  {"name" : "ciclo", "value" : "<%=items[i].ciclo%>", "prompt" : "Ciclo"},
+          {"name" : "empresa", "value" : "<%=items[i].empresa%>", "prompt" : "Empresa"},
+	  {"name" : "instructor", "value" : "<%=items[i].instructor%>", "prompt" : "Instructor"},
+	  {"name" : "alumno", "value" : "<%=items[i].alumno%>", "prompt" : "Alumno"},
+	  {"name" : "grupo", "value" : "<%=items[i].grupo%>", "prompt" : "Grupo"},
+	  {"name" : "periodo", "value" : "<%=items[i].periodo%>", "prompt" : "Período"}
+        ]
+      }
+      <% if(i<items.length-1){%>,<% } %>
+    <% } %>
+    ]
+  }
+}

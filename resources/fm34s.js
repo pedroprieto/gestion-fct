@@ -12,7 +12,7 @@ module.exports.controller = function(app,route,baseUrl) {
 	    if (err) return console.error(err);
 	    res.header('content-type',contentType);
 	    res.render('fm34s', {
-		site: baseUrl + "fm34s",
+		site: baseUrl + route,
 		items: fm34s
 	    });
 	    
