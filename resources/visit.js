@@ -11,7 +11,7 @@ module.exports.controller = function(app,route,baseUrl) {
 	    if (err) return console.error(err);
 	    res.header('content-type',contentType);
 	    res.render('visit', {
-		site: baseUrl + route,
+		site: req.protocol + '://' + req.get('host') + req.originalUrl + '/..',
 		item: visit
 	    });    
 	});
