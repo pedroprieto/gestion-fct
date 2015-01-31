@@ -1,5 +1,6 @@
 //var mongoose = require('mongoose');
 var fm34 = require('../models/fm34');
+var visita = require('../models/visit');
 var fecha = require('../aux/convert_date.js');
 
 
@@ -13,11 +14,15 @@ module.exports.controller = function(app,route,baseUrl) {
 	fm34.findOne({ '_id': id }, function (err,fm34) {
 	    if (err) return console.error(err);
 	    res.header('content-type',contentType);
-	    res.render('fm34', {
-		site: baseUrl + route,
-		item: fm34
-	    });  
+	    fm34.populate('visitas', function (err, user) {
+		res.render('fm34', {
+		    site: baseUrl + route,
+		    item: fm34
+		});
+	    })
+	      
 	});
+	
 
     });
 
@@ -38,6 +43,8 @@ module.exports.controller = function(app,route,baseUrl) {
 	fm34.findOne({ '_id': id }, function (err,fm34) {
 	    if (err) return console.error(err);
 
+
+	    
 	    //set the templateVariables
 	    
 	    doc.setData({

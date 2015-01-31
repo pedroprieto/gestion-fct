@@ -3,7 +3,7 @@ var mongoose = require('mongoose')
 fm34Schema = new Schema( {
     semanaDe: Date,
     semanaAl: Date,
-    visitas: [visitSchema]
+    visitas: [{ type: Schema.Types.ObjectId, ref: 'visit' }]
 }),
 Fm34 = mongoose.model('fm34', fm34Schema);
 

@@ -1,6 +1,5 @@
 var mongoose = require('mongoose');
 var fct = require('../models/fct');
-var fct = require('../models/fm18');
 module.exports.controller = function(app,route,baseUrl) {
 
     /**
@@ -69,19 +68,9 @@ module.exports.controller = function(app,route,baseUrl) {
 		return console.error(err);
 		res.status=400;
 		res.send('error');  
+	    } else {
+		res.redirect(route, 302);
 	    }
-	    // Creamos fm 18
-	    fm18doc = new fm18();
-	    fm18doc.fct = item;
-	    fm18doc.save(function (err, item) {
-		if (err) {
-		    return console.error(err);
-		    res.status=400;
-		    res.send('error');  
-		} else {
-		    res.redirect(route, 302);
-		}
-	    });
 	});
 
 	

@@ -8,7 +8,7 @@ fctSchema = new Schema( {
     alumno: String,
     grupo: String,
     periodo: String,
-    fm18: { type: Schema.Types.ObjectId, ref: 'Fm18' }
+    fm18: [{ type: Schema.Types.ObjectId, ref: 'Visit' }]
 }),
 Fct = mongoose.model('fct', fctSchema);
 
