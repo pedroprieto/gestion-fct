@@ -23,7 +23,10 @@ app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/views');
 //app.set('view engine', 'jade');
 app.set('view engine', 'ejs');
+
+app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json());
+app.use(bodyParser.text({ type: 'text/html' }))
 
 
 

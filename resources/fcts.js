@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var fct = require('../models/visit');
 var fct = require('../models/fct');
 module.exports.controller = function(app,route,baseUrl) {
 
@@ -9,10 +10,13 @@ module.exports.controller = function(app,route,baseUrl) {
 	fct.find(function (err,fcts) {
 	    if (err) return console.error(err);
 	    res.header('content-type',contentType);
-	    res.render('fcts', {
-		site: baseUrl + route,
-		items: fcts
-	    });
+
+		res.render('fcts', {
+		    site: req.protocol + '://' + req.get('host') + req.originalUrl,
+		    items: fcts
+		});
+
+	    
 	    
 	});
 
@@ -26,7 +30,9 @@ module.exports.controller = function(app,route,baseUrl) {
 	var fecha_lunes_semana;
 
 	// get data array
-	data = req.body.template.data; 
+	console.log(req.body);
+	var datos = JSON.parse(req.body);
+	data = datos.template.data;
 	// pull out values we want
 	for(i=0,x=data.length;i<x;i++) {
 	    switch(data[i].name) {

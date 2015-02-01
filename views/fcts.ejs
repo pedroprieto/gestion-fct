@@ -32,7 +32,13 @@
 	  {"name" : "alumno", "value" : "<%=items[i].alumno%>", "prompt" : "Alumno"},
 	  {"name" : "grupo", "value" : "<%=items[i].grupo%>", "prompt" : "Grupo"},
 	  {"name" : "periodo", "value" : "<%=items[i].periodo%>", "prompt" : "Período"}
-        ]
+        ],
+	"links" : [
+	  <% for(j=0,v=items[i].visitas.length;j<v;j++) {%>
+	    {"rel" : "item", "prompt" : "Visita",  "href" : "<%=site%>/../visits/<%=items[i].visitas[j]._id%>"}
+	    <% if(j<items[i].visitas.length-1){%>,<% } %>
+	  <% } %>
+	]
       }
       <% if(i<items.length-1){%>,<% } %>
     <% } %>

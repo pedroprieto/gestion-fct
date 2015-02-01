@@ -243,10 +243,10 @@ console.log(href);
     form.method = "post";
     form.action = action;
     form.style.display = 'none';
-    form.id = 'input-form';
+      form.id = 'input-form';
     form.onsubmit = function() {
       submitInputForm();
-      location.reload();
+//      location.reload();
       return false;
     };
 
