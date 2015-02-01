@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 var visit = require('../models/visit');
 var fm34 = require('../models/fm34');
-var fm34 = require('../models/fct');
+var fct = require('../models/fct');
 module.exports.controller = function(app,route,baseUrl) {
 
 /**
@@ -76,15 +76,18 @@ module.exports.controller = function(app,route,baseUrl) {
 	      res.send('error');  
 	  }
 	  // Buscamos fct asociada y metemos referencia
-	  fct.find({ empresa:  empresa}, function (err,fcts) {
-	      if (err) return handleError(err);
+	  fct.find({ empresa:  empresa}, function (err,fct_items) {
+
+	      console.log(fct_items);
+	      if (err) return console.error(err);
+
 	      if (fct_items.length) {
 		  for(j=0;j<fct_items.length;j++) {
-		      fct_items[i].visitas.push(item._id);
-		      fct_items[i].save();
+		      fct_items[j].visitas.push(item._id);
+		      fct_items[j].save();
 		  }
 	      } else {
-		  res.ststus = 400;
+		  res.status = 400;
 		  res.send('error');
 		  return console.error(err);
 	      }
@@ -92,7 +95,7 @@ module.exports.controller = function(app,route,baseUrl) {
       });
 
       
-      
+      // TODO: fallo aquí
       // Creamos fm 34
       // Buscamos si existe
       f = new Date(fecha);
@@ -109,7 +112,7 @@ module.exports.controller = function(app,route,baseUrl) {
 	  // Comprobar si existe una visita a la misma hora. Futura mejora
 	  if (err) return handleError(err);
 	  if (f) {
-	      f.visitas.push(item);
+	      f.visitas.push(item._id);
 	      f.save(),
 	      res.redirect('/visits/', 302);
 	  } else {

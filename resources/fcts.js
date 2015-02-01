@@ -67,6 +67,7 @@ module.exports.controller = function(app,route,baseUrl) {
 	item.alumno = alumno;
 	item.grupo = grupo;
 	item.periodo = periodo;
+	item.visitas = new Array();
 	item.save(function (err, item) {
 	    if (err) {
 		return console.error(err);
