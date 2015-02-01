@@ -3,7 +3,7 @@ var express = require('express');
 var partials = require('express-partials');
 var fs = require('fs');
 var http = require('http');
-var bodyParser = require('body-parser')
+var bodyParser = require('body-parser');
 
 
 var app = express();
@@ -24,9 +24,9 @@ app.set('views', __dirname + '/views');
 //app.set('view engine', 'jade');
 app.set('view engine', 'ejs');
 
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use(bodyParser.json());
-app.use(bodyParser.text({ type: 'text/html' }))
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({strict: false, type: 'application/collection+json'}));
+app.use(bodyParser.text());
 
 
 

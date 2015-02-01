@@ -26,13 +26,11 @@ module.exports.controller = function(app,route,baseUrl) {
      * POST
      */
     app.post(route, function(req, res) {
-	var item,id,tutor,ciclo,empresa,instructor,alumno,grupo,periodo;
+	var data, item,id,tutor,ciclo,empresa,instructor,alumno,grupo,periodo;
 	var fecha_lunes_semana;
 
 	// get data array
-	console.log(req.body);
-	var datos = JSON.parse(req.body);
-	data = datos.template.data;
+	data = req.body.template.data;
 	// pull out values we want
 	for(i=0,x=data.length;i<x;i++) {
 	    switch(data[i].name) {
@@ -75,7 +73,7 @@ module.exports.controller = function(app,route,baseUrl) {
 		res.status=400;
 		res.send('error');  
 	    } else {
-		res.redirect(route, 302);
+		res.redirect(302,route);
 	    }
 	});
 

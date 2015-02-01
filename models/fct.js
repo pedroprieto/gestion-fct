@@ -1,5 +1,5 @@
-var mongoose = require('mongoose')
-,Schema = mongoose.Schema
+var mongoose = require('mongoose'),
+    Schema = mongoose.Schema;
 fctSchema = new Schema( {
     tutor: String,
     ciclo: String,
@@ -9,7 +9,8 @@ fctSchema = new Schema( {
     grupo: String,
     periodo: String,
     visitas: [{ type: Schema.Types.ObjectId, ref: 'visit' }]
-}),
+});
+
 Fct = mongoose.model('fct', fctSchema);
 
 module.exports = Fct;

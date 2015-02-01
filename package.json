@@ -9,7 +9,10 @@
     "mongoose": "3.x",
     "ejs": ">= 0.0.1",
     "express-partials": ">= 0.3.0",
-    "docxtemplater": "1.x"  
-      
+    "docxtemplater": "1.x"
+  },
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-jshint": "^0.11.0"
   }
 }
