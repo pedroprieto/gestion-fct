@@ -1,12 +1,10 @@
-var http = require('http');
 var express = require('express');
 var partials = require('express-partials');
 var fs = require('fs');
-var http = require('http');
 var bodyParser = require('body-parser');
 
 
-var app = express();
+var app = exports.app =  express();
 
 // database connection
 var mongoose = require('mongoose');
