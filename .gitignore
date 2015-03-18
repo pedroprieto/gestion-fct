@@ -3,7 +3,7 @@
 # Logs
 logs
 *.log
-
+.tern-port
 # Runtime data
 pids
 *.pid

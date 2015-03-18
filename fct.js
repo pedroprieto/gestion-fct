@@ -2,7 +2,6 @@ var http = require('http');
 var express = require('express');
 var partials = require('express-partials');
 var fs = require('fs');
-var http = require('http');
 var bodyParser = require('body-parser');
 
 
@@ -62,20 +61,20 @@ fcts.controller(app,'/fcts',baseUrl);
 // dynamically include routes (Controller)
 /*fs.readdirSync('./resources').forEach(function (file) {
   if(file.substr(-3) == '.js') {
-      route = require('./resources/' + file);
-      route.controller(app,'/' + file.slice(0, -3));
+  route = require('./resources/' + file);
+  route.controller(app,'/' + file.slice(0, -3));
   }
-});*/
+  });*/
 
 app.use(express.static(__dirname + '/public'));
 
 
 var server = app.listen(app.get('port'), function(){
-  console.log('Express server listening on port ' + app.get('port'));
+    console.log('Express server listening on port ' + app.get('port'));
 });
 
 
 
 /*var server = app.listen(3000, function() {
-    console.log('Listening on port %d', server.address().port);
-}); */
+  console.log('Listening on port %d', server.address().port);
+  }); */
