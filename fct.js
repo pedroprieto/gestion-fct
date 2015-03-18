@@ -1,15 +1,15 @@
-var http = require('http');
+var db_config = require('./config.js');
 var express = require('express');
 var partials = require('express-partials');
 var fs = require('fs');
 var bodyParser = require('body-parser');
 
 
-var app = express();
+var app = exports.app =  express();
 
 // database connection
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/fct');
+mongoose.connect(db_config.uri);
 
 // Global variables
 var baseUrl = 'http://localhost:3000';
