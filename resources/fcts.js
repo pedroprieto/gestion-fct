@@ -30,6 +30,8 @@ module.exports.controller = function(app,route,baseUrl) {
 	var fecha_lunes_semana;
 
 	// get data array
+		console.log(req.body);
+
 	data = req.body.template.data;
 	// pull out values we want
 	for(i=0,x=data.length;i<x;i++) {

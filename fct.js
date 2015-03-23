@@ -5,11 +5,15 @@ var fs = require('fs');
 var bodyParser = require('body-parser');
 
 
+
 var app = exports.app =  express();
+
+// Collection js template
+app.locals.cj = require('./templates/collectionjs.js');
 
 // database connection
 var mongoose = require('mongoose');
-mongoose.connect(db_config.uri);
+mongoose.connect(db_config.db.uri);
 
 // Global variables
 var baseUrl = 'http://localhost:3000';

@@ -1,4 +1,4 @@
-var mongoose = require('mongoose');
+//var mongoose = require('mongoose');
 var visit = require('../models/visit');
 var fm34 = require('../models/fm34');
 var fct = require('../models/fct');
@@ -7,18 +7,22 @@ module.exports.controller = function(app,route,baseUrl) {
 /**
  * GET
  */
-  app.get(route, function(req, res) {
+    app.get(route, function(req, res) {
 
-     visit.find(function (err,visits) {
-      if (err) return console.error(err);
-      //res.send(users);
-      res.header('content-type',contentType);
-      res.render('visits', {
-	  site: req.protocol + '://' + req.get('host') + req.originalUrl,
-	  items: visits
-      });
-	 
-    });
+	visit.find(function (err,visits) {
+	    if (err) return console.error(err);
+
+	    col = req.app.locals.cj();
+
+	    // Links
+	    col.links.push({'rel':'collection', "prompt": "FCTs", 'href' : "/fcts"});
+	    col.links.push({'rel':'collection', "prompt": "Visitas", 'href' : "/visits"});
+	    col.links.push({'rel':'collection', "prompt": "FM34s", 'href' : "/fm34s"});
+
+	    // Items
+	    col.items = visit.tx_cj(visits);
+	    res.json(col);	 
+	});
 
   });
 

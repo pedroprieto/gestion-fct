@@ -12,31 +12,30 @@ var mongoose = require('mongoose');
 // this is helpful when you would like to change behavior when testing
 process.env.NODE_ENV = 'test';
 
+var db = mongoose.createConnection();
 
-// TODO: actualizar
 
 beforeEach(function (done) {
 
     function clearDB() {
-	//for (var i in mongoose.connection.collections) {
-	//  mongoose.connection.collections[i].remove();
-    //}
-    return done();
+	for (var i in db.collections) {
+	    db.collections[i].remove();
+	}
+	return done();
     }
 
     function reconnect() {
-	//mongoose.connect(db_config.uri);
-	//mongoose.connect(config.db.test, function (err) {
-	//if (err) {
-	//	throw err;
-	//  }
-	//  return clearDB();
-	//	});
+	db.open(db_config.db.testuri, function (err) {
+	    if (err) {
+		throw err;
+	    }
+	    return clearDB();
+	});
 	
     }
 
     function checkState() {
-	switch (mongoose.connection.readyState) {
+	switch (db.readyState) {
 	case 0:
 	    reconnect();
 	    break;
@@ -45,14 +44,13 @@ beforeEach(function (done) {
 	    break;
 	default:
 	    process.nextTick(checkState);
+	    console.log(db.readyState);
 	}
     }
-
-    //checkState();
-    return done();
+    checkState();
 });
 
 afterEach(function (done) {
-    //mongoose.disconnect();
+    db.close();
     return done();
 });
