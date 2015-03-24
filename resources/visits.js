@@ -20,8 +20,8 @@ module.exports = function(app) {
 	    col.links.push({'rel':'collection', "prompt": "FM34s", 'href' : "/fm34s"});
 
 	    // Items
-	    col.items = visits.map(function(visit) {
-		return visit.toObject({ transform: visit.tx_cj });
+	    col.items = visits.map(function(v) {
+		return v.toObject({transform: visit.tx_cj});
 	    });
 
 	    

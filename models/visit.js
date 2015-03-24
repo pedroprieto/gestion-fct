@@ -40,6 +40,10 @@ visitSchema.statics.tx_cj = function (doc, ret, options) {
     item.data = [];
     item.links = [];
 
+    // Elimino campo _id y __v
+    delete ret._id;
+    delete ret.__v;
+
     for(p in ret) {
 
         if(p==='blog') {
