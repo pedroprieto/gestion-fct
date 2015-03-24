@@ -25,7 +25,6 @@ app.use(partials());
 // some environment variables
 app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/views');
-//app.set('view engine', 'jade');
 app.set('view engine', 'ejs');
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -46,7 +45,12 @@ var server = app.listen(app.get('port'), function(){
     console.log('Express server listening on port ' + app.get('port'));
 });
 
-
+process.on('SIGINT', function() {
+  mongoose.connection.close(function () {
+    console.log('Mongoose disconnected on app termination');
+    process.exit(0);
+  });
+});
 
 /*var server = app.listen(3000, function() {
   console.log('Listening on port %d', server.address().port);
