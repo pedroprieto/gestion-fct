@@ -1,11 +1,11 @@
-//var mongoose = require('mongoose');
 var visit = require('../models/visit');
 var fm34 = require('../models/fm34');
 var fct = require('../models/fct');
+
 module.exports = function(app) {
 
 /**
- * GET
+ * GET lista de visitas
  */
     app.get(app.lookupRoute('visits'), function(req, res) {
 
@@ -20,14 +20,18 @@ module.exports = function(app) {
 	    col.links.push({'rel':'collection', "prompt": "FM34s", 'href' : "/fm34s"});
 
 	    // Items
-	    col.items = visit.tx_cj(visits);
+	    col.items = visits.map(function(visit) {
+		return visit.toObject({ transform: visit.tx_cj });
+	    });
+
+	    
 	    res.json(col);	 
 	});
 
   });
 
 /**
- * POST
+ * POST lista visitas
  */
   app.post(app.lookupRoute('visits'), function(req, res) {
       var item,id,empresa,tipo,distancia,fecha,hora_salida,hora_regreso,localidad,fct_nombre;
@@ -160,6 +164,9 @@ module.exports = function(app) {
       
   });  
 
+    /**
+     * GET visita      
+     */
 
     app.get(app.lookupRoute('visit'), function(req, res) {
 	var id = req.params.id;

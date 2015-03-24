@@ -31,48 +31,37 @@ var es_ES = {
 visitSchema.statics.prompts["es_ES"] =  es_ES;
 
 // Función estática de transformación de datos en formato Collection + JSON
-visitSchema.statics.tx_cj = function (items) {
+// Para usarla con el método toObject()
 
-    // TODO: mirar si se puede hacer con el método transform de toObject
-    // ASí podemos convertir cualquier documento a Collection JS independientemente
-    // Mirar cómo convertir un objeto query de Mongoose a un array de docs
+visitSchema.statics.tx_cj = function (doc, ret, options) {
+    item = {};
+    //item.href = base + '/' + coll[i].name;
+    item.href = "prueba";
+    item.data = [];
+    item.links = [];
 
-    var item,p;
+    for(p in ret) {
 
-    return items.map(function(visit) {
+        if(p==='blog') {
+	    item.links.push({
+	 	'rel' : 'alternate',
+	 	'href' : ret[p],
+	 	'prompt' : visitSchema.statics.prompts["es_ES"][p]
+	    });
+        }
+        else {
+	    item.data.push({
+                'name' : p,
+                'value' : ret[p],
+                'prompt' :  visitSchema.statics.prompts["es_ES"][p]
+	    });
+        }
+    }
 
-	visit = visit.toObject();
-	item = {};
-	//item.href = base + '/' + coll[i].name;
-	item.href = "prueba";
-	item.data = [];
-	item.links = [];
+    return item;
 
-	for(p in visit) {
-
-            if(p==='blog') {
-	 	item.links.push({
-	 	    'rel' : 'alternate',
-	 	    'href' : visit[p],
-	 	    'prompt' : visitSchema.statics.prompts["es_ES"][p]
-	 	});
-            }
-            else {
-	 	item.data.push({
-                    'name' : p,
-                    'value' : visit[p],
-                    'prompt' :  visitSchema.statics.prompts["es_ES"][p]
-	 	});
-            }
-	}
-
-	return item;
-
-    });
-
-};
+}
 
 // Modelo
 Visit = mongoose.model('visit', visitSchema);
-
 module.exports = Visit;
