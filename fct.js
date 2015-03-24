@@ -34,6 +34,10 @@ app.use(bodyParser.text());
 // Routes
 require('./routes/routes.js')(app);
 
+// Hacer disponible la función lookupRoute en locals
+// para que esté disponible en las plantillas
+app.locals.lookupRoute = app.lookupRoute;
+
 // Resources
 require('./resources/index')(app);
 
