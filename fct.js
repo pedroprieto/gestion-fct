@@ -1,5 +1,6 @@
 var db_config = require('./config.js');
 var express = require('express');
+var namedRoutes = require('express-named-routes');
 var partials = require('express-partials');
 var fs = require('fs');
 var bodyParser = require('body-parser');
@@ -7,6 +8,7 @@ var bodyParser = require('body-parser');
 
 
 var app = exports.app =  express();
+namedRoutes.extend(app);
 
 // Collection js template
 app.locals.cj = require('./templates/collectionjs.js');
@@ -43,8 +45,9 @@ var user = require('./resources/user.js');
 user.controller(app,'/users/:id',baseUrl);
 
 // Visits collection
+app.defineRoute('visits', '/visits');
 var visits = require('./resources/visits.js');
-visits.controller(app,'/visits',baseUrl);
+visits.controller(app,app.lookupRoute('visits'),baseUrl);
 
 // Visit item
 var visit = require('./resources/visit.js');
