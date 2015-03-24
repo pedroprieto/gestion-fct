@@ -2,12 +2,12 @@
 var visit = require('../models/visit');
 var fm34 = require('../models/fm34');
 var fct = require('../models/fct');
-module.exports.controller = function(app,route,baseUrl) {
+module.exports = function(app) {
 
 /**
  * GET
  */
-    app.get(route, function(req, res) {
+    app.get(app.lookupRoute('visits'), function(req, res) {
 
 	visit.find(function (err,visits) {
 	    if (err) return console.error(err);
@@ -29,7 +29,7 @@ module.exports.controller = function(app,route,baseUrl) {
 /**
  * POST
  */
-  app.post(route, function(req, res) {
+  app.post(app.lookupRoute('visits'), function(req, res) {
       var item,id,empresa,tipo,distancia,fecha,hora_salida,hora_regreso,localidad,fct_nombre;
       var fecha_lunes_semana;
 
@@ -147,11 +147,11 @@ module.exports.controller = function(app,route,baseUrl) {
       //res.send(users);
       res.header('content-type',contentType);
       res.render('visits', {
-	  site: baseUrl + "visits",
-	  items: visits
+      site: baseUrl + "visits",
+      items: visits
       });
-	 
-    });*/
+      
+      });*/
       
       
       
@@ -159,5 +159,19 @@ module.exports.controller = function(app,route,baseUrl) {
       
       
   });  
+
+
+    app.get(app.lookupRoute('visit'), function(req, res) {
+	var id = req.params.id;
+	visit.findOne({ '_id': id }, function (err,visit) {
+	    if (err) return console.error(err);
+	    res.header('content-type',contentType);
+	    res.render('visit', {
+		site: req.protocol + '://' + req.get('host') + req.originalUrl + '/..',
+		item: visit
+	    });    
+	});
+
+    });
 
 }

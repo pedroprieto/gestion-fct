@@ -1,12 +1,12 @@
 var mongoose = require('mongoose');
 var fct = require('../models/visit');
 var fct = require('../models/fct');
-module.exports.controller = function(app,route,baseUrl) {
+module.exports = function(app) {
 
     /**
      * GET
      */
-    app.get(route, function(req, res) {
+    app.get(app.lookupRoute('fcts'), function(req, res) {
 	fct.find(function (err,fcts) {
 	    if (err) return console.error(err);
 	    res.header('content-type',contentType);
@@ -25,7 +25,7 @@ module.exports.controller = function(app,route,baseUrl) {
     /**
      * POST
      */
-    app.post(route, function(req, res) {
+    app.post(app.lookupRoute('fcts'), function(req, res) {
 	var data, item,id,tutor,ciclo,empresa,instructor,alumno,grupo,periodo;
 	var fecha_lunes_semana;
 

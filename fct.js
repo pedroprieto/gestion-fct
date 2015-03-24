@@ -2,7 +2,6 @@ var db_config = require('./config.js');
 var express = require('express');
 var namedRoutes = require('express-named-routes');
 var partials = require('express-partials');
-var fs = require('fs');
 var bodyParser = require('body-parser');
 
 
@@ -33,46 +32,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json({strict: false, type: 'application/collection+json'}));
 app.use(bodyParser.text());
 
+// Routes
+require('./routes/routes.js')(app);
 
+// Resources
+require('./resources/index')(app);
 
-// Resources and routes
-// Users collection
-var users = require('./resources/users.js');
-users.controller(app,'/users',baseUrl);
-
-// User item
-var user = require('./resources/user.js');
-user.controller(app,'/users/:id',baseUrl);
-
-// Visits collection
-app.defineRoute('visits', '/visits');
-var visits = require('./resources/visits.js');
-visits.controller(app,app.lookupRoute('visits'),baseUrl);
-
-// Visit item
-var visit = require('./resources/visit.js');
-visit.controller(app,'/visits/:id',baseUrl);
-
-// FM34s collection
-var fm34s = require('./resources/fm34s.js');
-fm34s.controller(app,'/fm34s',baseUrl);
-
-// FM 34 item
-var fm34 = require('./resources/fm34.js');
-fm34.controller(app,'/fm34s/items/:id',baseUrl);
-
-// FCTs collection
-var fcts = require('./resources/fcts.js');
-fcts.controller(app,'/fcts',baseUrl);
-
-// dynamically include routes (Controller)
-/*fs.readdirSync('./resources').forEach(function (file) {
-  if(file.substr(-3) == '.js') {
-  route = require('./resources/' + file);
-  route.controller(app,'/' + file.slice(0, -3));
-  }
-  });*/
-
+// Cliente de prueba
 app.use(express.static(__dirname + '/public'));
 
 
