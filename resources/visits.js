@@ -15,6 +15,7 @@ module.exports = function(app) {
 	    col = req.app.locals.cj();
 
 	    // Links
+	    col.links.push(req.app.buildLink('visits'));
 	    col.links.push({'rel':'collection', "prompt": "FCTs", 'href' : "/fcts"});
 	    col.links.push({'rel':'collection', "prompt": "Visitas", 'href' : "/visits"});
 	    col.links.push({'rel':'collection', "prompt": "FM34s", 'href' : "/fm34s"});
@@ -24,6 +25,10 @@ module.exports = function(app) {
 		return v.toObject({transform: visit.tx_cj});
 	    });
 
+	    // Queries
+
+	    // Template
+	    
 	    
 	    res.json(col);	 
 	});

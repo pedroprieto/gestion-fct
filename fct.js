@@ -1,6 +1,6 @@
 var db_config = require('./config.js');
 var express = require('express');
-var namedRoutes = require('express-named-routes');
+var namedRoutes = require('./aux/named-routes-cj.js');
 var partials = require('express-partials');
 var bodyParser = require('body-parser');
 
