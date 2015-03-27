@@ -9,6 +9,7 @@ module.exports = function(app) {
     app.defineRoute('fm34', '/fm34s/items/:id');
     app.defineRoute('fcts', '/fcts');
     app.defineRoute('fct', '/fcts/:id');
+    app.defineRoute('login', '/login', 'url', 'Login');
     
     
 }

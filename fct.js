@@ -3,7 +3,11 @@ var express = require('express');
 var namedRoutes = require('./aux/named-routes-cj.js');
 var partials = require('express-partials');
 var bodyParser = require('body-parser');
-
+var cookieParser = require('cookie-parser');
+var session = require('express-session');
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
+var authSaoFct = require('./auth/auth.js')(passport, LocalStrategy);
 
 
 var app = exports.app =  express();
@@ -31,6 +35,24 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json({strict: false, type: 'application/collection+json'}));
 app.use(bodyParser.text());
 
+app.use(session({ secret: 'CalidadFCT', saveUninitialized: true, resave: true }));
+app.use(passport.initialize());
+app.use(passport.session());
+//app.locals.passport = passport;
+
+// Check authentication for all routes but /login
+app.all('*', function(req, res, next) {
+    if (/^\/login/g.test(req.url)) {
+	return next();
+    } else if (req.isAuthenticated()) {
+	return next();
+    } else {
+	// TODO: posibilidad de cambiar y poner error 401
+	return res.redirect("/login");
+    }
+});
+
+
 // Routes
 require('./routes/routes.js')(app);
 
@@ -55,7 +77,3 @@ process.on('SIGINT', function() {
     process.exit(0);
   });
 });
-
-/*var server = app.listen(3000, function() {
-  console.log('Listening on port %d', server.address().port);
-  }); */
