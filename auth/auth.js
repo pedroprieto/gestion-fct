@@ -39,7 +39,7 @@ module.exports = function(passport, LocalStrategy) {
 		    exito = true;
 	    }).on('end', function() {
 		if (exito) {
-		    return done(null, {nombre: 'pedroprieto', cookiesSAO: sessionCookie});
+		    return done(null, {nombre: username, cookiesSAO: sessionCookie});
 		} else {
 		    return done(null, false, { message: 'Usuario o password de SAO incorrecto.' });
 		}
