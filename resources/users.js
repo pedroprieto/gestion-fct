@@ -59,7 +59,7 @@ module.exports = function(app) {
     });
     
     app.get(app.lookupRoute('user'), function(req, res) {
-	var id = req.params.id;
+	var id = req.params.user;
 	user.findOne({ 'name': id }, function (err,user) {
 	    if (err) return console.error(err);
 	    res.header('content-type',contentType);

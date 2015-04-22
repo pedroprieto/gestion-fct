@@ -7,20 +7,22 @@
 
 var db_config = require('../config.js');
 var mongoose = require('mongoose');
+var db;
 
-// ensure the NODE_ENV is set to 'test'
-// this is helpful when you would like to change behavior when testing
-process.env.NODE_ENV = 'test';
+before(function(done) {
 
-var db = mongoose.createConnection();
+    db = mongoose.createConnection();
+    done();
+
+});
+
 
 
 beforeEach(function (done) {
+        process.env.NODE_ENV = 'test';
 
     function clearDB() {
-	for (var i in db.collections) {
-	    db.collections[i].remove();
-	}
+	db.db.dropDatabase();
 	return done();
     }
 

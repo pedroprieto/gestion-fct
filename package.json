@@ -13,7 +13,7 @@
 	"cookie-parser": "1.x",
 	"express-session": "x",
 	"passport": "x",
-	"passport-local": "x"
+	"passport-http": "x"
     },
     "devDependencies": {
 	"grunt": "^0.4.5",
@@ -21,5 +21,9 @@
 	"mocha": "^2.2.1",
 	"should": "^4.6.3",
 	"supertest": "^0.15.0"
+    },
+    "scripts": {
+	"start": "node fct.js",
+	"test": "NODE_ENV=test mocha"
     }
 }

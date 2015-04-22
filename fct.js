@@ -3,11 +3,9 @@ var express = require('express');
 var namedRoutes = require('./aux/named-routes-cj.js');
 var partials = require('express-partials');
 var bodyParser = require('body-parser');
-var cookieParser = require('cookie-parser');
-var session = require('express-session');
 var passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
-var authSaoFct = require('./auth/auth.js')(passport, LocalStrategy);
+var BasicStrategy = require('passport-http').BasicStrategy;
+var authSaoFct = require('./auth/auth.js')(passport, BasicStrategy);
 
 
 var app = exports.app =  express();
@@ -18,7 +16,8 @@ app.locals.cj = require('./templates/collectionjs.js');
 
 // database connection
 var mongoose = require('mongoose');
-mongoose.connect(db_config.db.uri);
+console.log(process.env.NODE_ENV);
+mongoose.connect(process.env.NODE_ENV!='test'? db_config.db.uri : db_config.db.testuri);
 
 // Global variables
 var baseUrl = 'http://localhost:3000';
@@ -35,13 +34,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json({strict: false, type: 'application/collection+json'}));
 app.use(bodyParser.text());
 
-app.use(session({ secret: 'CalidadFCT', saveUninitialized: true, resave: true }));
 app.use(passport.initialize());
-app.use(passport.session());
-//app.locals.passport = passport;
 
 // Check authentication for all routes but /login
-app.all('*', function(req, res, next) {
+/*app.all('*', function(req, res, next) {
     if (/^\/login/g.test(req.url)) {
 	return next();
     } else if (req.isAuthenticated()) {
@@ -50,7 +46,13 @@ app.all('*', function(req, res, next) {
 	// TODO: posibilidad de cambiar y poner error 401
 	return res.redirect("/login");
     }
+});*/
+
+app.all('*',passport.authenticate('basic', { session: false }), function(req,res,next) {
+    return next();
 });
+
+
 
 
 // Routes

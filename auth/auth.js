@@ -1,66 +1,59 @@
 var querystring = require('querystring');
 var http = require('https');
+var User = require('../models/user');
+var auth_sao = require('./auth_sao');
 
-module.exports = function(passport, LocalStrategy) {
-    // Estrategia para autenticar contra el servidor https://fct.edu.gva.es
-    passport.use(new LocalStrategy(function(username, password, done) {
-	var post_data = querystring.stringify({
-	    'login': 'Entrar',
-	    'usuario' : username,
-	    'password': password
+module.exports = function(passport, BasicStrategy) {
+    // Estrategia de autenticación Basic
+    // Si el usuario existe en la base de datos, se utilizan esos datos para el acceso
+    // Si el usuario no existe en la base de datos, se busca el usuario en el sistema SAO (https://fct.edu.gva.es) y se crea el usuario correspondiente
+    // Si el usuario no existe en base de datos ni en SAO, se deniega el acceso
+
+    passport.use(new BasicStrategy(function(username, password, done) {
+	User.findOne({ username: username }, function (err, user) {
+	    if (err) {
+		return done(err);
+	    }
+	    
+	    // Si no existe el usuario o el password es incorrecto, buscamos en SAO
+	    if (!user || (user.password != password) ) {
+		auth_sao(username,password,function(res) {
+		    console.log("Conectado con SAO.");
+		    if (res) {
+			// Acceso a SAO correcto
+
+			if (user) {
+			    // El usuario existía pero la contraseña era incorrecta
+			    user.password = password;
+			} else {
+			    // El usuario no existía
+			    user = new User();
+			    user.username = username;
+			    user.password = password;			    
+			}
+			user.save(function(err) {
+			    if (err) {return done(err);}
+
+			    return done(null,user);
+			});
+			
+		    } else {
+			// Acceso a SAO incorrecto
+			return done(null,false);
+		    }
+		});
+
+		
+		//return done(null, false);
+	    } else {
+		// Existe usuario y la contraseña coincide
+		return done(null, user);
+	    }
+	   
+
 	});
 	
-	var options = {
-	    host: 'fct.edu.gva.es',
-	    port: 443,
-	    path: '/index.php',
-	    method: 'POST',
-	    headers: {
-		'Content-Type': 'application/x-www-form-urlencoded',
-		'Content-Length': post_data.length
-	    }
-	};
-
-	var pet = http.request(options, function(r){
-	    r.setEncoding('utf8');
-	    var sessionCookie = r.headers['set-cookie'][0];
-	    sessionCookie = sessionCookie.split(';');
-	    sessionCookie = sessionCookie[0];
-	    var sessionCookie2 = r.headers['set-cookie'][1];
-	    sessionCookie2 = sessionCookie2.split(';');
-	    sessionCookie2 = sessionCookie2[0];
-	    sessionCookie = sessionCookie + ';' + sessionCookie2;
-	    var exito = false;
-	    
-	    r.on('data', function(chunk){
-		// Hay que consumir los datos; si no, no acaba la petición
-		// Si la página contiene el enlace al logout, es que se ha hecho el login
-		if (chunk.indexOf('name="logout"') > -1)
-		    exito = true;
-	    }).on('end', function() {
-		if (exito) {
-		    return done(null, {nombre: username, cookiesSAO: sessionCookie});
-		} else {
-		    return done(null, false, { message: 'Usuario o password de SAO incorrecto.' });
-		}
-	    });
-	});
-
-	pet.on('error', function(e) {
-	    console.log('problem with request: ' + e.message);
-	    return done(err);
-	});
-
-	pet.write(post_data);
-	pet.end();
     }));
 
-    passport.serializeUser(function(user, done) {
-	done(null, user);
-    });
-
-    passport.deserializeUser(function(user, done) {
-	done(null,user);
-    });
 
 };
