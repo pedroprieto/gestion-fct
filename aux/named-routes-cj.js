@@ -69,7 +69,7 @@ exports.extend = function (app) {
      * If routeName references an object of routes it will return routeName.index
      *
      * @param {String} routeName (optional)
-     * @param {String} params (optional)
+     * @param {Object} params (optional)
      * @return {Object}
      * @api public
      */
