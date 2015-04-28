@@ -15,7 +15,7 @@ module.exports = function(username, password, callback) {
     var options = {
 	host: 'fct.edu.gva.es',
 	port: 443,
-	path: '/index.php',
+	path: '/index.php?op=2&subop=0', // para poder acceder al id del usuario, que aparece en esta página
 	method: 'POST',
 	headers: {
 	    'Content-Type': 'application/x-www-form-urlencoded',
@@ -33,16 +33,27 @@ module.exports = function(username, password, callback) {
 	sessionCookie2 = sessionCookie2[0];
 	sessionCookie = sessionCookie + ';' + sessionCookie2;
 	var exito = false;
+	var idSAO = 0;
 	
 	r.on('data', function(chunk){
 	    // Hay que consumir los datos; si no, no acaba la petición
 	    // Si la página contiene el enlace al logout, es que se ha hecho el login
 	    if (chunk.indexOf('name="logout"') > -1)
 		exito = true;
+	    // Aparte, almacenamos el id del usuario conectado
+	    var cadena = '"usuarioActual" value="';
+	    var principio = chunk.indexOf(cadena);
+	    if (principio > -1) {
+		principio = chunk.indexOf(cadena) + cadena.length;
+		var fin = chunk.substring(principio).indexOf('"') + principio;
+		idSAO = parseInt(chunk.substring(principio,fin));
+	    }
+	    
+	    
 	}).on('end', function() {
 	    // Si autenticación en SAO es correcta
 	    if (exito) {
-		return callback({nombre: username, cookiesSAO: sessionCookie});
+		return callback({nombre: username, idSAO: idSAO, cookiesSAO: sessionCookie});
 	    // Si autenticación en SAO es incorrecta
 	    } else {
 		return callback(false);

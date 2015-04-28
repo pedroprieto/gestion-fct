@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-var fct = require('../models/visit');
+var visit = require('../models/visit');
 var fct = require('../models/fct');
 module.exports = function(app) {
 

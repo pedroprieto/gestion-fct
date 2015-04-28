@@ -20,6 +20,7 @@ describe('Función auth/auth_sao.js. Debe proporcionar acceso al sistema SAO.', 
 	auth_sao_function(user,password,function(res) {
 	    res.nombre.should.equal(user);
 	    should.exist(res.cookiesSAO);
+	    res.idSAO.should.be.above(0);
 	    done();
 	});
     });

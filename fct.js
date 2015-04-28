@@ -13,6 +13,7 @@ namedRoutes.extend(app);
 
 // Collection js template
 app.locals.cj = require('./templates/collectionjs.js');
+app.locals.errcj = require('./templates/collection_error.js');
 
 // database connection
 var mongoose = require('mongoose');

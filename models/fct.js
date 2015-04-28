@@ -8,6 +8,9 @@ fctSchema = new Schema( {
     alumno: String,
     grupo: String,
     periodo: String,
+    fecha_inicio: {type: Date, required: true},
+    fecha_fin: {type: Date, required: true},
+    horas: String,
     visitas: [{ type: Schema.Types.ObjectId, ref: 'visit' }]
 });
 
