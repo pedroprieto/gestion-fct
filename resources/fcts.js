@@ -42,11 +42,24 @@ module.exports = function(app) {
 	
 	fct.find({ 'usuario': res.locals.user._id }, function (err,fcts) {
 	    if (err) return console.error(err);
-	    res.header('content-type',contentType);
-	    res.render('fcts', {
-		site: req.protocol + '://' + req.get('host') + req.originalUrl,
-		items: fcts
+	    var col = req.app.locals.cj();
+
+	    // Links
+	    col.links.push(req.app.buildLink('fcts', {user: res.locals.user.username}));
+	    col.links.push({'rel':'collection', "prompt": "FCTs", 'href' : "/fcts"});
+	    col.links.push({'rel':'collection', "prompt": "Visitas", 'href' : "/visits"});
+	    col.links.push({'rel':'collection', "prompt": "FM34s", 'href' : "/fm34s"});
+
+	    // Items
+	    col.items = fcts.map(function(f) {
+		return f.toObject({transform: fct.tx_cj});
 	    });
+
+	    // Queries
+
+	    // Template
+	    
+	    res.json({collection: col});
 	});
 	
 	

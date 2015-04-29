@@ -28,7 +28,7 @@ var es_ES = {
     impresion: "Impresión general de la visita"
 };
 
-visitSchema.statics.prompts["es_ES"] =  es_ES;
+visitSchema.statics.prompts.es_ES =  es_ES;
 
 // Función estática de transformación de datos en formato Collection + JSON
 // Para usarla con el método toObject()
@@ -44,27 +44,27 @@ visitSchema.statics.tx_cj = function (doc, ret, options) {
     delete ret._id;
     delete ret.__v;
 
-    for(p in ret) {
+    for(var p in ret) {
 
         if(p==='blog') {
 	    item.links.push({
-	 	'rel' : 'alternate',
-	 	'href' : ret[p],
-	 	'prompt' : visitSchema.statics.prompts["es_ES"][p]
+	 	rel : 'alternate',
+	 	href : ret[p],
+	 	prompt : visitSchema.statics.prompts.es_ES[p]
 	    });
         }
         else {
 	    item.data.push({
-                'name' : p,
-                'value' : ret[p],
-                'prompt' :  visitSchema.statics.prompts["es_ES"][p]
+                name : p,
+                value : ret[p],
+                prompt :  visitSchema.statics.prompts.es_ES[p]
 	    });
         }
     }
 
     return item;
 
-}
+};
 
 // Modelo
 Visit = mongoose.model('visit', visitSchema);
