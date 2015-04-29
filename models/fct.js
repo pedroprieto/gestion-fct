@@ -11,6 +11,7 @@ fctSchema = new Schema( {
     fecha_inicio: {type: Date, required: true},
     fecha_fin: {type: Date, required: true},
     horas: String,
+    usuario: { type: Schema.Types.ObjectId, ref: 'user', required: true },
     visitas: [{ type: Schema.Types.ObjectId, ref: 'visit' }]
 });
 

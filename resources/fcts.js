@@ -1,24 +1,55 @@
 var mongoose = require('mongoose');
 var visit = require('../models/visit');
 var fct = require('../models/fct');
+var User = require('../models/user');
 module.exports = function(app) {
 
     /**
-     * GET
+     * ALL
      */
-    app.get(app.lookupRoute('fcts'), function(req, res) {
-	fct.find(function (err,fcts) {
+
+    // Cargamos el usuario del parámetro de la URL
+    app.all(app.lookupRoute('fcts'), function(req, res, next) {
+	var username = req.params.user;
+	User.findOne({ 'username': username }, function (err,user) {
 	    if (err) return console.error(err);
-	    res.header('content-type',contentType);
-
-		res.render('fcts', {
-		    site: req.protocol + '://' + req.get('host') + req.originalUrl,
-		    items: fcts
-		});
-
-	    
+	    // Opcional: si no coincide con el usuario autenticado, devolvemos error
+	    // user: usuario de la url
+	    // req.user: usuario autenticado
+	    if ( !user._id.equals(req.user._id) ) {
+		console.log(user._id);
+		console.log(req.user._id);
+		var errcol = req.app.locals.errcj();
+		errcol.href = req.protocol + '://' + req.get('host') + req.originalUrl;
+		errcol.error.title = 'No autorizado';
+		errcol.error.message = 'El usuario ' + req.user.username + ' no está autorizado para acceder a los recursos del usuario ' + username + '.';
+		res.status(401).json(errcol);		
+	    } else {
+		// Pasamos la info del usuario indicado en el parámetro a res.locals
+		res.locals.user = user;
+		next();		
+	    }
 	    
 	});
+    });
+    
+    
+    /**
+     * GET
+     * Lista de fcts de un usuario determinado
+     */
+    app.get(app.lookupRoute('fcts'), function(req, res) {
+	
+	fct.find({ 'usuario': res.locals.user._id }, function (err,fcts) {
+	    if (err) return console.error(err);
+	    res.header('content-type',contentType);
+	    res.render('fcts', {
+		site: req.protocol + '://' + req.get('host') + req.originalUrl,
+		items: fcts
+	    });
+	});
+	
+	
 
     });
 
