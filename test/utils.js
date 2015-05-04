@@ -19,7 +19,7 @@ before(function(done) {
 
 
 beforeEach(function (done) {
-        process.env.NODE_ENV = 'test';
+    process.env.NODE_ENV = 'test';
 
     function clearDB() {
 	db.db.dropDatabase();

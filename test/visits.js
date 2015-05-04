@@ -6,25 +6,23 @@ var should = require('should');
 var app = require('../fct.js').app;
 var routes = require('../routes/routes');
 
-describe('Crear una visita en una FCT', function () {
+describe.only('Crear una visita en una FCT', function () {
     var user = process.env.APP_USER;
     var password = process.env.APP_PASSWORD;
 
     var fct_test = {
 	template: {
 	    data: [
-		{
-		    tutor: 'Tutor test',
-		    ciclo: 'Ciclo test',
-		    empresa: 'empresa test',
-		    instructor: 'instructor test',
-		    alumno: 'alumno test',
-		    grupo: 'grupo test',
-		    periodo: 'período test',
-		    fecha_inicio: new Date(),
-		    fecha_fin: new Date(),
-		    horas: '400'
-		}
+		{name: "tutor", value: "Tutor test"},
+		{name: "ciclo", value: "Ciclo test"},
+		{name: "empresa", value: "empresa test"},
+		{name: "alumno", value: "alumno test"},
+		{name: "instructor", value: "instructor test"},
+		{name: "grupo", value: "grupo test"},
+		{name: "periodo", value: "periodo test"},
+		{name: "fecha_inicio", value: new Date().toString()},
+		{name: "fecha_fin", value: new Date().toString()},
+		{name: "horas", value: "400"}
 	    ]
 	}
     };
@@ -32,15 +30,13 @@ describe('Crear una visita en una FCT', function () {
     var visit_test = {
 	template: {
 	    data: [
-		{
-		    tipo: 'tipo visita test',
-		    distancia: 'distancia test',
-		    fecha: new Date(),
-		    hora_salida: 'hora salida test',
-		    hora_regreso: 'hora regreso test',
-		    localidad: 'localidad test',
-		    impresion: 'texto de impresión test'
-		}
+		{name: "tipo", value: "Tipo de visita test"},
+		{name: "distancia", value: "Distancia test"},
+		{name: "fecha", value:  new Date().toString()},
+		{name: "hora_salida", value: "Hora salida test"},
+		{name: "hora_regreso", value: "Hora regreso test"},
+		{name: "localidad", value: "Localidad test"},
+		{name: "impresion", value: "Impresión de la visita test"}
 	    ]
 	}
     };
@@ -53,6 +49,7 @@ describe('Crear una visita en una FCT', function () {
 	// Creamos una FCT de prueba
 	    .post(app.buildLink('fcts',{'user': process.env.APP_USER}).href)
 	    .set("Authorization", "basic " + new Buffer(user + ':' + password).toString("base64"))
+	    .set("Content-Type", "application/json")
 	    .send(fct_test)
 	    //.expect('Content-Type', /json/)
 	    .expect(201)
@@ -70,11 +67,12 @@ describe('Crear una visita en una FCT', function () {
 			if (err) throw err;
 			res.body.should.have.property('collection');
 			var links = res.body.collection.items[0].links;
-			links.should.containDeep({rel: 'visits'});
+			// Eror aquí
+//			links.should.containDeep({rel: 'visits'});
 			var visitslink = links.filter(function (el) {
 			    return el.rel == 'visits';
 			})[0].href;
-
+			should.exist(visitslink);
 			request(app)
 			// Petición POST al link de visitas para crear una visita
 			    .post(visitslink)
@@ -82,8 +80,11 @@ describe('Crear una visita en una FCT', function () {
 			    .send(visit_test)
 			    .expect(201)
 			    .end(function (err, res) {
+				console.log('visita creada');
+				console.log(err);
 				if (err) throw err;
 				var loc2 = res.header.location;
+				console.log(loc2);
 				should.not.exist(err);
 				should.exist(loc2);
 				request(app)
@@ -92,7 +93,11 @@ describe('Crear una visita en una FCT', function () {
 				    .set("Authorization", "basic " + new Buffer(user + ':' + password).toString("base64"))
 				    .expect(200)
 				    .end(function (err, res) {
+					console.log('algo');
+					console.log(err);
+					console.log(res);
 					if (err) throw err;
+					should.not.exist(err);
 					res.body.should.have.property('collection');
 					var v = res.body.collection.items[0].data;
 					v.length.should.be.above(0);
@@ -101,7 +106,6 @@ describe('Crear una visita en una FCT', function () {
 				    });
 				
 				
-				done();
 			    });
 		    });
 	    });

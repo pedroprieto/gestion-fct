@@ -1,3 +1,7 @@
+// Mongoose con Bluebird (promises)
+// https://github.com/jeduan/express4-mongoose-bluebird/blob/master/models.js
+
+var Promise = require("bluebird");
 var mongoose = require('mongoose')
 ,Schema = mongoose.Schema
 visitSchema = new Schema( {
@@ -9,7 +13,7 @@ visitSchema = new Schema( {
     hora_regreso: String,
     localidad: String,
     impresion: String,
-    _fct : [{ type: Number, ref: 'Fct' }]
+    _fct : { type: Schema.Types.ObjectId, ref: 'Fct' }
 });
 
 
@@ -68,4 +72,7 @@ visitSchema.statics.tx_cj = function (doc, ret, options) {
 
 // Modelo
 Visit = mongoose.model('visit', visitSchema);
+Promise.promisifyAll(Visit);
+Promise.promisifyAll(Visit.prototype);
+
 module.exports = Visit;

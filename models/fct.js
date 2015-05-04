@@ -1,3 +1,4 @@
+var Promise = require("bluebird");
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 fctSchema = new Schema( {
@@ -77,4 +78,7 @@ fctSchema.statics.tx_cj = function (doc, ret, options) {
 
 // Modelo
 Fct = mongoose.model('fct', fctSchema);
+Promise.promisifyAll(Fct);
+Promise.promisifyAll(Fct.prototype);
+
 module.exports = Fct;

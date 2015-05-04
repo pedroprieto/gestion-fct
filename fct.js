@@ -6,6 +6,7 @@ var bodyParser = require('body-parser');
 var passport = require('passport');
 var BasicStrategy = require('passport-http').BasicStrategy;
 var authSaoFct = require('./auth/auth.js')(passport, BasicStrategy);
+var error_handling = require('./errors/error_middleware.js');
 
 
 var app = exports.app =  express();
@@ -32,7 +33,7 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json({strict: false, type: 'application/collection+json'}));
+app.use(bodyParser.json({strict: false, type: 'application/json'}));
 app.use(bodyParser.text());
 
 app.use(passport.initialize());
@@ -59,6 +60,9 @@ app.all('*',passport.authenticate('basic', { session: false }), function(req,res
 // Routes
 require('./routes/routes.js')(app);
 
+// Parameters
+require('./routes/params.js')(app);
+
 // Hacer disponible la función lookupRoute en locals
 // para que esté disponible en las plantillas
 app.locals.lookupRoute = app.lookupRoute;
@@ -68,6 +72,25 @@ require('./resources/index')(app);
 
 // Cliente de prueba
 app.use(express.static(__dirname + '/public'));
+
+// Página 404 - not found
+app.use(function handleNotFound(req, res){
+    res.status(404);
+    // if (req.accepts('html')) {
+    // res.render('404', { url: req.url });
+    // return;
+    // }
+    if (req.accepts('json')) {
+	res.send({ error: 'Not found' });
+	return;
+    }
+    res.type('txt').send('Not found');
+});
+
+
+// Error handling
+app.use(error_handling.logErrors);
+app.use(error_handling.respondError);
 
 
 var server = app.listen(app.get('port'), function(){

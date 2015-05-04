@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 var visit = require('../models/visit');
-var fct = require('../models/fct');
+var Fct = require('../models/fct');
 var User = require('../models/user');
 module.exports = function(app) {
 
@@ -9,7 +9,7 @@ module.exports = function(app) {
      */
 
     // Cargamos el usuario del parámetro de la URL
-    app.all(app.lookupRoute('fcts'), function(req, res, next) {
+    /*app.all([app.lookupRoute('fcts'), app.lookupRoute('fct')], function(req, res, next) {
 	var username = req.params.user;
 	User.findOne({ 'username': username }, function (err,user) {
 	    if (err) return console.error(err);
@@ -31,16 +31,17 @@ module.exports = function(app) {
 	    }
 	    
 	});
-    });
+    });*/
     
     
     /**
      * GET
      * Lista de fcts de un usuario determinado
      */
-    app.get(app.lookupRoute('fcts'), function(req, res) {
+    app.get(app.lookupRoute('fcts'), function(req, res, next) {
+	console.log('aa');
 	
-	fct.find({ 'usuario': res.locals.user._id }, function (err,fcts) {
+	Fct.find({ 'usuario': res.locals.user._id }, function (err,fcts) {
 	    if (err) return console.error(err);
 	    var col = req.app.locals.cj();
 
@@ -52,7 +53,9 @@ module.exports = function(app) {
 
 	    // Items
 	    col.items = fcts.map(function(f) {
-		return f.toObject({transform: fct.tx_cj});
+		var item = f.toObject({transform: Fct.tx_cj});
+		item.links.push(req.app.buildLink('visits', {user: res.locals.user.username, fct: f._id.toString()}));
+		return item;
 	    });
 
 	    // Queries
@@ -69,63 +72,93 @@ module.exports = function(app) {
     /**
      * POST
      */
-    app.post(app.lookupRoute('fcts'), function(req, res) {
+    app.post(app.lookupRoute('fcts'), function(req, res, next) {
 	var data, item,id,tutor,ciclo,empresa,instructor,alumno,grupo,periodo;
 	var fecha_lunes_semana;
 
-	// get data array
-		console.log(req.body);
-
 	data = req.body.template.data;
-	// pull out values we want
-	for(i=0,x=data.length;i<x;i++) {
-	    switch(data[i].name) {
-	    case 'tutor' :
-		tutor = data[i].value;
-		break;
-	    case 'ciclo' :
-		ciclo = data[i].value;
-		break;
-	    case 'empresa' :
-		empresa = data[i].value;
-		break;
-	    case 'instructor' :
-		instructor = data[i].value;
-		break;
-	    case 'alumno' :
-		alumno = data[i].value;
-		break;
-	    case 'grupo' :
-		grupo = data[i].value;
-		break;
-	    case 'periodo' :
-		periodo = data[i].value;
-		break;
-		
-	    }    
+	
+	if (!Array.isArray(data)) {
+	    res.status(400).send('Los datos enviados no se ajustan al formato collection + json.');  
 	}
-	// Creamos elemento fct en la base de datos
-	item = new fct();
-	item.tutor=tutor;
-	item.ciclo = ciclo;
-	item.empresa=empresa;
-	item.instructor = instructor;
-	item.alumno = alumno;
-	item.grupo = grupo;
-	item.periodo = periodo;
+
+
+	// Aprovechamos que Mongoose elimina los campos no definidos en el modelo. Por tanto, no hay que filtrar los datos
+	// Convertimos el formato "template" de collection.json y devolvemos un objecto JavaScript convencional
+	var fctdata = data.reduce(function(a,b){
+	    a[b.name] = b.value;
+	    return a;
+	} , {});
+	
+	// Añadimos el usuario que ha creado la FCT
+	fctdata.usuario = res.locals.user._id;
+
+
+	item = new Fct(fctdata);
+
+	// Creamos un array de visitas. ¿Es necesario realmente?
 	item.visitas = new Array();
+
 	item.save(function (err, item) {
 	    if (err) {
 		return console.error(err);
-		res.status=400;
-		res.send('error');  
+		res.status(400).send('Error al guardar los datos de la base de datos');  
 	    } else {
-		res.redirect(302,route);
+		res.location(req.app.buildLink('fct', {user: res.locals.user.username, fct: item._id}).href);
+		res.status(201).end();
 	    }
 	});
 
 	
 	
-    });  
+    });
+
+    /**
+     * GET FCT      
+     */
+
+    app.get(app.lookupRoute('fct'), function(req, res, next) {
+
+
+	var fct = res.locals.fct;
+	var col = req.app.locals.cj();
+
+	// Links
+	col.links.push(req.app.buildLink('fcts', {user: res.locals.user.username}));
+	col.links.push({'rel':'collection', "prompt": "FCTs", 'href' : "/fcts"});
+	col.links.push({'rel':'collection', "prompt": "Visitas", 'href' : "/visits"});
+	col.links.push({'rel':'collection', "prompt": "FM34s", 'href' : "/fm34s"});
+
+	// Items
+
+	var item = fct.toObject({transform: Fct.tx_cj});
+	item.links.push(req.app.buildLink('visits', {user: res.locals.user.username, fct: fct._id.toString()}));
+	col.items.push(item);
+	
+	
+	
+	/* col.items = fcts.map(function(f) {
+	   var item = f.toObject({transform: Fct.tx_cj});
+	   item.links.push(req.app.buildLink('visits', {user: res.locals.user.username, fct: f._id.toString()}));
+	   return item;
+	   });*/
+
+	// Queries
+
+	// Template
+	
+	res.json({collection: col});
+
+
+
+
+	
+	/*res.render('fct', {
+	  site: req.protocol + '://' + req.get('host') + req.originalUrl + '/..',
+	  item: fct
+	  });*/    
+
+    });
+
 
 }

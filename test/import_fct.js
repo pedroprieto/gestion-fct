@@ -37,21 +37,5 @@ describe('Importar FCTs del sistema SAO', function () {
 	
 	
     });
-
-    /*it('debe crear un elemento en fcts', function(done) {
-	request(app)
-	    .post('/fcts')
-	    .send({template: {
-		data: [{
-		    tutor: 'Pedro'} ]
-	    }
-		  })
-	    .expect(201)
-	    .end(function(err,res) {
-		console.log(err);
-		should.not.exist(err);
-		done();
-	    });
-    });*/
 });
 
