@@ -58,8 +58,9 @@ module.exports = function(app) {
 	/*if (! objectIdRegex.test(String(id))) {
 	  return next('route')
 	  }*/
-	Visit.findOneAsync({ '_id': visitid, 'fct': res.locals.fct._id })
+	Visit.findOneAsync({ '_id': visitid, '_fct': res.locals.fct._id })
 	    .then(function(visit) {
+
 		if (!visit) {
 		    return next('route');
 		}

@@ -80,11 +80,8 @@ describe.only('Crear una visita en una FCT', function () {
 			    .send(visit_test)
 			    .expect(201)
 			    .end(function (err, res) {
-				console.log('visita creada');
-				console.log(err);
 				if (err) throw err;
 				var loc2 = res.header.location;
-				console.log(loc2);
 				should.not.exist(err);
 				should.exist(loc2);
 				request(app)
@@ -93,15 +90,11 @@ describe.only('Crear una visita en una FCT', function () {
 				    .set("Authorization", "basic " + new Buffer(user + ':' + password).toString("base64"))
 				    .expect(200)
 				    .end(function (err, res) {
-					console.log('algo');
-					console.log(err);
-					console.log(res);
 					if (err) throw err;
 					should.not.exist(err);
 					res.body.should.have.property('collection');
 					var v = res.body.collection.items[0].data;
 					v.length.should.be.above(0);
-					console.log(v);
 					done();
 				    });
 				
