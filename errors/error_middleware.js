@@ -1,3 +1,7 @@
+// Fuente: https://github.com/jeduan/express4-mongoose-bluebird
+
+// TODO: mejorar el tema de mensajes, etc.
+
 
 module.exports.logErrors = function(err, req, res, next){
     if (err.status === 404) {
@@ -11,11 +15,16 @@ module.exports.logErrors = function(err, req, res, next){
 };
 
 module.exports.respondError = function(err, req, res, next){
-    var status, message
+    var status, message;
+
+    var errcol = req.app.locals.errcj();
+    errcol.href = req.protocol + '://' + req.get('host') + req.originalUrl;
+    
     status = err.status || 500
     res.status(status)
-    message = ((err.productionMessage && err.message) ||
-	       err.customProductionMessage)
+    message = err.message
+/*    message = ((err.productionMessage && err.message) ||
+	       err.customProductionMessage)*/
     if (!message) {
 	if (status === 403) {
 	    message = 'Not allowed'
@@ -24,7 +33,10 @@ module.exports.respondError = function(err, req, res, next){
 	}
     }
     if (req.accepts('json')) {
-	res.send({error: message});
+	errcol.error.title = err.name || 'Error';
+	errcol.error.message = message;
+//	errcol.error.code = err.stack;
+	res.json({collection: errcol});
 	return
     } else {
 	res.type('txt').send(message + '\n');

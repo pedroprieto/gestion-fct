@@ -1,3 +1,5 @@
+// Fuente: https://gist.github.com/lingo/d972e618b4f226866be2
+
 'use strict';
 
 var utils = require('./utils');

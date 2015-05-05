@@ -23,13 +23,10 @@ module.exports = function(app) {
 
 	    if ( !user._id.equals(req.user._id) ) {
 		var err = new Error();
+		err.name = 'No autorizado';
 		err.message = 'El usuario ' + req.user.username + ' no está autorizado para acceder a los recursos del usuario ' + username + '.';
-		next(err);
-		/*var errcol = req.app.locals.errcj();
-		errcol.href = req.protocol + '://' + req.get('host') + req.originalUrl;
-		errcol.error.title = 'No autorizado';
-		errcol.error.message = 
-		res.status(401).json(errcol);		*/
+		err.status = 401;
+		throw err;
 	    } else {
 		// Pasamos la info del usuario indicado en el parámetro a res.locals
 		res.locals.user = user;
