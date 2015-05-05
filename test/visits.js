@@ -45,67 +45,53 @@ describe('Crear una visita en una FCT', function () {
 
     
 
-    it('Debe crear una visita y que aparezca como enlace en la FCT correspondiente', function (done) {
+    it('Debe crear una visita y que aparezca como enlace en la FCT correspondiente', function () {
 	this.timeout(20000);
-	request(app)
+	return request(app)
 	// Creamos una FCT de prueba
 	    .post(app.buildLink('fcts',{'user': process.env.APP_USER}).href)
 	    .set("Authorization", "basic " + new Buffer(user + ':' + password).toString("base64"))
 	    .set("Content-Type", "application/json")
 	    .send(fct_test)
-	    //.expect('Content-Type', /json/)
+	//.expect('Content-Type', /json/)
 	    .expect(201)
-	    .end(function (err, res) {
+	    .then(function(res) {
 		var loc = res.header.location;
-		should.not.exist(err);
 		should.exist(loc);
-		request(app)
+		return request(app)
 		// Conexión a la 'location' especificada al llamar a /fcts
 		// Es el item con la FCT creada
 		    .get(loc)
 		    .set("Authorization", "basic " + new Buffer(user + ':' + password).toString("base64"))
-		    .expect(200)
-		    .end(function (err, res) {
-			if (err) throw err;
-			res.body.should.have.property('collection');
-			var links = res.body.collection.items[0].links;
-			// Eror aquí
-//			links.should.containDeep({rel: 'visits'});
-			var visitslink = links.filter(function (el) {
-			    return el.rel == 'visits';
-			})[0].href;
-			should.exist(visitslink);
-			request(app)
-			// Petición POST al link de visitas para crear una visita
-			    .post(visitslink)
-			    .set("Authorization", "basic " + new Buffer(user + ':' + password).toString("base64"))
-			    .send(visit_test)
-			    .expect(201)
-			    .end(function (err, res) {
-				if (err) throw err;
-				var loc2 = res.header.location;
-				should.not.exist(err);
-				should.exist(loc2);
-				request(app)
-				// Conexión a la visita creada
-				    .get(loc2)
-				    .set("Authorization", "basic " + new Buffer(user + ':' + password).toString("base64"))
-				    .expect(200)
-				    .end(function (err, res) {
-					if (err) throw err;
-					should.not.exist(err);
-					res.body.should.have.property('collection');
-					var v = res.body.collection.items[0].data;
-					v.length.should.be.above(0);
-					done();
-				    });
-				
-				
-			    });
-		    });
+		    .expect(200);
+	    })
+	    .then(function(res) {
+		res.body.should.have.property('collection');
+		var links = res.body.collection.items[0].links;
+		links.should.containDeep([{rel: 'visits'}]);
+		var visitslink = links.filter(function (el) {
+		    return el.rel == 'visits';
+		})[0].href;
+		should.exist(visitslink);
+		return request(app)
+		// Petición POST al link de visitas para crear una visita
+		    .post(visitslink)
+		    .set("Authorization", "basic " + new Buffer(user + ':' + password).toString("base64"))
+		    .send(visit_test)
+		    .expect(201);
+	    }).then(function(res) {
+		var loc2 = res.header.location;
+		should.exist(loc2);
+		return request(app)
+		// Conexión a la visita creada
+		    .get(loc2)
+		    .set("Authorization", "basic " + new Buffer(user + ':' + password).toString("base64"))
+		    .expect(200);
+	    }).then(function(res) {
+		res.body.should.have.property('collection');
+		var v = res.body.collection.items[0].data;
+		v.length.should.be.above(0);
 	    });
-	
-	
     });
-	    
+    
 });
