@@ -1,6 +1,6 @@
 'use strict';
 
-var request = require('supertest');
+var request = require('supertest-as-promised');
 var should = require('should');
 var app = require('../fct.js').app;
 var routes = require('../routes/routes');

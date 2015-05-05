@@ -3,12 +3,12 @@
 'use strict';
 
 var utils = require('./utils');
-var request = require('supertest');
+var request = require('supertest-as-promised');
 var should = require('should');
 var app = require('../fct.js').app;
 var routes = require('../routes/routes');
 
-describe.only('Crear una visita en una FCT', function () {
+describe('Crear una visita en una FCT', function () {
     var user = process.env.APP_USER;
     var password = process.env.APP_PASSWORD;
 
