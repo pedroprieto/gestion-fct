@@ -67,4 +67,21 @@ module.exports = function(app) {
 	    })
 	    .catch(next);
     });
+
+    app.param('fm34', function(req, res, next, fm34id) {
+	/*if (! objectIdRegex.test(String(id))) {
+	  return next('route')
+	  }*/
+	Fm34.findOneAsync({ '_id': fm34id })
+	    .then(function(fm34) {
+
+		if (!fm34) {
+		    return next('route');
+		}
+		
+		res.locals.fm34 = fm34;
+		next();
+	    })
+	    .catch(next);
+    });
 };

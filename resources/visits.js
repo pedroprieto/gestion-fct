@@ -1,6 +1,9 @@
 var Visit = require('../models/visit');
 var fm34 = require('../models/fm34');
 var Fct = require('../models/fct');
+var Promise = require("bluebird");
+// Si no, no funciona el populate de Mongoose
+Promise.promisifyAll(require("mongoose"));
 
 module.exports = function(app) {
 
@@ -35,9 +38,9 @@ module.exports = function(app) {
 
 
     
-/**
- * GET lista de visitas
- */
+    /**
+     * GET lista de visitas
+     */
     app.get(app.lookupRoute('visits'), function(req, res) {
 
 	Visit.find(function (err,visits) {
@@ -60,108 +63,116 @@ module.exports = function(app) {
 
 	    // Template
 	    
-	    
-	    res.json(col);	 
+
+	    res.json({collection: col});
 	});
 
-  });
+    });
 
-/**
- * POST lista visitas
- */
+    /**
+     * POST lista visitas
+     */
     app.post(app.lookupRoute('visits'), function(req, res, next) {
-      var data,item,id,empresa,tipo,distancia,fecha,hora_salida,hora_regreso,localidad,fct_nombre;
-      var fecha_lunes_semana;
+	var data,item,id,empresa,tipo,distancia,fecha,hora_salida,hora_regreso,localidad,fct_nombre;
+	var fecha_lunes_semana;
 
-      // get data array
-      data = req.body.template.data;
-
-
-      data = req.body.template.data;
-      
-      if (!Array.isArray(data)) {
-	  res.status(400).send('Los datos enviados no se ajustan al formato collection + json.');  
-      }
+	// get data array
+	data = req.body.template.data;
 
 
-      // Aprovechamos que Mongoose elimina los campos no definidos en el modelo. Por tanto, no hay que filtrar los datos
-      // Convertimos el formato "template" de collection.json y devolvemos un objecto JavaScript convencional
-      var visitdata = data.reduce(function(a,b){
-	  a[b.name] = b.value;
-	  return a;
-      } , {});
-      
-      // Añadimos el usuario que ha creado la FCT
-      visitdata._fct = res.locals.fct._id;
+	data = req.body.template.data;
+	
+	if (!Array.isArray(data)) {
+	    res.status(400).send('Los datos enviados no se ajustan al formato collection + json.');  
+	}
 
 
-      item = new Visit(visitdata);
+	// Aprovechamos que Mongoose elimina los campos no definidos en el modelo. Por tanto, no hay que filtrar los datos
+	// Convertimos el formato "template" de collection.json y devolvemos un objecto JavaScript convencional
+	var visitdata = data.reduce(function(a,b){
+	    a[b.name] = b.value;
+	    return a;
+	} , {});
+	
+	// Añadimos el usuario que ha creado la FCT
+	visitdata._fct = res.locals.fct._id;
 
-      // Guardamos visita
-      item.saveAsync()
-	  .then(function(item) {
-	      // Alterminar, actualizadmos y guardamos la FCT
-	      res.locals.fct.visitas.push(item._id);
-	      return res.locals.fct.saveAsync();
-	  })
-	  .then(function(fctactualizada) {
-	      // Al guardar la FCT, éxito. Falta FM34
-	      res.location(req.app.buildLink('visit', {user: res.locals.user.username, fct: res.locals.fct._id, visit: item._id}).href);
-	      res.status(201).end();
-	      
-	  })
-	  .catch(next);
 
-      
-      // TODO: fallo aquí
-      // Creamos fm 34
-      // Buscamos si existe
-     /* f = new Date(fecha);
-      var day = f.getDay();
-      diff = f.getDate() - day + (day == 0 ? -6:1);
-      // TODO: mejorar
-      fecha_lunes_semana = new Date(f.setDate(diff));
-      f = new Date(fecha_lunes_semana);
-      day = f.getDay();
-      diff2 = f.getDate() + 6;
-      fecha_domingo_semana = new Date(f.setDate(diff2));
-      var fm34doc;
-      fm34.findOne({ semanaDe: fecha_lunes_semana}, function (err,f) {
-	  // Comprobar si existe una visita a la misma hora. Futura mejora
-	  if (err) return handleError(err);
-	  if (f) {
-	      f.visitas.push(item._id);
-	      f.save(),
-	      res.redirect('/visits/', 302);
-	  } else {
-	      // Creamos fm34
-	      fm34doc = new fm34();
-	      fm34doc.semanaDe = fecha_lunes_semana;
-	      fm34doc.semanaAl = fecha_domingo_semana;
-	      fm34doc.visitas.push(item);
+	item = new Visit(visitdata);
 
-	      fm34doc.save(function (err, item) {
-		  if (err) {
-		      return console.error(err);
-		      res.status=400;
-		      res.send('error');  
-		  } else {
-		      //res.location(req.app.buildLink('visit', {user: res.locals.user.username, fct: item._id, visit: item._id }).href);
-		      res.status(201).end();
-		  }
-    
-	      });
-	  }
-      });*/
+	// Guardamos visita
+	item.saveAsync()
+	    .then(function(item) {
+		// El resultado es un vector con el item y el número de filas afectadas.
+		// Nos quedamos sólo con el item
+		item = item[0];
+		// Alterminar, actualizadmos y guardamos la FCT
+		res.locals.fct.visitas.push(item._id);
 
-      
+		// Guardamos la FCT con promise
+		var fctpromise = res.locals.fct.saveAsync();
 
-      
-      
+		// Computamos y guardamos el FM34
+		// TODO: fallo aquí
+		// Creamos fm 34
+		// Buscamos si existe
+		//      f = new Date(fecha);
+		var f=new Date(item.fecha);
+		console.log(item.fecha);
+		var day = f.getDay();
+		var diff = f.getDate() - day + (day == 0 ? -6:1);
+		// TODO: mejorar
+		fecha_lunes_semana = new Date(f.setDate(diff));
+		f = new Date(fecha_lunes_semana);
+		day = f.getDay();
+		var diff2 = f.getDate() + 6;
+		var fecha_domingo_semana = new Date(f.setDate(diff2));
+		// Fin del cálculo de lunes y domingo de la semana en cuestión
+		
+		var fm34doc;
+		
+		var fm34promise = fm34.findOne({ semanaDe: fecha_lunes_semana}).populate('visitas').execAsync()
+		    .then(function (f) {
+			if (f) {
 
-      
-      
-  });  
+			    // Comprobar si existe una visita a la misma hora. Futura mejora
+			    if (f.visits.filter(function(v) {
+				console.log('repetido');
+				(v.fecha == item.fecha) && (v.hora_salida == item.hora_salida);
+			    }).length > 0) {
+				return;
+				/* vendors contains the element we're looking for */
+			    }
+
+			    
+			    
+			    f.visitas.push(item._id);
+			    return f.saveAsync();
+			    //res.redirect('/visits/', 302);
+			} else {
+			    // Creamos fm34
+			    fm34doc = new fm34();
+			    fm34doc.semanaDe = fecha_lunes_semana;
+			    fm34doc.semanaAl = fecha_domingo_semana;
+			    fm34doc.visitas.push(item._id);
+			    return fm34doc.saveAsync();
+			}
+		    });
+
+		// Por último, devolvemos una promesa que sea la unión de las otras dos
+		return Promise.join(fctpromise, fm34promise);
+
+	    }).then(function(fctactualizada, fm34actualizado) {
+		res.location(req.app.buildLink('visit', {user: res.locals.user.username, fct: res.locals.fct._id, visit: item._id}).href);
+		res.status(201).end();
+		
+	    })
+	    .catch(next);
+
+	
+	
+	
+    });  
 
     /**
      * GET visita      

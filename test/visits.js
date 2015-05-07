@@ -8,7 +8,7 @@ var should = require('should');
 var app = require('../fct.js').app;
 var routes = require('../routes/routes');
 
-describe('Crear una visita en una FCT', function () {
+describe.only('Crear una visita en una FCT', function () {
     var user = process.env.APP_USER;
     var password = process.env.APP_PASSWORD;
 
@@ -91,6 +91,17 @@ describe('Crear una visita en una FCT', function () {
 		res.body.should.have.property('collection');
 		var v = res.body.collection.items[0].data;
 		v.length.should.be.above(0);
+		return request(app)
+		// Conexión al FM 34
+		    .get(app.buildLink('fm34s',{'user': process.env.APP_USER}).href)
+		    .set("Authorization", "basic " + new Buffer(user + ':' + password).toString("base64"))
+		    .expect(200);
+	    }).then(function(res) {
+		res.body.should.have.property('collection');
+		var v = res.body.collection.items[0].data;
+		v.length.should.be.above(0);
+		console.log(v);
+		
 	    });
     });
     
