@@ -3,7 +3,7 @@
 
 var Promise = require("bluebird");
 var mongoose = require('mongoose')
-,Schema = mongoose.Schema
+,Schema = mongoose.Schema, 
 visitSchema = new Schema( {
     empresa: String,
     tipo: String,
@@ -70,8 +70,66 @@ visitSchema.statics.tx_cj = function (doc, ret, options) {
 
 };
 
+// Función estática para generar FM34
+visitSchema.statics.genfm34 = function (cb) {
+    return this.aggregate(
+	{
+	    $project: {
+		_id: 1,
+		empresa: 1,
+		tipo: 1,
+		distancia: 1,
+		fecha: 1,
+		hora_salida: 1,
+		hora_regreso: 1,
+		localidad: 1,
+		semana: { $week: "$fecha"},
+		diaSemana: { $dayOfWeek: "$fecha"},
+		year: { $year: "$fecha" }
+	    }
+	},
+	{
+	    $project: {
+		_id: 1,
+		empresa: 1,
+		tipo: 1,
+		distancia: 1,
+		fecha: 1,
+		hora_salida: 1,
+		hora_regreso: 1,
+		localidad: 1,
+		// Para que el domingo cuente dentro de la semana
+		semana: {$cond:[{$eq:["$diaSemana",1]},{$subtract:["$semana",1]},'$semana']},
+		year: { $year: "$fecha" }
+
+	    }
+	},
+	{
+	    $group: {
+		_id: {fecha: '$fecha', hora_salida: '$hora_salida', hora_regreso: '$hora_regreso'},
+		empresa: { $first: "$empresa" },
+		tipo: { $push: "$tipo" },
+		distancia: { $first: "$distancia" },
+		fecha: { $first: "$fecha" },
+		hora_salida: { $first: "$hora_salida" },
+		hora_regreso: { $first: "$hora_regreso" },
+		localidad: { $first: "$localidad" },
+		semana: { $first: "$semana"},
+		year: { $first: "$year" }
+	    }
+
+	},
+	{
+	    $group: {
+		_id: '$semana',
+		visits: { $push: '$$ROOT'}
+	    }
+
+	}, cb);
+};
+
 // Modelo
-Visit = mongoose.model('visit', visitSchema);
+var Visit = mongoose.model('visit', visitSchema);
 Promise.promisifyAll(Visit);
 Promise.promisifyAll(Visit.prototype);
 

@@ -11,7 +11,7 @@
 	"ejs": ">= 0.0.1",
 	"express": "4.x",
 	"express-partials": ">= 0.3.0",
-	"mongoose": "3.8.x",
+	"mongoose": "4.0.x",
 	"passport": "x",
 	"passport-http": "x",
 	"request": "^2.55.0",
