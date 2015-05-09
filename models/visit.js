@@ -9,11 +9,23 @@ visitSchema = new Schema( {
     tipo: String,
     distancia: String,
     fecha: Date,
+    semana: Number,
+    anyo: Number,
     hora_salida: String,
     hora_regreso: String,
     localidad: String,
     impresion: String,
     _fct : { type: Schema.Types.ObjectId, ref: 'Fct' }
+});
+
+// Middleware para añadir semana y año en formato ISO 8601
+visitSchema.pre('save', function (next) {
+    // do stuff
+    var moment = require('moment');
+    var m = moment(this.fecha);
+    this.semana = m.isoWeek();
+    this.anyo = m.isoWeekYear();
+    next();
 });
 
 
@@ -74,37 +86,6 @@ visitSchema.statics.tx_cj = function (doc, ret, options) {
 visitSchema.statics.genfm34 = function (cb) {
     return this.aggregate(
 	{
-	    $project: {
-		_id: 1,
-		empresa: 1,
-		tipo: 1,
-		distancia: 1,
-		fecha: 1,
-		hora_salida: 1,
-		hora_regreso: 1,
-		localidad: 1,
-		semana: { $week: "$fecha"},
-		diaSemana: { $dayOfWeek: "$fecha"},
-		year: { $year: "$fecha" }
-	    }
-	},
-	{
-	    $project: {
-		_id: 1,
-		empresa: 1,
-		tipo: 1,
-		distancia: 1,
-		fecha: 1,
-		hora_salida: 1,
-		hora_regreso: 1,
-		localidad: 1,
-		// Para que el domingo cuente dentro de la semana
-		semana: {$cond:[{$eq:["$diaSemana",1]},{$subtract:["$semana",1]},'$semana']},
-		year: { $year: "$fecha" }
-
-	    }
-	},
-	{
 	    $group: {
 		_id: {fecha: '$fecha', hora_salida: '$hora_salida', hora_regreso: '$hora_regreso'},
 		empresa: { $first: "$empresa" },
@@ -115,13 +96,14 @@ visitSchema.statics.genfm34 = function (cb) {
 		hora_regreso: { $first: "$hora_regreso" },
 		localidad: { $first: "$localidad" },
 		semana: { $first: "$semana"},
+		anyo: { $first: "$anyo"},
 		year: { $first: "$year" }
 	    }
 
 	},
 	{
 	    $group: {
-		_id: '$semana',
+		_id: {semana: '$semana', anyo: '$anyo'},
 		visits: { $push: '$$ROOT'}
 	    }
 

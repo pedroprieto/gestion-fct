@@ -15,7 +15,8 @@
 	"passport": "x",
 	"passport-http": "x",
 	"request": "^2.55.0",
-	"bluebird": "2.9.x"
+	"bluebird": "2.9.x",
+	"moment": "2.10.x"
     },
     "devDependencies": {
 	"grunt": "^0.4.5",

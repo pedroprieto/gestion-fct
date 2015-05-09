@@ -129,11 +129,11 @@ describe.only('Comprobar la correcta generación de FM 34s', function () {
 		return Visit.genfm34Async();
 	    })
 	    .then(function(fm34s) {
+		console.log(fm34s);
 		fm34s.should.have.a.lengthOf(2);
 		// Ojo con orden. Desacoplar
 		fm34s[0].visits.should.have.a.lengthOf(1);
 		fm34s[1].visits.should.have.a.lengthOf(4);
-		console.log(fm34s);
 	    });
 
     });
