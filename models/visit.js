@@ -15,7 +15,8 @@ visitSchema = new Schema( {
     hora_regreso: String,
     localidad: String,
     impresion: String,
-    _fct : { type: Schema.Types.ObjectId, ref: 'Fct' }
+    _fct : { type: Schema.Types.ObjectId, ref: 'Fct' },
+    _usuario: { type: Schema.Types.ObjectId, ref: 'User' }
 });
 
 // Middleware para añadir semana y año en formato ISO 8601
@@ -83,8 +84,13 @@ visitSchema.statics.tx_cj = function (doc, ret, options) {
 };
 
 // Función estática para generar FM34
-visitSchema.statics.genfm34 = function (cb) {
+visitSchema.statics.genfm34 = function (userid, cb) {
     return this.aggregate(
+	{
+	    $match: {
+		_usuario: userid
+	    }
+	},
 	{
 	    $group: {
 		_id: {fecha: '$fecha', hora_salida: '$hora_salida', hora_regreso: '$hora_regreso'},

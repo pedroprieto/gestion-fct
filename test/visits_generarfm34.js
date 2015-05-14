@@ -106,12 +106,14 @@ describe.only('Comprobar la correcta generación de FM 34s', function () {
 	impresion: 'texto impresión test 6'
     });
 
+    var usuario;
+
     it('Debe generar un FM34 al crear 3 visitas', function () {
 	return user_test1.saveAsync()
 	    .then(function(user) {
-		user = user[0];
-		fct1.usuario = user._id;
-		fct2.usuario = user._id;
+		usuario = user[0];
+		fct1.usuario = usuario._id;
+		fct2.usuario = usuario._id;
 		return Promise.join(fct1.saveAsync(),fct2.saveAsync());
 	    })
 	    .then(function(f) {
@@ -123,10 +125,16 @@ describe.only('Comprobar la correcta generación de FM 34s', function () {
 		v4_same_week._fct = f1._id;
 		v5_other_week._fct = f1._id;
 		v6_same_week_dif_fct._fct = f2._id;
+		v1._usuario = usuario._id;
+		v2_same_date._usuario = usuario._id;
+		v3_other_hour._usuario = usuario._id;
+		v4_same_week._usuario = usuario._id;
+		v5_other_week._usuario = usuario._id;
+		v6_same_week_dif_fct._usuario = usuario._id;
 		return Promise.join(v1.saveAsync(), v2_same_date.saveAsync(), v3_other_hour.saveAsync(), v4_same_week.saveAsync(), v5_other_week.saveAsync(), v6_same_week_dif_fct.saveAsync());
 	    })
 	    .then(function(vs) {
-		return Visit.genfm34Async();
+		return Visit.genfm34Async(usuario._id);
 	    })
 	    .then(function(fm34s) {
 		console.log(fm34s);
