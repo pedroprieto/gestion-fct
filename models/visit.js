@@ -115,17 +115,22 @@ visitSchema.statics.genfm34 = function (userid, cb) {
 	},
 	{
 	    $group: {
-		_id: {fecha: '$fecha', hora_salida: '$hora_salida', hora_regreso: '$hora_regreso'},
+		_id: {
+		    year: { $year: '$fecha'},
+		    month: { $month: '$fecha'},
+		    dayOfMonth: { $dayOfMonth: '$fecha'},
+		    hora_salida: '$hora_salida',
+		    hora_regreso: '$hora_regreso'
+		},	    
 		empresa: { $first: "$empresa" },
-		tipo: { $push: "$tipo" },
+		tipo: { $addToSet: "$tipo" }, // Para eliminar duplicados
 		distancia: { $first: "$distancia" },
 		fecha: { $first: "$fecha" },
 		hora_salida: { $first: "$hora_salida" },
 		hora_regreso: { $first: "$hora_regreso" },
 		localidad: { $first: "$localidad" },
 		semana: { $first: "$semana"},
-		anyo: { $first: "$anyo"},
-		year: { $first: "$year" }
+		anyo: { $first: "$anyo"}
 	    }
 
 	},
