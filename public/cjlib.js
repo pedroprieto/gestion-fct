@@ -8,7 +8,7 @@ var cjs = function() {
   g.data = {};
   g.item = {};
   g.collectionUrl = '';
-  g.contentType = 'application/collection+json';
+  g.contentType = 'application/vnd.collection+json';
   g.filterUrl = '';
 
   g.inputForm = true;

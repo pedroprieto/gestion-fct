@@ -23,7 +23,7 @@ mongoose.connect(process.env.NODE_ENV!='test'? db_config.db.uri : db_config.db.t
 
 // Global variables
 var baseUrl = 'http://localhost:3000';
-contentType = 'application/json';
+var contentType = 'application/vnd.collection+json';
 
 app.use(partials());
 
@@ -33,8 +33,8 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json({strict: false, type: 'application/json'}));
-app.use(bodyParser.text());
+app.use(bodyParser.json({strict: false, type: contentType}));
+//app.use(bodyParser.text());
 
 app.use(passport.initialize());
 
@@ -54,7 +54,11 @@ app.all('*',passport.authenticate('basic', { session: false }), function(req,res
     return next();
 });
 
-
+// Default content type for all routes but /client
+app.use(/(?!\/client)(.+)/, function(req, res, next) {
+    res.type(contentType);
+    next();
+});
 
 
 // Routes
@@ -71,7 +75,7 @@ app.locals.lookupRoute = app.lookupRoute;
 require('./resources/index')(app);
 
 // Cliente de prueba
-app.use(express.static(__dirname + '/public'));
+app.use('/client', express.static('public'));
 
 // Página 404 - not found
 app.use(function handleNotFound(req, res){

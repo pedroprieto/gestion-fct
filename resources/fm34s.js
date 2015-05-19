@@ -1,5 +1,7 @@
 var fecha = require('../aux/convert_date.js');
 var Fm34 = require('../models/fm34');
+var Visit = require('../models/visit');
+var moment = require('moment');
 
 module.exports = function(app) {
     // TODO
@@ -11,7 +13,7 @@ module.exports = function(app) {
      */
     app.get(app.lookupRoute('fm34s'), function(req, res, next) {
 
-	Fm34.findAsync()
+	Visit.genfm34Async(res.locals.user._id)
 	    .then(function (fm34s) {
 
 		var col = req.app.locals.cj();
@@ -24,7 +26,7 @@ module.exports = function(app) {
 
 		// Items
 		col.items = fm34s.map(function(v) {
-		    return v.toObject({transform: Fm34.tx_cj});
+		    return Visit.genfm34_cj(v);
 		});
 
 		// Queries
@@ -50,15 +52,22 @@ module.exports = function(app) {
 
 	var doc=new Docxtemplater(content);
 
-	Fm34.findAsync()
+	Visit.genfm34Async(res.locals.user._id)
 	    .then(function (fm34s) {
+		var f;
+
+		for (var i = 0; i<fm34s.length; i++) {
+		    f=fm34s[i];
+		    //var isoweek = moment(f._id.anyo + "-W0" + f._id.semana, moment.ISO_8601);
+		    var isoweek = moment().isoWeek(f._id.semana).isoWeekYear(f._id.anyo);
+		    f.semanaDe = isoweek.startOf('isoWeek').format("DD/MM/YYYY");
+		    f.semanaAl = isoweek.endOf('isoWeek').format("DD/MM/YYYY");
+		};
 
 		//set the templateVariables
 		// Construir el array de visitas quitando el formato de fecha
 		doc.setData({
-		    "fm34s" :
-		    // Para cambiar el formato de la fecha
-		    JSON.parse(JSON.stringify(fm34s,fecha.reemplaza))
+		    "fm34s" : JSON.parse(JSON.stringify(fm34s))
 		});
 
 		//apply them (replace all occurences of {first_name} by Hipp, ...)

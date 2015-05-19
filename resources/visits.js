@@ -47,6 +47,7 @@ module.exports = function(app) {
 	    if (err) return console.error(err);
 
 	    var col = req.app.locals.cj();
+	    col.href = req.protocol + '://' + req.get('host') + req.originalUrl;
 
 	    // Links
 	    col.links.push(req.app.buildLink('visits'));
@@ -62,6 +63,7 @@ module.exports = function(app) {
 	    // Queries
 
 	    // Template
+	    col.template = Visit.visit_template();
 	    
 
 	    res.json({collection: col});
@@ -94,8 +96,11 @@ module.exports = function(app) {
 	    return a;
 	} , {});
 	
-	// Añadimos el usuario que ha creado la FCT
+	// Añadimos el id de la FCT
 	visitdata._fct = res.locals.fct._id;
+
+	// Añadimos el usuario
+	visitdata._usuario = res.locals.user._id;
 
 
 	item = new Visit(visitdata);

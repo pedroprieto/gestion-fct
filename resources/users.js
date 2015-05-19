@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-var user = require('../models/user');
+var User = require('../models/user');
 module.exports = function(app) {
     // TODO
     route = '';
@@ -9,14 +9,28 @@ module.exports = function(app) {
  */
     app.get(app.lookupRoute('users'), function(req, res) {
 
-	user.find(function (err,users) {
+	User.find(function (err,users) {
 	    if (err) return console.error(err);
-	    //res.send(users);
-	    res.header('content-type',contentType);
-	    res.render('users', {
-		site: baseUrl + "users",
-		items: users
-	    }); 
+
+	    var col = req.app.locals.cj();
+	    col.href = req.protocol + '://' + req.get('host') + req.originalUrl;
+
+	    // Links
+	    col.links.push(req.app.buildLink('visits'));
+	    col.links.push({'rel':'collection', "prompt": "FCTs", 'href' : "/fcts"});
+	    col.links.push({'rel':'collection', "prompt": "Visitas", 'href' : "/visits"});
+	    col.links.push({'rel':'collection', "prompt": "FM34s", 'href' : "/fm34s"});
+
+	    // Items
+	    col.items = users.map(function(v) {
+		return v.toObject({transform: User.tx_cj});
+	    });
+
+	    // Queries
+
+	    // Template
+
+	    res.json({collection: col});
 	    
 	});
 
@@ -42,7 +56,7 @@ module.exports = function(app) {
 	    }    
 	}
 
-	item = new user();
+	item = new User();
 	item.name = name;
 	item.save(function (err, item) {
 	    if (err) {
@@ -60,7 +74,7 @@ module.exports = function(app) {
     
     app.get(app.lookupRoute('user'), function(req, res) {
 	var id = req.params.user;
-	user.findOne({ 'name': id }, function (err,user) {
+	User.findOne({ 'name': id }, function (err,user) {
 	    if (err) return console.error(err);
 	    res.header('content-type',contentType);
 	    res.render('user', {

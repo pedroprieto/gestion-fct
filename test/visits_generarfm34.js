@@ -7,7 +7,7 @@ var Fct = require('../models/fct');
 var Visit = require('../models/visit');
 var Promise = require("bluebird");
 
-describe.only('Comprobar la correcta generación de FM 34s', function () {
+describe('Comprobar la correcta generación de FM 34s', function () {
 
     var user_test1 = new User({
 	username: 'testuser1',

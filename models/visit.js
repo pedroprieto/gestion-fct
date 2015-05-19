@@ -2,6 +2,7 @@
 // https://github.com/jeduan/express4-mongoose-bluebird/blob/master/models.js
 
 var Promise = require("bluebird");
+var moment = require('moment');
 var mongoose = require('mongoose')
 ,Schema = mongoose.Schema, 
 visitSchema = new Schema( {
@@ -21,8 +22,6 @@ visitSchema = new Schema( {
 
 // Middleware para añadir semana y año en formato ISO 8601
 visitSchema.pre('save', function (next) {
-    // do stuff
-    var moment = require('moment');
     var m = moment(this.fecha);
     this.semana = m.isoWeek();
     this.anyo = m.isoWeekYear();
@@ -83,6 +82,29 @@ visitSchema.statics.tx_cj = function (doc, ret, options) {
 
 };
 
+// Función estática para generar template
+visitSchema.statics.visit_template = function () {
+    var template = {};
+    
+    template.data = [];
+
+    for (p in this.schema.paths) {
+	if (p.substring(0,1) != '_') {
+	    
+	template.data.push({
+	    name : p,
+	    value: '',
+	    prompt :  visitSchema.statics.prompts.es_ES[p]
+	});
+	    console.log(p);
+	}
+    }
+
+    
+//    template.data.push(
+    return template;
+}
+
 // Función estática para generar FM34
 visitSchema.statics.genfm34 = function (userid, cb) {
     return this.aggregate(
@@ -114,6 +136,48 @@ visitSchema.statics.genfm34 = function (userid, cb) {
 	    }
 
 	}, cb);
+};
+
+// Función estática para generar un FM34 devuelto por la función anterior en formato Collection + JS
+visitSchema.statics.genfm34_cj = function (fm34) {
+
+  
+    var item = {};
+    //item.href = base + '/' + coll[i].name;
+    item.href = "prueba";
+    item.data = [];
+    item.links = [];
+
+    var isoweek = moment(fm34._id.anyo + "-W" + fm34._id.semana, moment.ISO_8601);
+
+    var princ = isoweek.startOf('isoWeek').format("DD/MM/YYYY");
+    var fin = isoweek.endOf('isoWeek').format("DD/MM/YYYY");
+
+    item.data.push({
+	name: 'semanaDe',
+	value: princ,
+	prompt: 'Semana de:'
+    });
+
+    item.data.push({
+	name: 'semanaAl',
+	value: fin,
+	prompt: 'Semana al:'
+    });
+
+    // TODO: en realidad no son enlaces a recursos, sino al resumen (agrupadas visitas con misma fecha y hora
+    // Falta aclarar cómo hacerlo
+
+    for(var p in fm34.visits) {
+	item.links.push({
+	    rel : 'visit item',
+	    href : p._id,
+	    prompt : 'Visita'
+	});
+    };		
+
+    return item;
+    
 };
 
 // Modelo

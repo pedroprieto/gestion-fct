@@ -7,8 +7,10 @@ var request = require('supertest-as-promised');
 var should = require('should');
 var app = require('../fct.js').app;
 var routes = require('../routes/routes');
+var contenttype ='application/vnd.collection+json';
 
-describe.only('Crear una visita en una FCT', function () {
+
+describe('Crear una visita en una FCT', function () {
     var user = process.env.APP_USER;
     var password = process.env.APP_PASSWORD;
 
@@ -51,8 +53,8 @@ describe.only('Crear una visita en una FCT', function () {
 	// Creamos una FCT de prueba
 	    .post(app.buildLink('fcts',{'user': process.env.APP_USER}).href)
 	    .set("Authorization", "basic " + new Buffer(user + ':' + password).toString("base64"))
-	    .set("Content-Type", "application/json")
-	    .send(fct_test)
+	    .set('Content-Type', contenttype)
+	    .send(JSON.stringify(fct_test))
 	//.expect('Content-Type', /json/)
 	    .expect(201)
 	    .then(function(res) {
@@ -77,7 +79,8 @@ describe.only('Crear una visita en una FCT', function () {
 		// Petición POST al link de visitas para crear una visita
 		    .post(visitslink)
 		    .set("Authorization", "basic " + new Buffer(user + ':' + password).toString("base64"))
-		    .send(visit_test)
+		    .set('Content-Type', contenttype)
+		    .send(JSON.stringify(visit_test))
 		    .expect(201);
 	    }).then(function(res) {
 		var loc2 = res.header.location;
