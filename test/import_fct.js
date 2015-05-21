@@ -2,7 +2,7 @@
 
 // import the moongoose helper utilities
 var utils = require('./utils');
-var request = require('supertest-as-promised');
+var req = require('supertest-as-promised');
 var should = require('should');
 var app = require('../fct.js').app;
 
@@ -12,7 +12,8 @@ describe('Importar FCTs del sistema SAO', function () {
 
     it('Debe crear las fcts del usuario correspondiente (último período activo en SAO) al hacer una petición POST a /import_fcts', function (done) {
 	this.timeout(20000);
-	request(app)
+	var request = req('');
+	request
 	    .post(app.buildLink('import_fcts',{'user': process.env.APP_USER}).href)
 	    .set("Authorization", "basic " + new Buffer(user + ':' + password).toString("base64"))
 	    //.expect('Content-Type', /json/)
@@ -21,7 +22,7 @@ describe('Importar FCTs del sistema SAO', function () {
 		var loc = res.header['location'];
 		should.not.exist(err);
 		should.exist(loc);
-		request(app)
+		request
 		// Conexión a la 'location' especificada al llamar a /import_fcts
 		    .get(loc)
 		    .set("Authorization", "basic " + new Buffer(user + ':' + password).toString("base64"))

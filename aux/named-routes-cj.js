@@ -89,7 +89,7 @@ exports.extend = function (app) {
 	    url = url.replace('/:' + key, '/' + params[key]);
 	}
 
-	//url = app.get('protocol') + '://' + app.get('host') + ':' + app.get('port') + url;
+	url = app.get('protocol') + '://' + app.get('host') + ':' + app.get('port') + url;
 	
 	link.href = url;
 	link.rel = route.rel;

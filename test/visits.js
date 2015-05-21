@@ -3,7 +3,7 @@
 'use strict';
 
 var utils = require('./utils');
-var request = require('supertest-as-promised');
+var req = require('supertest-as-promised');
 var should = require('should');
 var app = require('../fct.js').app;
 var routes = require('../routes/routes');
@@ -49,7 +49,8 @@ describe('Crear una visita en una FCT', function () {
 
     it('Debe crear una visita y que aparezca como enlace en la FCT correspondiente', function () {
 	this.timeout(20000);
-	return request(app)
+	var request = req('');
+	return request
 	// Creamos una FCT de prueba
 	    .post(app.buildLink('fcts',{'user': process.env.APP_USER}).href)
 	    .set("Authorization", "basic " + new Buffer(user + ':' + password).toString("base64"))
@@ -60,7 +61,7 @@ describe('Crear una visita en una FCT', function () {
 	    .then(function(res) {
 		var loc = res.header.location;
 		should.exist(loc);
-		return request(app)
+		return request
 		// Conexión a la 'location' especificada al llamar a /fcts
 		// Es el item con la FCT creada
 		    .get(loc)
@@ -75,7 +76,7 @@ describe('Crear una visita en una FCT', function () {
 		    return el.rel == 'visits';
 		})[0].href;
 		should.exist(visitslink);
-		return request(app)
+		return request
 		// Petición POST al link de visitas para crear una visita
 		    .post(visitslink)
 		    .set("Authorization", "basic " + new Buffer(user + ':' + password).toString("base64"))
@@ -85,7 +86,7 @@ describe('Crear una visita en una FCT', function () {
 	    }).then(function(res) {
 		var loc2 = res.header.location;
 		should.exist(loc2);
-		return request(app)
+		return request
 		// Conexión a la visita creada
 		    .get(loc2)
 		    .set("Authorization", "basic " + new Buffer(user + ':' + password).toString("base64"))
@@ -94,7 +95,7 @@ describe('Crear una visita en una FCT', function () {
 		res.body.should.have.property('collection');
 		var v = res.body.collection.items[0].data;
 		v.length.should.be.above(0);
-		return request(app)
+		return request
 		// Conexión al FM 34
 		    .get(app.buildLink('fm34s',{'user': process.env.APP_USER}).href)
 		    .set("Authorization", "basic " + new Buffer(user + ':' + password).toString("base64"))
