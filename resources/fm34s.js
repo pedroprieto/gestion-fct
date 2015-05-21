@@ -2,6 +2,10 @@ var fecha = require('../aux/convert_date.js');
 var Fm34 = require('../models/fm34');
 var Visit = require('../models/visit');
 var moment = require('moment');
+var gendoc = require('../aux/generate_doc');
+
+var fm34docfile = 'prueba';
+
 
 module.exports = function(app) {
     // TODO
@@ -45,12 +49,6 @@ module.exports = function(app) {
      */
     app.get(app.lookupRoute('fm34sdocx'), function(req, res, next) {
 	var fs=require('fs');
- 	var Docxtemplater=require('docxtemplater');
-
-	//Load the docx file as a binary
-	var content=fs.readFileSync(__dirname+"/../office_templates/prueba.docx","binary");
-
-	var doc=new Docxtemplater(content);
 
 	Visit.genfm34Async(res.locals.user._id)
 	    .then(function (fm34s) {
@@ -65,31 +63,28 @@ module.exports = function(app) {
 		};
 
 		//set the templateVariables
-		// Construir el array de visitas quitando el formato de fecha
-		doc.setData({
-		    "fm34s" : JSON.parse(JSON.stringify(fm34s))
-		});
+		var doc = {
+		    fm34s: fm34s
+		};
 
-		//apply them (replace all occurences of {first_name} by Hipp, ...)
-		doc.render();
-
-		var buf = doc.getZip()
-		    .generate({type:"nodebuffer"});
-
-		fs.writeFile("test.docx", buf, function(err) {
-		    if (err) throw err;
-		    //res.set('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
-		    //res.download("test.docx");
-		    res.download("test.docx", function(err){
+		var fd = gendoc(doc, fm34docfile);
+		if (fd) {
+		    res.download(fd, function(err){
 			if (err) {
 			    // handle error, keep in mind the response may be partially-sent
 			    // so check res.headerSent
 			} else {
 			    // descarga completada
-			    fs.unlink("test.docx");
+			    fs.unlink(fd);
 			}
 		    });
-		});
+		}
+
+		else {
+		    throw new Error('error');
+		}
+
+	
 	    
 	    })
 	    .catch(next);

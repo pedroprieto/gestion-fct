@@ -5,7 +5,47 @@ var detallesFCT = require('../aux/get_fct_sao');
 
 module.exports = function(app) {
 
-   
+
+    /**
+     * GET
+     */
+    app.get(app.lookupRoute('import_fcts'), function(req, res) {
+
+	var col = res.app.locals.cj();
+
+	// Collection href
+	col.href = res.app.buildLink('import_fcts', {user: res.locals.user.username}).href;
+	
+	
+	// Collection Links
+	col.links.push(res.app.buildLink('fcts', {user: res.locals.user.username}));
+	col.links.push(res.app.buildLink('import_fcts', {user: res.locals.user.username}));
+	col.links.push(res.app.buildLink('fm34s', {user: res.locals.user.username}));
+	col.links.push(res.app.buildLink('certs_alumno', {user: res.locals.user.username}));
+	col.links.push(res.app.buildLink('certs_instructor', {user: res.locals.user.username}));
+
+	// Items
+
+	// Queries
+
+	// Template
+	var data = [];
+	
+	var itemdata = {
+	    prompt: "Introduzca el período que desea importar",
+	    name: "periodo",
+	    value: "ultimo"
+	};
+	data.push(itemdata);
+
+	col.template.data = data;
+
+	// Return collection object
+	res.json({collection: col});
+
+    });
+
+    
     /**
      * POST
      */
