@@ -5,64 +5,59 @@ var User = require('../models/user');
 module.exports = function(app) {
 
     /**
-     * ALL
+     * Function to render a collection of fcts
+     * @param {array} fctlist
+     * @return {Object} collection
      */
+    function renderCollectionFcts(req,res,fctlist) {
+	var col = res.app.locals.cj();
 
-    // Cargamos el usuario del parámetro de la URL
-    /*app.all([app.lookupRoute('fcts'), app.lookupRoute('fct')], function(req, res, next) {
-	var username = req.params.user;
-	User.findOne({ 'username': username }, function (err,user) {
-	    if (err) return console.error(err);
-	    // Opcional: si no coincide con el usuario autenticado, devolvemos error
-	    // user: usuario de la url
-	    // req.user: usuario autenticado
-	    if ( !user._id.equals(req.user._id) ) {
-		console.log(user._id);
-		console.log(req.user._id);
-		var errcol = req.app.locals.errcj();
-		errcol.href = req.protocol + '://' + req.get('host') + req.originalUrl;
-		errcol.error.title = 'No autorizado';
-		errcol.error.message = 'El usuario ' + req.user.username + ' no está autorizado para acceder a los recursos del usuario ' + username + '.';
-		res.status(401).json(errcol);		
-	    } else {
-		// Pasamos la info del usuario indicado en el parámetro a res.locals
-		res.locals.user = user;
-		next();		
-	    }
+	// Collection href
+	col.href = res.app.buildLink('fcts', {user: res.locals.user.username}).href;
+	
+	
+	// Collection Links
+	col.links.push(res.app.buildLink('fcts', {user: res.locals.user.username}));
+	col.links.push(res.app.buildLink('import_fcts', {user: res.locals.user.username}));
+	col.links.push(res.app.buildLink('fm34s', {user: res.locals.user.username}));
+	col.links.push(res.app.buildLink('certs_alumno', {user: res.locals.user.username}));
+	col.links.push(res.app.buildLink('certs_instructor', {user: res.locals.user.username}));
+
+	// Items
+	col.items = fctlist.map(function(f) {
+
+	    // Item data
+	    var item = f.toObject({transform: Fct.tx_cj});
+
+	    // Item href
+	    item.href = res.app.buildLink('fct', {user: res.locals.user.username, fct: f._id}).href;
+
+	    // Item links
+	    item.links.push(res.app.buildLink('visits', {user: res.locals.user.username, fct: f._id.toString()}));
 	    
+	    return item;
 	});
-    });*/
-    
+
+	// Queries
+
+	// Template
+
+	// Return collection object
+	return {collection: col};
+
+    }
     
     /**
      * GET
      * Lista de fcts de un usuario determinado
      */
     app.get(app.lookupRoute('fcts'), function(req, res, next) {
-	console.log('aa');
 	
 	Fct.find({ 'usuario': res.locals.user._id }, function (err,fcts) {
 	    if (err) return console.error(err);
-	    var col = req.app.locals.cj();
-
-	    // Links
-	    col.links.push(req.app.buildLink('fcts', {user: res.locals.user.username}));
-	    col.links.push({'rel':'collection', "prompt": "FCTs", 'href' : "/fcts"});
-	    col.links.push({'rel':'collection', "prompt": "Visitas", 'href' : "/visits"});
-	    col.links.push({'rel':'collection', "prompt": "FM34s", 'href' : "/fm34s"});
-
-	    // Items
-	    col.items = fcts.map(function(f) {
-		var item = f.toObject({transform: Fct.tx_cj});
-		item.links.push(req.app.buildLink('visits', {user: res.locals.user.username, fct: f._id.toString()}));
-		return item;
-	    });
-
-	    // Queries
-
-	    // Template
+	    var col = renderCollectionFcts(req, res, fcts);
 	    
-	    res.json({collection: col});
+	    res.json(col);
 	});
 	
 	
@@ -121,42 +116,13 @@ module.exports = function(app) {
 
 
 	var fct = res.locals.fct;
-	var col = req.app.locals.cj();
 
-	// Links
-	col.links.push(req.app.buildLink('fcts', {user: res.locals.user.username}));
-	col.links.push({'rel':'collection', "prompt": "FCTs", 'href' : "/fcts"});
-	col.links.push({'rel':'collection', "prompt": "Visitas", 'href' : "/visits"});
-	col.links.push({'rel':'collection', "prompt": "FM34s", 'href' : "/fm34s"});
+	var fcts = [];
+	fcts.push(fct);
 
-	// Items
-
-	var item = fct.toObject({transform: Fct.tx_cj});
-	item.links.push(req.app.buildLink('visits', {user: res.locals.user.username, fct: fct._id.toString()}));
-	col.items.push(item);
-	
-	
-	
-	/* col.items = fcts.map(function(f) {
-	   var item = f.toObject({transform: Fct.tx_cj});
-	   item.links.push(req.app.buildLink('visits', {user: res.locals.user.username, fct: f._id.toString()}));
-	   return item;
-	   });*/
-
-	// Queries
-
-	// Template
-	
-	res.json({collection: col});
-
-
-
-
-	
-	/*res.render('fct', {
-	  site: req.protocol + '://' + req.get('host') + req.originalUrl + '/..',
-	  item: fct
-	  });*/    
+	var col = renderCollectionFcts(req, res, fcts);
+	    
+	res.json(col);
 
     });
 

@@ -29,6 +29,8 @@ app.use(partials());
 
 // some environment variables
 app.set('port', process.env.PORT || 3000);
+app.set('host', process.env.HOST || 'localhost');
+app.set('protocol', process.env.PROTOCOL || 'http');
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 

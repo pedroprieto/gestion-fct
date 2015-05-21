@@ -88,6 +88,8 @@ exports.extend = function (app) {
 	for (key in params) {
 	    url = url.replace('/:' + key, '/' + params[key]);
 	}
+
+	//url = app.get('protocol') + '://' + app.get('host') + ':' + app.get('port') + url;
 	
 	link.href = url;
 	link.rel = route.rel;

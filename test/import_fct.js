@@ -5,7 +5,6 @@ var utils = require('./utils');
 var request = require('supertest-as-promised');
 var should = require('should');
 var app = require('../fct.js').app;
-var routes = require('../routes/routes');
 
 describe('Importar FCTs del sistema SAO', function () {
     var user = process.env.APP_USER;
