@@ -6,7 +6,7 @@ var cheerio = require('cheerio');
 module.exports = function(data, idFCT, callback) {
 
     var options = { 
-	url: 'https://fct.edu.gva.es/inc/ajax/fcts/detalles_fct.php?id=' + idFCT,
+	url: 'https://fct.edu.gva.es/index.php?accion=10&idFct=' + idFCT,
 	method: 'GET',
 	headers: {
 	    'Cookie': data.cookiesSAO
@@ -21,9 +21,8 @@ module.exports = function(data, idFCT, callback) {
 	if (!error && response.statusCode == 200) {
 
 	    $ = cheerio.load(body);
-	    var fechas = $('td').eq(39).text();
-	    var fecha_inicio = fechas.split('-')[0].trim();
-	    var fecha_fin = fechas.split('-')[1].trim();
+	    var fecha_inicio = $("input[name='fecha_inicio']").val().trim();
+	    var fecha_fin = $("input[name='fecha_fin']").val().trim();
 
 	    var finicio_part = fecha_inicio.split("/");
 	    var ffin_part = fecha_fin.split("/");
@@ -31,17 +30,23 @@ module.exports = function(data, idFCT, callback) {
 	    fecha_inicio = new Date(finicio_part[2], (finicio_part[1] - 1), finicio_part[0]);
 	    fecha_fin = new Date(ffin_part[2], (ffin_part[1] - 1), ffin_part[0]);
 
+	    var datos_alumno = $('#celdaDatosAlumno td');
+	    var datos_empresa = $('#celdaDatosEmpresa td');
+	    var datos_tutor = $('#celdaDatosTutor td');
 	    var res = {
-		alumno: $('td').eq(1).text().trim(),
-		empresa: $('td').eq(3).text().trim(),
-		ciclo: $('td').eq(13).text().trim(),
-		grupo: grupos[$('td').eq(13).text().trim()],
-		tutor: $('td').eq(29).text().trim(),
-		instructor: $('td').eq(33).text().trim(),
-		periodo: $('td').eq(37).text().trim(),
+		alumno: datos_alumno.eq(2).text().trim(),
+		nif_alumno: datos_alumno.eq(1).text().trim(),
+		empresa:  datos_empresa.eq(1).text().trim(),
+		dir_empresa: datos_empresa.eq(2).text().trim(),
+		ciclo: $('#seleccionCiclo option[selected]').text().trim(),
+		grupo: datos_tutor.eq(2).text().trim(),
+		tutor: datos_tutor.eq(1).text().trim(),
+		instructor: $("input[name='instructor']").val().trim(),
+		nif_instructor: $("input[name='dni_inst']").val().trim(),
+		periodo: $('#curso option[selected]').text().trim() + '_' +  $('#periodo option[selected]').val().trim(),
 		fecha_inicio: fecha_inicio,
 		fecha_fin: fecha_fin,
-		horas: $('td').eq(43).text().split('/')[1].trim()
+		horas: $("input[name='fct_horas']").val().trim()
 
 	    };
 	    callback(res);

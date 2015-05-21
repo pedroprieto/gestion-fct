@@ -5,37 +5,7 @@ var detallesFCT = require('../aux/get_fct_sao');
 
 module.exports = function(app) {
 
-
-    /**
-     * ALL
-     */
-    // Cargamos el usuario del parámetro de la URL
-    app.all(app.lookupRoute('import_fcts'), function(req, res, next) {
-	var username = req.params.user;
-	User.findOne({ 'username': username }, function (err,user) {
-	    if (err) return console.error(err);
-	    // Opcional: si no coincide con el usuario autenticado, devolvemos error
-	    // user: usuario de la url
-	    // req.user: usuario autenticado
-	    if ( !user._id.equals(req.user._id) ) {
-		console.log(user._id);
-		console.log(req.user._id);
-		var errcol = req.app.locals.errcj();
-		errcol.href = req.protocol + '://' + req.get('host') + req.originalUrl;
-		errcol.error.title = 'No autorizado';
-		errcol.error.message = 'El usuario ' + req.user.username + ' no está autorizado para acceder a los recursos del usuario ' + username + '.';
-		res.status(401).json(errcol);		
-	    } else {
-		// Pasamos la info del usuario indicado en el parámetro a res.locals
-		res.locals.user = user;
-		next();		
-	    }
-	    
-	});
-    });
-
-
-    
+   
     /**
      * POST
      */
