@@ -1,27 +1,33 @@
-// Function that returns 
+// Function that returns buffer with docx document rendered
+var Promise = require('bluebird');
 
-module.exports = function(model, template_file_name) {
+module.exports = Promise.promisify(function(model, template_file_name, callback) {
 
-    try {
-	var fs=require('fs');
-	var Docxtemplater=require('docxtemplater');
+    var fs=require('fs');
+    var Docxtemplater=require('docxtemplater');
 
-	//Load the docx file as a binary
-	var content=fs.readFileSync(__dirname + "/../office_templates/" + template_file_name + ".docx","binary");
+    //Load the docx file as a binary
+    fs.readFile(__dirname + "/../office_templates/" + template_file_name + ".docx","binary", function(err, content) {
+	if (err) {
+	    callback(new Error('Error opening template file'));
+	}
 
-	var doc=new Docxtemplater(content);
+	try {
+	    var doc=new Docxtemplater(content);
 
-	doc.setData(model);
-	doc.render();
+	    doc.setData(model);
+	    doc.render();
 
-	var buf = doc.getZip()
-	    .generate({type:"nodebuffer"});
+	    var buf = doc.getZip()
+		.generate({type:"nodebuffer"});
 
-	return buf;
+	    callback(null,buf);
+	    
+	} catch(ex) {
+	    callback(ex);
+	}
+    });
 
-    } catch(ex) {
-	console.log(ex);
-	return false;
-    };
+});
 
-}
+

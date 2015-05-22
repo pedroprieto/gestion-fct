@@ -67,20 +67,16 @@ module.exports = function(app) {
 		    fm34s: fm34s
 		};
 
-		var buf = gendoc(doc, fm34docfile);
-		if (buf) {
-		    var filename = res.locals.user.username + "_fm34s" + ".docx";
-		    res.type('application/vnd.openxmlformats-officedocument.wordprocessingml.document');
-		    res.set({"Content-Disposition":"attachment; filename=\"" + filename +  "\""});
-		    res.send(buf);
-		}
+		return gendoc(doc, fm34docfile);
+		
+	    })
+	    .then(function(buf) {
 
-		else {
-		    throw new Error('error');
-		}
+		var filename = res.locals.user.username + "_fm34s" + ".docx";
+		res.type('application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+		res.set({"Content-Disposition":"attachment; filename=\"" + filename +  "\""});
+		res.send(buf);
 
-	
-	    
 	    })
 	    .catch(next);
 
