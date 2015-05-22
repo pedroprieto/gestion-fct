@@ -23,9 +23,9 @@ module.exports = function(data, callback) {
 		res[i] = res[i].match(/(\d+)/g);
 	    }
 
-	    callback(res);
+	    callback(null, res);
 	} else {
-	    callback(false);
+	    callback(new Error("Error"));
 	}
     }
     

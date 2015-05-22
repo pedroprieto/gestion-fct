@@ -49,9 +49,9 @@ module.exports = function(data, idFCT, callback) {
 		horas: $("input[name='fct_horas']").val().trim()
 
 	    };
-	    callback(res);
+	    callback(null,res);
 	} else {
-	    callback(false);
+	    callback(new Error("Error"));
 	}
     }
     

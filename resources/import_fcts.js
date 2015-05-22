@@ -61,9 +61,9 @@ module.exports = function(app) {
 		res.status(500).json(errcol);
 	    } else {
 		// Obtenemos la lista de FCTs de SAO
-		fctnums(sao_conn_data, function(lista_fcts) {
+		fctnums(sao_conn_data, function(err, lista_fcts) {
 
-		    if (lista_fcts === false) {
+		    if (err) {
 			errcol.error.message = 'Error al obtener la lista de FCTs de SAO';
 			errcol.error.title = 'Error al obtener la lista de FCTs de SAO';
 			res.status(500).json(errcol);
@@ -87,12 +87,11 @@ module.exports = function(app) {
 			} else {
 			    lista_fcts.forEach(function(key) {
 				// Para cada FCT de la lista obtenemos sus datos
-				detallesFCT(sao_conn_data, key[0], function(fct_data) {
-				    if (fct_data===false) {
+				detallesFCT(sao_conn_data, key[0], function(err, fct_data) {
+				    if (err) {
 					errcol.error.message += 'Error al importar la FCT desde SAO. ';
 					errcol.error.title = 'Error al importar la FCT desde SAO';
-					// TODO: añadir error de la función anterior
-					//errcol.code += 
+					errcol.code += err;
 				    } else {
 					// Creamos FCT y salvamos
 					var nfct = new Fct(fct_data);
