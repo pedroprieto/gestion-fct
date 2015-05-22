@@ -1,8 +1,8 @@
 // Build routes
 
 module.exports = function(app) {
-    app.defineRoute('visits', '/users/:user/fcts/:fct/visits', 'visits', 'Lista de visitas');
-    app.defineRoute('visit', '/users/:user/fcts/:fct/visits/:visit', 'item', 'Visita');
+    app.defineRoute('visits', '/users/:user/fcts/items/:fct/visits', 'visits', 'Lista de visitas');
+    app.defineRoute('visit', '/users/:user/fcts/items/:fct/visits/:visit', 'item', 'Visita');
     app.defineRoute('users', '/users');
     app.defineRoute('user', '/users/:user');
     app.defineRoute('fm34s', '/users/:user/fm34s', 'fm34s collection', 'Conjunto de FM 34');

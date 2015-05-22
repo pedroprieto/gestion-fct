@@ -1,6 +1,18 @@
 var Promise = require("bluebird");
+var moment = require('moment');
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
+
+moment.locale('es');
+
+var schemaOptions = {
+    toObject: {
+      virtuals: true
+    }
+    ,toJSON: {
+      virtuals: true
+    }
+  };
 fctSchema = new Schema( {
     tutor: String,
     ciclo: String,
@@ -17,7 +29,7 @@ fctSchema = new Schema( {
     horas: String,
     usuario: { type: Schema.Types.ObjectId, ref: 'user', required: true },
     visitas: [{ type: Schema.Types.ObjectId, ref: 'visit' }]
-});
+}, schemaOptions);
 
 // Función estática para mensajes prompt
 fctSchema.statics.prompts = {};
@@ -34,6 +46,15 @@ var es_ES = {
     fecha_fin: "Fecha de fin de la FCT",
     horas: "Duración en horas de la FCT"
 };
+
+// Propiedades virtuales
+fctSchema.virtual('finicio_texto').get(function () {
+    return moment(this.fecha_inicio).format("LL");
+});
+
+fctSchema.virtual('ffin_texto').get(function () {
+    return moment(this.fecha_fin).format("LL");
+});
 
 fctSchema.statics.prompts.es_ES =  es_ES;
 

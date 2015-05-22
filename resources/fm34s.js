@@ -48,7 +48,6 @@ module.exports = function(app) {
      * GET para versión DOCX del FM34
      */
     app.get(app.lookupRoute('fm34sdocx'), function(req, res, next) {
-	var fs=require('fs');
 
 	Visit.genfm34Async(res.locals.user._id)
 	    .then(function (fm34s) {
