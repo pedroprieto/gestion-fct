@@ -3,7 +3,6 @@
 module.exports = function(model, template_file_name) {
 
     try {
-	var descarga = __dirname+"/output.docx";
 	var fs=require('fs');
 	var Docxtemplater=require('docxtemplater');
 
@@ -18,9 +17,7 @@ module.exports = function(model, template_file_name) {
 	var buf = doc.getZip()
 	    .generate({type:"nodebuffer"});
 
-	fs.writeFileSync(descarga, buf);
-
-	return descarga;
+	return buf;
 
     } catch(ex) {
 	console.log(ex);

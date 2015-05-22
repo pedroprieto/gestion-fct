@@ -67,17 +67,12 @@ module.exports = function(app) {
 		    fm34s: fm34s
 		};
 
-		var fd = gendoc(doc, fm34docfile);
-		if (fd) {
-		    res.download(fd, function(err){
-			if (err) {
-			    // handle error, keep in mind the response may be partially-sent
-			    // so check res.headerSent
-			} else {
-			    // descarga completada
-			    fs.unlink(fd);
-			}
-		    });
+		var buf = gendoc(doc, fm34docfile);
+		if (buf) {
+		    var filename = res.locals.user.username + "_fm34s" + ".docx";
+		    res.type('application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+		    res.set({"Content-Disposition":"attachment; filename=\"" + filename +  "\""});
+		    res.send(buf);
 		}
 
 		else {
