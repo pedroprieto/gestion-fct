@@ -26,7 +26,26 @@ visitSchema.pre('save', function (next) {
     var m = moment(this.fecha);
     this.semana = m.isoWeek();
     this.anyo = m.isoWeekYear();
-    next();
+    return next();
+});
+
+// Middleware para impedir que se guarden dos visitas con tipo distinto de 'otra'
+visitSchema.pre('save', function (next) {
+    var tipo = this.tipo;
+
+    if (tipo === 'otra') return next();
+
+    this.constructor.find({_fct: this._fct, _usuario: this._usuario, tipo: tipo}, function (err, docs) {
+	if (err) next(err);
+	
+        if (!docs.length){
+            return next();
+        } else {
+	    var e = new Error('Ya hay una visita de tipo: ' + tipo);
+	    return next(e);
+        }
+    });
+
 });
 
 
