@@ -8,52 +8,51 @@ Promise.promisifyAll(require("mongoose"));
 module.exports = function(app) {
 
     /**
-     * ALL
-     */
-
-    // Cargamos el usuario y la fct del parámetro de la URL
-    /*app.all([app.lookupRoute('visits'), app.lookupRoute('visit')], function(req, res, next) {
-	var username = req.params.user;
-	User.findOne({ 'username': username }, function (err,user) {
-	    if (err) return console.error(err);
-	    // Opcional: si no coincide con el usuario autenticado, devolvemos error
-	    // user: usuario de la url
-	    // req.user: usuario autenticado
-	    if ( !user._id.equals(req.user._id) ) {
-		console.log(user._id);
-		console.log(req.user._id);
-		var errcol = req.app.locals.errcj();
-		errcol.href = req.protocol + '://' + req.get('host') + req.originalUrl;
-		errcol.error.title = 'No autorizado';
-		errcol.error.message = 'El usuario ' + req.user.username + ' no está autorizado para acceder a los recursos del usuario ' + username + '.';
-		res.status(401).json(errcol);		
-	    } else {
-		// Pasamos la info del usuario indicado en el parámetro a res.locals
-		res.locals.user = user;
-		next();		
-	    }
-	    
-	});
-    });*/
-
-
-    
-    /**
      * GET lista de visitas
      */
     app.get(app.lookupRoute('visits'), function(req, res) {
 
-	Visit.find(function (err,visits) {
+	Visit.find({ '_usuario': res.locals.user._id , '_fct': res.locals.fct._id},function (err,visits) {
 	    if (err) return console.error(err);
 
 	    var col = req.app.locals.cj();
 	    col.href = req.protocol + '://' + req.get('host') + req.originalUrl;
 
 	    // Links
-	    col.links.push(req.app.buildLink('visits'));
-	    col.links.push({'rel':'collection', "prompt": "FCTs", 'href' : "/fcts"});
-	    col.links.push({'rel':'collection', "prompt": "Visitas", 'href' : "/visits"});
-	    col.links.push({'rel':'collection', "prompt": "FM34s", 'href' : "/fm34s"});
+	    col.links.push(res.app.buildLink('fcts', {user: res.locals.user.username}));
+	    col.links.push(res.app.buildLink('fct', {user: res.locals.user.username, fct: res.locals.fct._id}));
+	    	   
+
+	    // Template links para visitas
+	    var t1;
+	    var tipos_existentes = '';
+	    for (var i in visits) {
+		tipos_existentes += visits[i].tipo;
+	    }
+	    
+	    if (tipos_existentes.indexOf('inicial') === -1) {
+		t1 = req.app.buildLink('template_visita', {user: res.locals.user.username, fct: res.locals.fct._id, tipo: 'inicial'});
+		t1.prompt += " inicial";
+		col.links.push(t1);
+	    }
+
+	    if (tipos_existentes.indexOf('seguimiento') === -1) {
+		t1 = req.app.buildLink('template_visita', {user: res.locals.user.username, fct: res.locals.fct._id, tipo: 'seguimiento'});
+		t1.prompt += " seguimiento";
+		col.links.push(t1);
+	    }
+
+	    if (tipos_existentes.indexOf('final') === -1) {
+		t1 = req.app.buildLink('template_visita', {user: res.locals.user.username, fct: res.locals.fct._id, tipo: 'final'});
+		t1.prompt += " final";
+		col.links.push(t1);
+	    }
+
+	    t1 = req.app.buildLink('template_visita', {user: res.locals.user.username, fct: res.locals.fct._id, tipo: 'otra'});
+	    t1.prompt += " adicional";
+	    col.links.push(t1);
+	    
+	    
 
 	    // Items
 	    col.items = visits.map(function(v) {
@@ -63,7 +62,7 @@ module.exports = function(app) {
 	    // Queries
 
 	    // Template
-	    col.template = Visit.visit_template();
+	    // col.template = Visit.visit_template();
 	    
 
 	    res.json({collection: col});
@@ -208,5 +207,39 @@ module.exports = function(app) {
 	res.json({collection: col});
 
     });
+
+
+    /**
+     * GET - Templates para crear visitas     
+     */
+
+    app.get(app.lookupRoute('template_visita'), function(req, res, next) {
+
+	var tipo = res.locals.tipo_visita;
+
+	// Collection object
+	var col = req.app.locals.cj();
+
+	// Collection href
+	col.href = req.app.buildLink('visits', {user: res.locals.user.username, fct: res.locals.fct._id}).href;
+	
+	// Links
+	//col.links.push(req.app.buildLink('fcts', {user: res.locals.user.username}));
+	// col.links.push({'rel':'collection', "prompt": "FCTs", 'href' : "/fcts"});
+	// col.links.push({'rel':'collection', "prompt": "Visitas", 'href' : "/visits"});
+	// col.links.push({'rel':'collection', "prompt": "FM34s", 'href' : "/fm34s"});
+
+	// Items
+
+	// Queries
+
+	// Template
+	col.template = Visit.visit_template(tipo);
+	
+	//Send
+	res.json({collection: col});
+
+    });
+
 
 }

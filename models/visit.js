@@ -103,19 +103,24 @@ visitSchema.statics.tx_cj = function (doc, ret, options) {
 };
 
 // Función estática para generar template
-visitSchema.statics.visit_template = function () {
+visitSchema.statics.visit_template = function (tipo) {
     var template = {};
     
     template.data = [];
 
     for (p in this.schema.paths) {
+	var v = '';
 	if (p.substring(0,1) != '_') {
+
+	    if (p === 'tipo') {
+		if (tipo !== undefined) v = tipo;
+	    }
 	    
-	template.data.push({
-	    name : p,
-	    value: '',
-	    prompt :  visitSchema.statics.prompts.es_ES[p]
-	});
+	    template.data.push({
+		name : p,
+		value: v,
+		prompt :  visitSchema.statics.prompts.es_ES[p]
+	    });
 	    console.log(p);
 	}
     }

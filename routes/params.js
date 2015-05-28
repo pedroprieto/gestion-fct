@@ -84,4 +84,18 @@ module.exports = function(app) {
 	    })
 	    .catch(next);
     });
+
+    app.param('tipo', function(req, res, next, tipo) {
+
+	// Tipos de visitas válidos de acuerdo con el esquema de Visit
+	var tipos = Visit.schema.path('tipo').enumValues;
+
+	if (tipos.indexOf(tipo) > -1) {
+	    res.locals.tipo_visita = tipo;
+	    next();
+	} else {
+	    // Not found
+	    return next('route');
+	}	
+    });
 };

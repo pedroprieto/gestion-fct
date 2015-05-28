@@ -2,7 +2,7 @@
 
 module.exports = function(app) {
     app.defineRoute('visits', '/users/:user/fcts/items/:fct/visits', 'visits', 'Lista de visitas');
-    app.defineRoute('visit', '/users/:user/fcts/items/:fct/visits/:visit', 'item', 'Visita');
+    app.defineRoute('visit', '/users/:user/fcts/items/:fct/visits/items/:visit', 'item', 'Visita');
     app.defineRoute('users', '/users');
     app.defineRoute('user', '/users/:user');
     app.defineRoute('fm34s', '/users/:user/fm34s', 'fm34s collection', 'Conjunto de FM 34');
@@ -14,6 +14,10 @@ module.exports = function(app) {
     app.defineRoute('fct', '/users/:user/fcts/items/:fct', 'item', 'FCT');
     app.defineRoute('login', '/login', 'url', 'Login');
     app.defineRoute('import_fcts', '/users/:user/import_fcts', 'url', 'Importar FCTs de SAO');
+
+    // Templates para crear visitas
+    app.defineRoute('template_visita', '/users/:user/fcts/items/:fct/visits/templates/:tipo', 'template visits', 'Crear visita');
+
     
     
 }
