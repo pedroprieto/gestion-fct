@@ -4,10 +4,11 @@
 var Promise = require("bluebird");
 var moment = require('moment');
 var mongoose = require('mongoose')
-,Schema = mongoose.Schema, 
-visitSchema = new Schema( {
+,Schema = mongoose.Schema;
+var tipos = 'inicial seguimiento final otra'.split(' ');
+var visitSchema = new Schema( {
     empresa: String,
-    tipo: String,
+    tipo: {type: String, enum: tipos },
     distancia: String,
     fecha: Date,
     semana: Number,

@@ -34,7 +34,7 @@ describe('Crear una visita en una FCT', function () {
     var visit_test = {
 	template: {
 	    data: [
-		{name: "tipo", value: "Tipo de visita test"},
+		{name: "tipo", value: "inicial"},
 		{name: "distancia", value: "Distancia test"},
 		{name: "fecha", value:  new Date().toString()},
 		{name: "hora_salida", value: "Hora salida test"},
