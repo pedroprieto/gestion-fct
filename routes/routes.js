@@ -11,6 +11,7 @@ module.exports = function(app) {
     app.defineRoute('fcts', '/users/:user/fcts', 'fcts', 'Lista de FCTs del usuario');
     app.defineRoute('certs_alumno', '/users/:user/fcts/certs_alumno', 'certs_alumno collection', 'Lista de certificados del alumno');
     app.defineRoute('certs_instructor', '/users/:user/fcts/certs_instructor', 'certs_instructor collection', 'Lista de certificados del instructor');
+    app.defineRoute('fm18s', '/users/:user/fcts/fm18s', 'fm18 collection', 'Lista de FM 18');
     app.defineRoute('fct', '/users/:user/fcts/items/:fct', 'item', 'FCT');
     app.defineRoute('login', '/login', 'url', 'Login');
     app.defineRoute('import_fcts', '/users/:user/import_fcts', 'url', 'Importar FCTs de SAO');

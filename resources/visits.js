@@ -110,63 +110,13 @@ module.exports = function(app) {
 		// El resultado es un vector con el item y el número de filas afectadas.
 		// Nos quedamos sólo con el item
 		item = item[0];
-		// Alterminar, actualizadmos y guardamos la FCT
+		// Al terminar, actualizamos y guardamos la FCT
 		res.locals.fct.visitas.push(item._id);
 
 		// Guardamos la FCT con promise
-		var fctpromise = res.locals.fct.saveAsync();
+		return res.locals.fct.saveAsync();
 
-		// Computamos y guardamos el FM34
-		// TODO: fallo aquí
-		// Creamos fm 34
-		// Buscamos si existe
-		//      f = new Date(fecha);
-		var f=new Date(item.fecha);
-		console.log(item.fecha);
-		var day = f.getDay();
-		var diff = f.getDate() - day + (day == 0 ? -6:1);
-		// TODO: mejorar
-		fecha_lunes_semana = new Date(f.setDate(diff));
-		f = new Date(fecha_lunes_semana);
-		day = f.getDay();
-		var diff2 = f.getDate() + 6;
-		var fecha_domingo_semana = new Date(f.setDate(diff2));
-		// Fin del cálculo de lunes y domingo de la semana en cuestión
-		
-		var fm34doc;
-		
-		var fm34promise = fm34.findOne({ semanaDe: fecha_lunes_semana}).populate('visitas').execAsync()
-		    .then(function (f) {
-			if (f) {
-
-			    // Comprobar si existe una visita a la misma hora. Futura mejora
-			    if (f.visits.filter(function(v) {
-				console.log('repetido');
-				(v.fecha == item.fecha) && (v.hora_salida == item.hora_salida);
-			    }).length > 0) {
-				return;
-				/* vendors contains the element we're looking for */
-			    }
-
-			    
-			    
-			    f.visitas.push(item._id);
-			    return f.saveAsync();
-			    //res.redirect('/visits/', 302);
-			} else {
-			    // Creamos fm34
-			    fm34doc = new fm34();
-			    fm34doc.semanaDe = fecha_lunes_semana;
-			    fm34doc.semanaAl = fecha_domingo_semana;
-			    fm34doc.visitas.push(item._id);
-			    return fm34doc.saveAsync();
-			}
-		    });
-
-		// Por último, devolvemos una promesa que sea la unión de las otras dos
-		return Promise.join(fctpromise, fm34promise);
-
-	    }).then(function(fctactualizada, fm34actualizado) {
+	    }).then(function(fctactualizada) {
 		res.location(req.app.buildLink('visit', {user: res.locals.user.username, fct: res.locals.fct._id, visit: item._id}).href);
 		res.status(201).end();
 		

@@ -21,6 +21,11 @@ var visitSchema = new Schema( {
     _usuario: { type: Schema.Types.ObjectId, ref: 'User' }
 });
 
+// Propiedades virtuales
+visitSchema.virtual('fecha_texto').get(function () {
+    return moment(this.fecha).format("LL");
+});
+
 // Middleware para añadir semana y año en formato ISO 8601
 visitSchema.pre('save', function (next) {
     var m = moment(this.fecha);
@@ -121,7 +126,6 @@ visitSchema.statics.visit_template = function (tipo) {
 		value: v,
 		prompt :  visitSchema.statics.prompts.es_ES[p]
 	    });
-	    console.log(p);
 	}
     }
 
