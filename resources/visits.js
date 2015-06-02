@@ -7,75 +7,87 @@ Promise.promisifyAll(require("mongoose"));
 
 module.exports = function(app) {
 
+        /**
+     * Function to render a collection of visits
+     * @param {array} visitlist
+     * @return {Object} collection
+     */
+    function renderCollectionVisits(req,res,visitlist) {
+	var col = res.app.locals.cj();
+
+	// Collection href
+	col.href = res.app.buildLink('visits', {user: res.locals.user.username, fct: res.locals.fct._id}).href;
+	
+	
+	// Collection Links
+	col.links.push(res.app.buildLink('fcts', {user: res.locals.user.username}));
+	col.links.push(res.app.buildLink('fct', {user: res.locals.user.username, fct: res.locals.fct._id}));
+	res.app.buildLink('visits', {user: res.locals.user.username, fct: res.locals.fct._id});
+	col.links.push(res.app.buildLink('fm34s', {user: res.locals.user.username}));
+
+	// Items
+	col.items = visitlist.map(function(v) {
+
+	    // Item data
+	    var item = v.toObject({transform: Visit.tx_cj});
+
+	    // Item href
+	    item.href = res.app.buildLink('visit', {user: res.locals.user.username, fct: res.locals.fct._id, visit: v._id}).href;
+
+	    // Item links
+	    
+	    return item;
+	});
+
+	// Queries
+
+	// Template
+	var t1;
+	var tipos_existentes = '';
+	for (var i in visitlist) {
+	    tipos_existentes += visitlist[i].tipo;
+	}
+	
+	if (tipos_existentes.indexOf('inicial') === -1) {
+	    t1 = req.app.buildLink('template_visita', {user: res.locals.user.username, fct: res.locals.fct._id, tipo: 'inicial'});
+	    t1.prompt += " inicial";
+	    col.links.push(t1);
+	}
+
+	if (tipos_existentes.indexOf('seguimiento') === -1) {
+	    t1 = req.app.buildLink('template_visita', {user: res.locals.user.username, fct: res.locals.fct._id, tipo: 'seguimiento'});
+	    t1.prompt += " seguimiento";
+	    col.links.push(t1);
+	}
+
+	if (tipos_existentes.indexOf('final') === -1) {
+	    t1 = req.app.buildLink('template_visita', {user: res.locals.user.username, fct: res.locals.fct._id, tipo: 'final'});
+	    t1.prompt += " final";
+	    col.links.push(t1);
+	}
+
+	t1 = req.app.buildLink('template_visita', {user: res.locals.user.username, fct: res.locals.fct._id, tipo: 'otra'});
+	t1.prompt += " adicional";
+	col.links.push(t1);
+
+	// Return collection object
+	return {collection: col};
+
+    }
+    
+
     /**
      * GET lista de visitas
      */
-    app.get(app.lookupRoute('visits'), function(req, res) {
+    app.get(app.lookupRoute('visits'), function(req, res, next) {
 
-	Visit.find({ '_usuario': res.locals.user._id , '_fct': res.locals.fct._id},function (err,visits) {
-	    if (err) return console.error(err);
-
-	    var col = req.app.locals.cj();
-	    col.href = req.protocol + '://' + req.get('host') + req.originalUrl;
-
-	    // Links
-	    col.links.push(res.app.buildLink('fcts', {user: res.locals.user.username}));
-	    col.links.push(res.app.buildLink('fct', {user: res.locals.user.username, fct: res.locals.fct._id}));
-	    	   
-
-	    // Template links para visitas
-	    var t1;
-	    var tipos_existentes = '';
-	    for (var i in visits) {
-		tipos_existentes += visits[i].tipo;
-	    }
-	    
-	    if (tipos_existentes.indexOf('inicial') === -1) {
-		t1 = req.app.buildLink('template_visita', {user: res.locals.user.username, fct: res.locals.fct._id, tipo: 'inicial'});
-		t1.prompt += " inicial";
-		col.links.push(t1);
-	    }
-
-	    if (tipos_existentes.indexOf('seguimiento') === -1) {
-		t1 = req.app.buildLink('template_visita', {user: res.locals.user.username, fct: res.locals.fct._id, tipo: 'seguimiento'});
-		t1.prompt += " seguimiento";
-		col.links.push(t1);
-	    }
-
-	    if (tipos_existentes.indexOf('final') === -1) {
-		t1 = req.app.buildLink('template_visita', {user: res.locals.user.username, fct: res.locals.fct._id, tipo: 'final'});
-		t1.prompt += " final";
-		col.links.push(t1);
-	    }
-
-	    t1 = req.app.buildLink('template_visita', {user: res.locals.user.username, fct: res.locals.fct._id, tipo: 'otra'});
-	    t1.prompt += " adicional";
-	    col.links.push(t1);
-	    
-	    
-
-	    // Items
-	    col.items = visits.map(function(v) {
-		// Item data
-		var item = v.toObject({transform: Visit.tx_cj});
-
-		// Item href
-		item.href = res.app.buildLink('visit', {user: res.locals.user.username, fct: res.locals.fct._id, visit: v._id}).href;
-
-		// Item links
-		
-		return item;
-	    });
-
-	    // Queries
-
-	    // Template
-	    // col.template = Visit.visit_template();
-	    
-
-	    res.json({collection: col});
-	});
-
+	Visit.findAsync({ '_usuario': res.locals.user._id , '_fct': res.locals.fct._id})
+	    .then(function (visits) {
+		var col = renderCollectionVisits(req, res, visits);
+		res.json(col);
+	    })
+	    .catch(next);
+	
     });
 
     /**
@@ -143,28 +155,38 @@ module.exports = function(app) {
     app.get(app.lookupRoute('visit'), function(req, res, next) {
 
 	var visit = res.locals.visit;
-	var col = req.app.locals.cj();
 
-	// Links
-	//col.links.push(req.app.buildLink('fcts', {user: res.locals.user.username}));
-	col.links.push({'rel':'collection', "prompt": "FCTs", 'href' : "/fcts"});
-	col.links.push({'rel':'collection', "prompt": "Visitas", 'href' : "/visits"});
-	col.links.push({'rel':'collection', "prompt": "FM34s", 'href' : "/fm34s"});
+	var visits = [];
+	visits.push(visit);
 
-	// Items
+	var col = renderCollectionVisits(req, res, visits);
+	    
+	res.json(col);
+    });
 
-	var item = visit.toObject({transform: Visit.tx_cj});
-//	item.links.push(req.app.buildLink('visits', {user: res.locals.user.username, fct: visit._id.toString()}));
-	col.items.push(item);
-	
+    /**
+     * DELETE visita
+     */
 
-	// Queries
+    app.delete(app.lookupRoute('visit'), function(req, res, next) {
 
-	// Template
-	
-	res.json({collection: col});
+
+	var fct = res.locals.fct;
+	var visit = res.locals.visit;
+
+	// Eliminamos referencia en la FCT
+	fct.visitas.pull(visit._id);
+
+	// Eliminamos visita
+	visit.removeAsync()
+	    .then(function(v) {
+		res.status(204).end();
+	    })
+	    .catch(next);
+
 
     });
+
 
 
     /**
