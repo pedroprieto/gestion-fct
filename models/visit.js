@@ -77,7 +77,7 @@ visitSchema.statics.prompts.es_ES =  es_ES;
 visitSchema.statics.tx_cj = function (doc, ret, options) {
     item = {};
     //item.href = base + '/' + coll[i].name;
-    item.href = "prueba";
+    item.href = "";
     item.data = [];
     item.links = [];
 

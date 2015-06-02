@@ -56,7 +56,15 @@ module.exports = function(app) {
 
 	    // Items
 	    col.items = visits.map(function(v) {
-		return v.toObject({transform: Visit.tx_cj});
+		// Item data
+		var item = v.toObject({transform: Visit.tx_cj});
+
+		// Item href
+		item.href = res.app.buildLink('visit', {user: res.locals.user.username, fct: res.locals.fct._id, visit: v._id}).href;
+
+		// Item links
+		
+		return item;
 	    });
 
 	    // Queries
