@@ -11,7 +11,7 @@ describe('Importar FCTs del sistema SAO', function () {
     var password = process.env.APP_PASSWORD;
 
     it('Debe crear las fcts del usuario correspondiente (último período activo en SAO) al hacer una petición POST a /import_fcts', function (done) {
-	this.timeout(20000);
+	this.timeout(40000);
 	var request = req('');
 	request
 	    .post(app.buildLink('import_fcts',{'user': process.env.APP_USER}).href)

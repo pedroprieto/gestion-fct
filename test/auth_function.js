@@ -19,6 +19,7 @@ describe('Ingresar en la aplicación con usuario y contraseña', function () {
     });
 
     it('Debe negar acceso si hay usuario incorrecto', function (done) {
+	this.timeout(40000);
 	request(app)
 	    .get(app.lookupRoute('users'))
 	    .set("Authorization", "basic " + new Buffer('wronguser:wrongpass').toString("base64"))
@@ -28,6 +29,7 @@ describe('Ingresar en la aplicación con usuario y contraseña', function () {
     });
 
     it('Debe permitir acceso con usuario correcto.', function(done) {
+	this.timeout(40000);
 	request(app)
 	    .get(app.lookupRoute('users'))
 	    .set("Authorization", "basic " + new Buffer(user + ':' + password).toString("base64"))
