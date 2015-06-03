@@ -138,11 +138,9 @@ module.exports = function(app) {
 	// Eliminamos visitas asociadas
 	visit.find({'_id': { $in: fct.visitas}}).remove().execAsync()
 	    .then(function(vs) {
-		console.log(vs);
 		return fct.removeAsync();
 	    })
 	    .then(function(fctborrada) {
-		console.log('fct borrada');
 		//res.location(req.app.buildLink('visit', {user: res.locals.user.username, fct: res.locals.fct._id, visit: item._id}).href);
 		res.status(204).end();
 		
