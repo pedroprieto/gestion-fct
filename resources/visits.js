@@ -94,7 +94,7 @@ module.exports = function(app) {
      * POST lista visitas
      */
     app.post(app.lookupRoute('visits'), function(req, res, next) {
-	var data,item,id,empresa,tipo,distancia,fecha,hora_salida,hora_regreso,localidad,fct_nombre;
+	var data,id,empresa,tipo,distancia,fecha,hora_salida,hora_regreso,localidad,fct_nombre;
 	var fecha_lunes_semana;
 
 	// get data array
@@ -114,37 +114,61 @@ module.exports = function(app) {
 	    a[b.name] = b.value;
 	    return a;
 	} , {});
-	
-	// Añadimos el id de la FCT
-	visitdata._fct = res.locals.fct._id;
 
 	// Añadimos el usuario
 	visitdata._usuario = res.locals.user._id;
 
 
-	item = new Visit(visitdata);
+	// Comprobamos si se quieren crear visitas relacionadas
+	// La propiedad 'related' es una cadena con las ids de las FCTs relacionadas separadas por coma
+	var list_fcts = [];
+	if (visitdata.hasOwnProperty('related')) {
+	    list_fcts = visitdata.related.split(",");
+	}
+	
+	// Añadimos la FCT actual
+	list_fcts.push(res.locals.fct._id);
 
-	// Guardamos visita
-	item.saveAsync()
-	    .then(function(item) {
-		// El resultado es un vector con el item y el número de filas afectadas.
-		// Nos quedamos sólo con el item
-		item = item[0];
-		// Al terminar, actualizamos y guardamos la FCT
-		res.locals.fct.visitas.push(item._id);
-
-		// Guardamos la FCT con promise
-		return res.locals.fct.saveAsync();
-
-	    }).then(function(fctactualizada) {
-		res.location(req.app.buildLink('visit', {user: res.locals.user.username, fct: res.locals.fct._id, visit: item._id}).href);
-		res.status(201).end();
+	// De toda la lista de FCTs, filtramos sólo las que sean del usuario
+	var list_fcts_filtradas;
+	var visita_base;
+	Fct.findAsync({usuario: res.locals.user._id, _id: {$in: list_fcts}})
+	    .then(function(fcts) {
+		list_fcts_filtradas = fcts;
+		
+		// Creamos lista de promesas de visitas
+		var visitas_promesas = [];
+		
+		// Iteramos para el conjunto de FCTs que tengamos
+		for (var i in list_fcts_filtradas) {
+		    // Añadimos el id de la FCT
+		    visitdata._fct = list_fcts_filtradas[i]._id;
+		    var item = new Visit(visitdata);
+		    visitas_promesas.push(item.saveAsync());	    
+		}
+		return Promise.all(visitas_promesas);
 		
 	    })
-	    .catch(next);
+	    .then(function(vs) {
+		// Cuando se guarden las visitas
+		var fcts_promises = [];
+		for (var i in vs) {
+		    var f = Fct.updateAsync({usuario: res.locals.user._id, _id: list_fcts_filtradas[i]}, {
+			$push: {visitas: vs[i][0]._id}
+		    });
+		    fcts_promises.push(f);
+		}
+		visita_base = vs[vs.length-1][0]._id;
+		return Promise.all(fcts_promises);
+	    })
+	    .then(function(fctsactualizadas) {
+		res.location(req.app.buildLink('visit', {user: res.locals.user.username, fct: res.locals.fct._id, visit: visita_base}).href);
+		res.status(201).end();
 
+	    })
+	    .catch(next);
 	
-	
+
 	
     });  
 
@@ -196,6 +220,7 @@ module.exports = function(app) {
     app.get(app.lookupRoute('template_visita'), function(req, res, next) {
 
 	var tipo = res.locals.tipo_visita;
+	var fct = res.locals.fct;
 
 	// Collection object
 	var col = req.app.locals.cj();
@@ -214,10 +239,20 @@ module.exports = function(app) {
 	// Queries
 
 	// Template
-	col.template = Visit.visit_template(tipo);
+
+	// Obtenemos FCTs con la misma empresa que la actual, del mismo usuario, para incluirlas en la template
+	var related = "";
+	Fct.findAsync({empresa: res.locals.fct.empresa, usuario: res.locals.user._id, _id: {'$ne': fct._id}}, '_id')
+	    .then(function(fcts) {
+		related = fcts.map(function (key) {return key._id;}).join();
+		col.template = Visit.visit_template(tipo, related);
+		
+		//Send
+		res.json({collection: col});
+
+	    })
+	    .catch(next);
 	
-	//Send
-	res.json({collection: col});
 
     });
 

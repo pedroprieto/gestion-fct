@@ -108,7 +108,7 @@ visitSchema.statics.tx_cj = function (doc, ret, options) {
 };
 
 // Función estática para generar template
-visitSchema.statics.visit_template = function (tipo) {
+visitSchema.statics.visit_template = function (tipo, related) {
     var template = {};
     
     template.data = [];
@@ -129,8 +129,15 @@ visitSchema.statics.visit_template = function (tipo) {
 	}
     }
 
-    
-//    template.data.push(
+    // Añadimos FCTs relacionadas en el campo 'related' de la plantilla
+    if (related !== "") {
+	template.data.push({
+	    name : 'related',
+	    value : related,
+	    prompt : 'Crear una visita igual en las siguientes FCTs'
+	});
+    }
+
     return template;
 }
 
