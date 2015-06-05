@@ -1,4 +1,5 @@
 exports.db = {};
-exports.db.uri = 'mongodb://localhost/fct';
-exports.db.testuri = 'mongodb://localhost/testfct';
+var dburl = process.env.MONGODB_URL || 'mongodb://localhost/';
+exports.db.uri = dburl + 'fct';
+exports.db.testuri = dburl + 'testfct';
 exports.options = {};

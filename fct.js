@@ -28,9 +28,9 @@ var contentType = 'application/vnd.collection+json';
 app.use(partials());
 
 // some environment variables
-app.set('port', process.env.PORT || 3000);
-app.set('host', process.env.HOST || 'localhost');
-app.set('protocol', process.env.PROTOCOL || 'http');
+app.set('port', process.env.OPENSHIFT_NODEJS_PORT || 3000);
+app.set('host', process.env.OPENSHIFT_APP_DNS || 'localhost');
+app.set('protocol', process.env.NODE_ENV!='test'? 'https' : 'http');
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 

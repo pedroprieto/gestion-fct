@@ -1,10 +1,20 @@
 language: node_js
 node_js:
-  - "0.10"
+- '0.10'
 before_install:
-  - "sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10"
-  - "echo 'deb http://repo.mongodb.org/apt/ubuntu '$(lsb_release -sc)'/mongodb-org/3.0 multiverse' | sudo tee /etc/apt/sources.list.d/mongodb-org-3.0.list"
-  - "sudo apt-get update"
-  - "sudo apt-get install -y mongodb-org-server"
+- sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
+- echo 'deb http://repo.mongodb.org/apt/ubuntu '$(lsb_release -sc)'/mongodb-org/3.0
+  multiverse' | sudo tee /etc/apt/sources.list.d/mongodb-org-3.0.list
+- sudo apt-get update
+- sudo apt-get install -y mongodb-org-server
 before_script:
-  - "until nc -z localhost 27017; do echo Waiting for MongoDB; sleep 1; done"
+- until nc -z localhost 27017; do echo Waiting for MongoDB; sleep 1; done
+deploy:
+  provider: openshift
+  user: pedpral@gmail.com
+  password:
+    secure: T4Aqzxdf0OAZs+DrDT75FztoDAV4Eo7xr3ylEys1riC4K166JWbXmrt0+cT7Mkg9Qodvq+cixJOhdTEPQMooQKTZI1aJSJyjIP4cZfy0d7pm+44cmoNeiVcmL+jvxYZnPmQy4Mtcx02ZaKyO6LTuFotHWmH9/Fm4opXorB23L44=
+  app: gestionfct
+  domain: pedroprieto
+  on:
+    repo: pedroprieto/gestion-fct
