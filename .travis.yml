@@ -18,3 +18,4 @@ deploy:
   domain: pedroprieto
   on:
     repo: pedroprieto/gestion-fct
+  skip_cleanup: true
