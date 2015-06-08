@@ -13,15 +13,15 @@ module.exports = function(app) {
 	var col = res.app.locals.cj();
 
 	// Collection href
-	col.href = res.app.buildLink('fcts', {user: res.locals.user.username}).href;
+	col.href = req.buildLink('fcts').href;
 	
 	
 	// Collection Links
-	col.links.push(res.app.buildLink('fcts', {user: res.locals.user.username}));
-	col.links.push(res.app.buildLink('import_fcts', {user: res.locals.user.username}));
-	col.links.push(res.app.buildLink('fm34s', {user: res.locals.user.username}));
-	col.links.push(res.app.buildLink('certs_alumno', {user: res.locals.user.username}));
-	col.links.push(res.app.buildLink('certs_instructor', {user: res.locals.user.username}));
+	col.links.push(req.buildLink('fcts'));
+	col.links.push(req.buildLink('import_fcts'));
+	col.links.push(req.buildLink('fm34s'));
+	col.links.push(req.buildLink('certs_alumno'));
+	col.links.push(req.buildLink('certs_instructor'));
 
 	// Items
 	col.items = fctlist.map(function(f) {
@@ -30,10 +30,10 @@ module.exports = function(app) {
 	    var item = f.toObject({transform: Fct.tx_cj});
 
 	    // Item href
-	    item.href = res.app.buildLink('fct', {user: res.locals.user.username, fct: f._id}).href;
+	    item.href = req.buildLink('fct', {fct: f._id}).href;
 
 	    // Item links
-	    item.links.push(res.app.buildLink('visits', {user: res.locals.user.username, fct: f._id.toString()}));
+	    item.links.push(req.buildLink('visits', {fct: f._id.toString()}));
 	    
 	    return item;
 	});
@@ -99,7 +99,7 @@ module.exports = function(app) {
 		return console.error(err);
 		res.status(400).send('Error al guardar los datos de la base de datos');  
 	    } else {
-		res.location(req.app.buildLink('fct', {user: res.locals.user.username, fct: item._id}).href);
+		res.location(req.buildLink('fct', {fct: item._id}).href);
 		res.status(201).end();
 	    }
 	});

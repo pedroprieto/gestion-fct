@@ -14,15 +14,15 @@ module.exports = function(app) {
 	var col = res.app.locals.cj();
 
 	// Collection href
-	col.href = res.app.buildLink('import_fcts', {user: res.locals.user.username}).href;
+	col.href = req.buildLink('import_fcts').href;
 	
 	
 	// Collection Links
-	col.links.push(res.app.buildLink('fcts', {user: res.locals.user.username}));
-	col.links.push(res.app.buildLink('import_fcts', {user: res.locals.user.username}));
-	col.links.push(res.app.buildLink('fm34s', {user: res.locals.user.username}));
-	col.links.push(res.app.buildLink('certs_alumno', {user: res.locals.user.username}));
-	col.links.push(res.app.buildLink('certs_instructor', {user: res.locals.user.username}));
+	col.links.push(req.buildLink('fcts'));
+	col.links.push(req.buildLink('import_fcts'));
+	col.links.push(req.buildLink('fm34s'));
+	col.links.push(req.buildLink('certs_alumno'));
+	col.links.push(req.buildLink('certs_instructor'));
 
 	// Items
 
@@ -76,7 +76,7 @@ module.exports = function(app) {
 				res.status(500).json(errcol);
 			    } else {
 				// TODO
-				res.location(req.app.buildLink('fcts', {user: res.locals.user.username}).href);
+				res.location(req.buildLink('fcts').href);
 				res.status(201).end();
 			    }
 			};

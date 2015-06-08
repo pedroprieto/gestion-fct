@@ -16,14 +16,14 @@ module.exports = function(app) {
 	var col = res.app.locals.cj();
 
 	// Collection href
-	col.href = res.app.buildLink('visits', {user: res.locals.user.username, fct: res.locals.fct._id}).href;
+	col.href = req.buildLink('visits').href;
 	
 	
 	// Collection Links
-	col.links.push(res.app.buildLink('fcts', {user: res.locals.user.username}));
-	col.links.push(res.app.buildLink('fct', {user: res.locals.user.username, fct: res.locals.fct._id}));
-	res.app.buildLink('visits', {user: res.locals.user.username, fct: res.locals.fct._id});
-	col.links.push(res.app.buildLink('fm34s', {user: res.locals.user.username}));
+	col.links.push(req.buildLink('fcts'));
+	col.links.push(req.buildLink('fct'));
+	req.buildLink('visits');
+	col.links.push(req.buildLink('fm34s'));
 
 	// Items
 	col.items = visitlist.map(function(v) {
@@ -32,7 +32,7 @@ module.exports = function(app) {
 	    var item = v.toObject({transform: Visit.tx_cj});
 
 	    // Item href
-	    item.href = res.app.buildLink('visit', {user: res.locals.user.username, fct: res.locals.fct._id, visit: v._id}).href;
+	    item.href = req.buildLink('visit', {visit: v._id}).href;
 
 	    // Item links
 	    
@@ -49,24 +49,24 @@ module.exports = function(app) {
 	}
 	
 	if (tipos_existentes.indexOf('inicial') === -1) {
-	    t1 = req.app.buildLink('template_visita', {user: res.locals.user.username, fct: res.locals.fct._id, tipo: 'inicial'});
+	    t1 = req.buildLink('template_visita', {tipo: 'inicial'});
 	    t1.prompt += " inicial";
 	    col.links.push(t1);
 	}
 
 	if (tipos_existentes.indexOf('seguimiento') === -1) {
-	    t1 = req.app.buildLink('template_visita', {user: res.locals.user.username, fct: res.locals.fct._id, tipo: 'seguimiento'});
+	    t1 = req.buildLink('template_visita', {tipo: 'seguimiento'});
 	    t1.prompt += " seguimiento";
 	    col.links.push(t1);
 	}
 
 	if (tipos_existentes.indexOf('final') === -1) {
-	    t1 = req.app.buildLink('template_visita', {user: res.locals.user.username, fct: res.locals.fct._id, tipo: 'final'});
+	    t1 = req.buildLink('template_visita', {tipo: 'final'});
 	    t1.prompt += " final";
 	    col.links.push(t1);
 	}
 
-	t1 = req.app.buildLink('template_visita', {user: res.locals.user.username, fct: res.locals.fct._id, tipo: 'otra'});
+	t1 = req.buildLink('template_visita', {tipo: 'otra'});
 	t1.prompt += " adicional";
 	col.links.push(t1);
 
@@ -162,7 +162,7 @@ module.exports = function(app) {
 		return Promise.all(fcts_promises);
 	    })
 	    .then(function(fctsactualizadas) {
-		res.location(req.app.buildLink('visit', {user: res.locals.user.username, fct: res.locals.fct._id, visit: visita_base}).href);
+		res.location(req.buildLink('visit', {visit: visita_base}).href);
 		res.status(201).end();
 
 	    })
@@ -226,10 +226,10 @@ module.exports = function(app) {
 	var col = req.app.locals.cj();
 
 	// Collection href
-	col.href = req.app.buildLink('visits', {user: res.locals.user.username, fct: res.locals.fct._id}).href;
+	col.href = req.buildLink('visits').href;
 	
 	// Links
-	//col.links.push(req.app.buildLink('fcts', {user: res.locals.user.username}));
+	//col.links.push(req.app.buildLink('fcts'));
 	// col.links.push({'rel':'collection', "prompt": "FCTs", 'href' : "/fcts"});
 	// col.links.push({'rel':'collection', "prompt": "Visitas", 'href' : "/visits"});
 	// col.links.push({'rel':'collection', "prompt": "FM34s", 'href' : "/fm34s"});

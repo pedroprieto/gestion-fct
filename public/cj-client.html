@@ -25,8 +25,11 @@
   <script src="cj-client.js">//na </script>
   <script>
     window.onload = function() {
-      var pg = cj();
-      pg.init("http://localhost:3000/users/pedroprieto/fcts");
+    var pg = cj();
+    var http = location.protocol;
+    var slashes = http.concat("//");
+    var host = slashes.concat(window.location.host);
+    pg.init(host + "/");
     }
   </script>
 </html>

@@ -16,7 +16,7 @@ module.exports = function(app) {
 	    col.href = req.protocol + '://' + req.get('host') + req.originalUrl;
 
 	    // Links
-	    col.links.push(req.app.buildLink('visits'));
+	    col.links.push(req.buildLink('visits'));
 	    col.links.push({'rel':'collection', "prompt": "FCTs", 'href' : "/fcts"});
 	    col.links.push({'rel':'collection', "prompt": "Visitas", 'href' : "/visits"});
 	    col.links.push({'rel':'collection', "prompt": "FM34s", 'href' : "/fm34s"});

@@ -10,6 +10,9 @@
 /* Modified by Pedro Prieto to support link generation in CJ format
 
  */
+
+var URL = require('url');
+
 exports.version = '0.0.9';
 /**
  * Add named routes functionality to `app`.
@@ -21,6 +24,7 @@ exports.extend = function (app) {
     var namedRoutes = {},
 	defineRoute,
 	lookupRoute,
+	routeToPath,
 	buildLink;
     /**
      * Define a route;
@@ -60,19 +64,102 @@ exports.extend = function (app) {
 	}
 	return route.route;
     };
+
     /**
-     * Build a CJ link;
+     * routeToPath Middleware
      *
-     * takes a routeName and returns a resolved path using
-     * the object passed in.
+     * adds the routeToPath method to the request object;
      *
-     * If routeName references an object of routes it will return routeName.index
-     *
-     * @param {String} routeName (optional)
-     * @param {Object} params (optional)
-     * @return {Object}
+     * @param {Object} req
+     * @param {Object} res
+     * @param {fn} next
      * @api public
      */
+    routeToPath = function (req, res, next) {
+	var parentRouteToPath = req.routeToPath;
+	/**
+	 * routeToPath function
+	 *
+	 * takes a routeName and returns a resolved path using
+	 * the current request params. You can optionally pass
+	 * in an object to use to replace the route params.
+	 *
+	 * @param {String} routeName
+	 * @param {Object} override (optional)
+	 * @return {String} path
+	 * @api public
+	 */
+	req.routeToPath = function (routeName, override) {
+	    var path,
+		params = req.params,
+		key;
+	    // Allow mounting of multiple applications with named routes, and still
+	    // be able to access the parents routes.
+	    if (parentRouteToPath) {
+		try {
+		    path = app.lookupRoute(routeName);
+		}
+		catch (error) {
+		    path = parentRouteToPath(routeName, override);
+		    return path;
+		}
+	    } else {
+		path = app.lookupRoute(routeName);
+	    }
+	    if ('object' === typeof path) {
+		throw new Error('Route "' + routeName + '" Is An Object')
+	    }
+	    if (override) {
+		params = merge(params, override);
+	    };
+	    for (key in params) {
+		path = path.replace('/:' + key, '/' + params[key]);
+	    };
+	    return path;
+	};
+	/**
+	 * Build a CJ link;
+	 *
+	 * takes a routeName and returns a resolved path using
+	 * the object passed in.
+	 *
+	 * If routeName references an object of routes it will return routeName.index
+	 *
+	 * @param {String} routeName (optional)
+	 * @param {Object} params (optional)
+	 * @return {Object}
+	 * @api public
+	 */
+	req.buildLink = function (routeName, params) {
+	    // If no argument, return error
+	    if (!routeName) {
+		throw new Error('No route name specified');
+	    }
+	    var route = resolve(namedRoutes, routeName);
+	    if(!route) {
+		throw new Error('Route "' + routeName + '" Does Not Exist');
+	    }
+
+	    var link = {};
+	    var url = req.routeToPath(routeName, params);
+
+	    // Absolute URL
+	    var full_url = URL.parse(url);
+	    full_url.host = req.headers['host'];
+	    full_url.protocol = req.protocol;
+	    
+	    link.href = URL.format(full_url);
+	    link.rel = route.rel;
+	    link.prompt = route.prompt;
+	    
+	    return link;
+	};
+
+	next();
+    };
+
+
+    // Para testing (crea links a partir de plantilla)
     buildLink = function (routeName, params) {
 	// If no argument, return error
 	if (!routeName) {
@@ -82,28 +169,81 @@ exports.extend = function (app) {
 	if(!route) {
 	    throw new Error('Route "' + routeName + '" Does Not Exist');
 	}
-
 	link = {};
 	url = route.route;
 	for (key in params) {
 	    url = url.replace('/:' + key, '/' + params[key]);
 	}
-
 	url = app.get('protocol') + '://' + app.get('host') + ':' + app.get('port') + url;
-	
 	link.href = url;
 	link.rel = route.rel;
 	link.prompt = route.prompt;
-	
 	return link;
     };
+    
 
     
     app.defineRoute = defineRoute;
     app.lookupRoute = lookupRoute;
     app.buildLink = buildLink;
+    app.use(routeToPath);
+    // Allow nested req.routeToPath;
+    if (app.handler) {
+	var originalHandler = app.handler;
+	app.handler = function (req, res, next) {
+	    var origRouteToPath = req.routeToPath;
+	    originalHandler(req, res, function (err) {
+		req.routeToPath = origRouteToPath;
+		next(err);
+	    });
+	};
+    };
+    // Add support for nested apps with named-routes
+    app.on('attached', function (event) {
+	var origLookupRoute = event.parent.lookupRoute,
+	    origComponentLookupRoute = app.lookupRoute;
+	event.parent.lookupRoute = function (lookupRouteName) {
+	    var re = /^(.*?)\.(.*?)$/g,
+		test = re.exec(lookupRouteName);
+	    if (test && test[1] === event.routeName) {
+		return app.lookupRoute(test[2]);
+	    } else {
+		return origLookupRoute(lookupRouteName);
+	    }
+	};
+	app.lookupRoute = function (lookupRouteName, route) {
+	    var route = event.parent.lookupRoute(event.routeName) + origComponentLookupRoute(lookupRouteName, route);
+	    route = route.replace(/\/{2,}/g, '/'); // remove double //
+	    route = route.replace(/(.+)\/+$/g, '$1'); // remove trailing slash
+	    return route;
+	};
+    });
     return app; // for chaining;
 };
+
+/**
+ * Merges one object into another and returns a new object
+ *
+ * @param {Object} obj1
+ * @param {Object} obj2
+ * @return {Object}
+ * @api private
+ */
+function merge (obj1, obj2) {
+    var target = {},
+	i;
+    for (i in obj1) {
+	if (obj1.hasOwnProperty(i)) {
+	    target[i] = obj1[i];
+	}
+    }
+    for (i in obj2) {
+	if (obj2.hasOwnProperty(i)) {
+	    target[i] = obj2[i];
+	}
+    }
+    return target;
+}
 
 /**
  * Resolves a nested property lookup

@@ -18,11 +18,9 @@ app.locals.errcj = require('./templates/collection_error.js');
 
 // database connection
 var mongoose = require('mongoose');
-console.log(process.env.NODE_ENV);
 mongoose.connect(process.env.NODE_ENV!='test'? db_config.db.uri : db_config.db.testuri);
 
 // Global variables
-var baseUrl = 'http://localhost:3000';
 var contentType = 'application/vnd.collection+json';
 
 app.use(partials());
@@ -98,8 +96,8 @@ app.use(function handleNotFound(req, res){
 app.use(error_handling.logErrors);
 app.use(error_handling.respondError);
 
-
-var server = app.listen(app.get('port'), function(){
+var ipaddress = process.env.OPENSHIFT_NODEJS_IP || "127.0.0.1";
+var server = app.listen(app.get('port'), ipaddress, function(){
     console.log('Express server listening on port ' + app.get('port'));
 });
 
