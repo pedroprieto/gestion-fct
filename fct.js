@@ -31,6 +31,7 @@ app.set('host', process.env.OPENSHIFT_APP_DNS || 'localhost');
 app.set('protocol', process.env.NODE_ENV!='test'? 'https' : 'http');
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
+app.enable('trust proxy');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json({strict: false, type: contentType}));
