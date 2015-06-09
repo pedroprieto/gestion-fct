@@ -1,5 +1,3 @@
-var fecha = require('../aux/convert_date.js');
-var Fm34 = require('../models/fm34');
 var Visit = require('../models/visit');
 var moment = require('moment');
 var gendoc = require('../aux/generate_doc');
@@ -137,7 +135,7 @@ module.exports = function(app) {
 	    doc.setData({
 		"fm34s" : [
 		    // Para cambiar el formato de la fecha
-		    JSON.parse(JSON.stringify(fm34,fecha.reemplaza))
+		    JSON.parse(JSON.stringify(fm34))
 		]
 	    });
 

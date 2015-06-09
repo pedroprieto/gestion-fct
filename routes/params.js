@@ -4,7 +4,6 @@
 
 var User = require('../models/user');
 var Visit = require('../models/visit');
-var Fm34 = require('../models/fm34');
 var Fct = require('../models/fct');
 
 
@@ -69,10 +68,11 @@ module.exports = function(app) {
     });
 
     app.param('fm34', function(req, res, next, fm34id) {
+	// TODO
 	/*if (! objectIdRegex.test(String(id))) {
 	  return next('route')
 	  }*/
-	Fm34.findOneAsync({ '_id': fm34id })
+	/*Fm34.findOneAsync({ '_id': fm34id })
 	    .then(function(fm34) {
 
 		if (!fm34) {
@@ -82,7 +82,7 @@ module.exports = function(app) {
 		res.locals.fm34 = fm34;
 		next();
 	    })
-	    .catch(next);
+	    .catch(next);*/
     });
 
     app.param('tipo', function(req, res, next, tipo) {

@@ -1,5 +1,4 @@
 var Visit = require('../models/visit');
-var fm34 = require('../models/fm34');
 var Fct = require('../models/fct');
 var Promise = require("bluebird");
 // Si no, no funciona el populate de Mongoose
