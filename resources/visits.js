@@ -95,7 +95,8 @@ module.exports = function(app) {
     app.post(app.lookupRoute('visits'), function(req, res, next) {
 	var data,id,empresa,tipo,distancia,fecha,hora_salida,hora_regreso,localidad,fct_nombre;
 	var fecha_lunes_semana;
-
+	var list_fcts = [];
+	
 	// get data array
 	data = req.body.template.data;
 
@@ -103,7 +104,9 @@ module.exports = function(app) {
 	data = req.body.template.data;
 	
 	if (!Array.isArray(data)) {
-	    res.status(400).send('Los datos enviados no se ajustan al formato collection + json.');  
+	    var err = new Error('Los datos enviados no se ajustan al formato collection + json.');
+	    err.status = 400;
+	    throw err;
 	}
 
 
@@ -120,13 +123,13 @@ module.exports = function(app) {
 
 	// Comprobamos si se quieren crear visitas relacionadas
 	// La propiedad 'related' es una cadena con las ids de las FCTs relacionadas separadas por coma
-	var list_fcts = [];
 	if (visitdata.hasOwnProperty('related')) {
 	    list_fcts = visitdata.related.split(",");
 	}
 	
 	// Añadimos la FCT actual
 	list_fcts.push(res.locals.fct._id);
+
 
 	// De toda la lista de FCTs, filtramos sólo las que sean del usuario
 	var list_fcts_filtradas;
