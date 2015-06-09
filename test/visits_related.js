@@ -26,13 +26,16 @@ describe('Crear una visita en una FCT', function () {
 	tutor: "Tutor test",
 	ciclo: "Ciclo test",
 	empresa: "Empresa test",
-	alumno: "alumno test",
-	instructor: "instructor test",
+	dir_empresa: "Dir empresa ",
+	alumno: "alumno test ",
+	nif_alumno: "12345678k",
+	instructor: "instructor test ",
+	nif_instructor: "12345678k",
 	grupo: "grupo test",
 	periodo: "periodo test",
 	fecha_inicio: new Date(),
 	fecha_fin:new Date(),
-	horas: '400'
+	horas: 400
     });
 
     // Misma empresa
@@ -40,13 +43,17 @@ describe('Crear una visita en una FCT', function () {
 	tutor: "Tutor test 2",
 	ciclo: "Ciclo test 2",
 	empresa: "Empresa test",
+	dir_empresa: "Dir empresa 2",
+	nif_alumno: "12345678k",
+	nif_instructor: "12345678k",
+	instructor: "instructor test 2",
 	alumno: "alumno test 2",
 	instructor: "instructor test 2",
 	grupo: "grupo test 2",
 	periodo: "periodo test 2",
 	fecha_inicio: new Date(),
 	fecha_fin:new Date(),
-	horas: '400'
+	horas: 400
     });
 
     // Distinta empresa
@@ -54,13 +61,16 @@ describe('Crear una visita en una FCT', function () {
 	tutor: "Tutor test 3",
 	ciclo: "Ciclo test 3",
 	empresa: "Empresa test 2",
+	dir_empresa: "Dir empresa ",
+	nif_alumno: "12345678k",
+	nif_instructor: "12345678k",
 	alumno: "alumno test 3",
 	instructor: "instructor test 3",
 	grupo: "grupo test 3",
 	periodo: "periodo test 3",
 	fecha_inicio: new Date(),
 	fecha_fin:new Date(),
-	horas: '400'
+	horas: 400
     });
 
     // De otro usuario
@@ -68,13 +78,17 @@ describe('Crear una visita en una FCT', function () {
 	tutor: "Tutor test 4",
 	ciclo: "Ciclo test 4",
 	empresa: "Empresa test 4",
+	dir_empresa: "Dir empresa ",
 	alumno: "alumno test 4",
+	nif_alumno: "12345678k",
+	instructor: "instructor test ",
+	nif_instructor: "123456789k",
 	instructor: "instructor test 4",
 	grupo: "grupo test 4",
 	periodo: "periodo test 4",
 	fecha_inicio: new Date(),
 	fecha_fin:new Date(),
-	horas: '400'
+	horas: 400
     });
 
        
@@ -82,10 +96,10 @@ describe('Crear una visita en una FCT', function () {
 	template: {
 	    data: [
 		{name: "tipo", value: "inicial"},
-		{name: "distancia", value: "Distancia test"},
+		{name: "distancia", value: "25"},
 		{name: "fecha", value:  new Date().toString()},
-		{name: "hora_salida", value: "Hora salida test"},
-		{name: "hora_regreso", value: "Hora regreso test"},
+		{name: "hora_salida", value: "10:00"},
+		{name: "hora_regreso", value: "12:00"},
 		{name: "localidad", value: "Localidad test"},
 		{name: "impresion", value: "Impresión de la visita test"}
 	    ]

@@ -120,6 +120,9 @@ module.exports = function(app) {
 	// Añadimos el usuario
 	visitdata._usuario = res.locals.user._id;
 
+	// Añadimos la empresa (no está puesta en el template)
+	visitdata.empresa = res.locals.fct.empresa;
+
 
 	// Comprobamos si se quieren crear visitas relacionadas
 	// La propiedad 'related' es una cadena con las ids de las FCTs relacionadas separadas por coma

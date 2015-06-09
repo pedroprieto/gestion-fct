@@ -18,32 +18,38 @@ describe('Comprobar la correcta generación de FM 34s', function () {
 	tutor: "Tutor test",
 	ciclo: "Ciclo test",
 	empresa: "Empresa test",
+	dir_empresa: "Dir empresa 1",
 	alumno: "alumno test",
+	nif_alumno: "12345678k",
 	instructor: "instructor test",
+	nif_instructor: "12345678k",
 	grupo: "grupo test",
 	periodo: "periodo test",
 	fecha_inicio: new Date(),
 	fecha_fin:new Date(),
-	horas: '400'
+	horas: 400
     });
 
     var fct2 = new Fct({
 	tutor: "Tutor test 2",
 	ciclo: "Ciclo test 2",
 	empresa: "Empresa test 2",
+	dir_empresa: "Dir empresa 2",
 	alumno: "alumno test 2",
+	nif_alumno: "12345678k",
 	instructor: "instructor test 2",
+	nif_instructor: "12345678k",
 	grupo: "grupo test 2",
 	periodo: "periodo test 2",
 	fecha_inicio: new Date(),
 	fecha_fin:new Date(),
-	horas: '400'
+	horas: 400
     });
 
     var v1 = new Visit({
 	empresa: 'empresa1',
 	tipo: 'inicial',
-	distancia: 'distancia test 1',
+	distancia: 30,
 	fecha: new Date(2015,4,8),
 	hora_salida: '09:00',
 	hora_regreso: '11:00',
@@ -54,7 +60,7 @@ describe('Comprobar la correcta generación de FM 34s', function () {
     var v2_same_date = new Visit({
 	empresa: 'empresa1',
 	tipo: 'seguimiento',
-	distancia: 'distancia test 1',
+	distancia: 30,
 	fecha: new Date(2015,4,8),
 	hora_salida: '09:00',
 	hora_regreso: '11:00',
@@ -65,7 +71,7 @@ describe('Comprobar la correcta generación de FM 34s', function () {
     var v3_other_hour = new Visit({
 	empresa: 'empresa3',
 	tipo: 'otra',
-	distancia: 'distancia test 3',
+	distancia: 30,
 	fecha: new Date(2015,4,8),
 	hora_salida: '15:00',
 	hora_regreso: '17:00',
@@ -76,7 +82,7 @@ describe('Comprobar la correcta generación de FM 34s', function () {
     var v4_same_week = new Visit({
 	empresa: 'empresa4',
 	tipo: 'otra',
-	distancia: 'distancia test 4',
+	distancia: 30,
 	fecha: new Date(2015,4,5),
 	hora_salida: '15:00',
 	hora_regreso: '17:00',
@@ -87,7 +93,7 @@ describe('Comprobar la correcta generación de FM 34s', function () {
     var v5_other_week = new Visit({
 	empresa: 'empresa5',
 	tipo: 'otra',
-	distancia: 'distancia test 5',
+	distancia: 30,
 	fecha: new Date(2015,3,8),
 	hora_salida: '15:00',
 	hora_regreso: '17:00',
@@ -98,7 +104,7 @@ describe('Comprobar la correcta generación de FM 34s', function () {
     var v6_same_week_dif_fct = new Visit({
 	empresa: 'empresa6',
 	tipo: 'otra',
-	distancia: 'distancia test 6',
+	distancia: 30,
 	fecha: new Date(2015,4,7),
 	hora_salida: '15:00',
 	hora_regreso: '17:00',

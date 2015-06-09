@@ -12,21 +12,21 @@ var schemaOptions = {
     ,toJSON: {
       virtuals: true
     }
-  };
+};
 fctSchema = new Schema( {
-    tutor: String,
-    ciclo: String,
-    empresa: String,
-    dir_empresa: String,
-    instructor: String,
-    nif_instructor: String,
-    alumno: String,
-    nif_alumno: String,
-    grupo: String,
-    periodo: String,
+    tutor: {type: String, required: true},
+    ciclo: {type: String, required: true},
+    empresa: {type: String, required: true},
+    dir_empresa: {type: String, required: true},
+    instructor: {type: String, required: true},
+    nif_instructor: {type: String, required: true},
+    alumno: {type: String, required: true},
+    nif_alumno: {type: String, required: true},
+    grupo: {type: String, required: true},
+    periodo: {type: String, required: true},
     fecha_inicio: {type: Date, required: true},
     fecha_fin: {type: Date, required: true},
-    horas: String,
+    horas: { type: Number, min: 0, max: 1000, required: true },
     usuario: { type: Schema.Types.ObjectId, ref: 'user', required: true },
     visitas: [{ type: Schema.Types.ObjectId, ref: 'visit' }]
 }, schemaOptions);

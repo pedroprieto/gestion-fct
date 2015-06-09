@@ -21,6 +21,9 @@ describe('Comprobar que no se pueden grabar visitas del mismo tipo.', function (
 	tutor: "Tutor test",
 	ciclo: "Ciclo test",
 	empresa: "Empresa test",
+	dir_empresa: "Dir empresa 2",
+	nif_alumno: "12345678k",
+	nif_instructor: "12345678k",
 	alumno: "alumno test",
 	instructor: "instructor test",
 	grupo: "grupo test",
@@ -33,7 +36,7 @@ describe('Comprobar que no se pueden grabar visitas del mismo tipo.', function (
     var datos_visita = {
 	empresa: 'empresa1',
 	tipo: 'inicial',
-	distancia: 'distancia test 1',
+	distancia: 35,
 	fecha: new Date(2015,4,8),
 	hora_salida: '09:00',
 	hora_regreso: '11:00',

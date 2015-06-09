@@ -7,16 +7,16 @@ var mongoose = require('mongoose')
 ,Schema = mongoose.Schema;
 var tipos = 'inicial seguimiento final otra'.split(' ');
 var visitSchema = new Schema( {
-    empresa: String,
-    tipo: {type: String, enum: tipos },
-    distancia: String,
-    fecha: Date,
+    empresa: {type: String, required: true},
+    tipo: {type: String, enum: tipos, required: true },
+    distancia: {type: Number, required: true},
+    fecha: {type: Date, required: true},
     semana: Number,
     anyo: Number,
-    hora_salida: String,
-    hora_regreso: String,
-    localidad: String,
-    impresion: String,
+    hora_salida: {type: String, match: /^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/, required: true},
+    hora_regreso: {type: String, match: /^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/, required: true},
+    localidad: {type: String,required: true},
+    impresion: {type: String, required: true},
     _fct : { type: Schema.Types.ObjectId, ref: 'Fct' },
     _usuario: { type: Schema.Types.ObjectId, ref: 'User' }
 });
@@ -60,10 +60,10 @@ visitSchema.statics.prompts = {};
 
 var es_ES = {
     empresa: "Nombre de la empresa",
-    tipo: "Tipo de la empresa",
+    tipo: "Tipo de la visita",
     distancia: "Distancia a la empresa en KM",
     fecha: "Fecha de la visita",
-    hora_salida: "Hora de salida prueba",
+    hora_salida: "Hora de salida",
     hora_regreso: "Hora de regreso",
     localidad: "Localidad",
     impresion: "Impresión general de la visita"
@@ -81,9 +81,13 @@ visitSchema.statics.tx_cj = function (doc, ret, options) {
     item.data = [];
     item.links = [];
 
-    // Elimino campo _id y __v
+    // Elimino campos
     delete ret._id;
     delete ret.__v;
+    delete ret.anyo;
+    delete ret.semana;
+    delete ret._fct;
+    delete ret._usuario;
 
     for(var p in ret) {
 
@@ -120,6 +124,7 @@ visitSchema.statics.visit_template = function (tipo, related) {
 	    if (p === 'tipo') {
 		if (tipo !== undefined) v = tipo;
 	    }
+	    if (p==='anyo' || p==='semana' || p==='empresa') continue;
 	    
 	    template.data.push({
 		name : p,

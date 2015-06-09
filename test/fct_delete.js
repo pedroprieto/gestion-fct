@@ -20,13 +20,16 @@ describe('Comprobar el borrado de FCT y sus visitas asociadas.', function () {
 	tutor: "Tutor test",
 	ciclo: "Ciclo test",
 	empresa: "Empresa test",
+	dir_empresa: "Dir empresa 1",
 	alumno: "alumno test",
+	nif_alumno: "12345678k",
 	instructor: "instructor test",
+	nif_instructor: "12345678k",
 	grupo: "grupo test",
 	periodo: "periodo test",
 	fecha_inicio: new Date(),
 	fecha_fin:new Date(),
-	horas: '400'
+	horas: 400
     });
 
    
@@ -34,7 +37,7 @@ describe('Comprobar el borrado de FCT y sus visitas asociadas.', function () {
     var v1 = new Visit({
 	empresa: 'empresa1',
 	tipo: 'inicial',
-	distancia: 'distancia test 1',
+	distancia: 30,
 	fecha: new Date(2015,4,8),
 	hora_salida: '09:00',
 	hora_regreso: '11:00',

@@ -20,8 +20,11 @@ describe('Crear una visita en una FCT', function () {
 		{name: "tutor", value: "Tutor test"},
 		{name: "ciclo", value: "Ciclo test"},
 		{name: "empresa", value: "empresa test"},
+		{name: "dir_empresa", value: "dir empresa test"},
 		{name: "alumno", value: "alumno test"},
+		{name: "nif_alumno", value: "123456789k"},
 		{name: "instructor", value: "instructor test"},
+		{name: "nif_instructor", value: "123456789k"},
 		{name: "grupo", value: "grupo test"},
 		{name: "periodo", value: "periodo test"},
 		{name: "fecha_inicio", value: new Date().toString()},
@@ -35,10 +38,10 @@ describe('Crear una visita en una FCT', function () {
 	template: {
 	    data: [
 		{name: "tipo", value: "inicial"},
-		{name: "distancia", value: "Distancia test"},
+		{name: "distancia", value: "30"},
 		{name: "fecha", value:  new Date().toString()},
-		{name: "hora_salida", value: "Hora salida test"},
-		{name: "hora_regreso", value: "Hora regreso test"},
+		{name: "hora_salida", value: "11:00"},
+		{name: "hora_regreso", value: "12:00"},
 		{name: "localidad", value: "Localidad test"},
 		{name: "impresion", value: "Impresión de la visita test"}
 	    ]
