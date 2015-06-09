@@ -145,9 +145,14 @@ describe('Comprobar la correcta generación de FM 34s', function () {
 	    .then(function(fm34s) {
 		console.log(fm34s);
 		fm34s.should.have.a.lengthOf(2);
-		// Ojo con orden. Desacoplar
-		fm34s[0].visits.should.have.a.lengthOf(1);
-		fm34s[1].visits.should.have.a.lengthOf(4);
+		var fm341 = fm34s.filter(function( obj ) {
+		    return obj._id.semana == 15;
+		})[0];
+		var fm342 = fm34s.filter(function( obj ) {
+		    return obj._id.semana == 19;
+		})[0];
+		fm341.visits.should.have.a.lengthOf(1);
+		fm342.visits.should.have.a.lengthOf(4);
 	    });
 
     });
