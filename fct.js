@@ -72,7 +72,7 @@ app.all('*',passport.authenticate('basic', { session: false }), function(req,res
 });
 
 // Default content type for all routes but /client
-app.use(/(?!\/client)(.+)/, function(req, res, next) {
+app.use(/^(?!\/client)(.+)$/, function(req, res, next) {
     res.type(contentType);
     next();
 });
@@ -92,7 +92,12 @@ app.locals.lookupRoute = app.lookupRoute;
 require('./resources/index')(app);
 
 // Cliente de prueba
-app.use('/client', express.static('public'));
+var static_ops = {
+    extensions: ['html'],
+    index: ['cj-client.html']
+};
+
+app.use(app.lookupRoute('cliente'), express.static('public', static_ops));
 
 // Página 404 - not found
 app.use(function handleNotFound(req, res){
