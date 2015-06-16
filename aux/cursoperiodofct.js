@@ -1,5 +1,7 @@
 var moment = require('moment');
+var getlist;
 
+module.exports.getlist = getlist =  function() {
     var curso_inicial = 2012;
     var now = moment();
     var curso_final = now.year();
@@ -23,20 +25,22 @@ var moment = require('moment');
 	cps.push(cp + '_2');
     }
 
-    module.exports.getlist = function() {
-	return cps;
-    }
 
-    module.exports.validate = function(cursoperiodo) {
-	var i = cps.indexOf(cursoperiodo);
-	if (i > -1) {
-	    var result = {};
-	    result.cursoperiodo = cursoperiodo;
-	    result.curso = cursoperiodo.substring(0, cursoperiodo.indexOf('_'));
-	    result.periodo = cursoperiodo.substring(cursoperiodo.indexOf('_')+1, cursoperiodo.length);
-	    return result;
-	} else {
-	    return null;
-	}
-	
-    };
+    return cps;
+}
+
+module.exports.validate = function(cursoperiodo) {
+    if (getlist().indexOf(cursoperiodo) >=0) {
+	return true;
+    } else {
+	return false;
+    }
+};
+
+module.exports.getcurso = function(cursoperiodo) {
+    return cursoperiodo.substring(0, cursoperiodo.indexOf('_'));
+}
+
+module.exports.getperiodo = function(cursoperiodo) {
+    return cursoperiodo.substring(cursoperiodo.indexOf('_')+1, cursoperiodo.length);
+}
