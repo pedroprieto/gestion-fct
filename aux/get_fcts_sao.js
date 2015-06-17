@@ -2,11 +2,16 @@
 
 var request = require('request');
 
-module.exports = function(data, callback) {
+module.exports = function(data, curso, periodo, callback) {
 
-    //TODO: ver tema periodo y curso
+    // Curso: p. ej. 2014-2015
+    // Periodo:
+    // -1 todos
+    // 1 Sept-Dic
+    // 2 Abril-Junio
+    // 3 Otros
     var options = {
-	url: 'https://fct.edu.gva.es/inc/ajax/fcts/rellenar_fct.php?prof=' + data.idSAO +  ' &curso=2014-2015&periodo=2',
+	url: 'https://fct.edu.gva.es/inc/ajax/fcts/rellenar_fct.php?prof=' + data.idSAO +  '&curso=' + curso + '&periodo=' + periodo,
 	method: 'GET',
 	headers: {
 	    'Cookie': data.cookiesSAO

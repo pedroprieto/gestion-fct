@@ -2,6 +2,8 @@ var mongoose = require('mongoose');
 var visit = require('../models/visit');
 var Fct = require('../models/fct');
 var User = require('../models/user');
+var Queries = require('../routes/queries');
+
 module.exports = function(app) {
 
     /**
@@ -52,15 +54,26 @@ module.exports = function(app) {
      * Lista de fcts de un usuario determinado
      */
     app.get(app.lookupRoute('fcts'), function(req, res, next) {
-	
-	Fct.find({ 'usuario': res.locals.user._id }, function (err,fcts) {
-	    if (err) return console.error(err);
-	    var col = renderCollectionFcts(req, res, fcts);
-	    
-	    res.json(col);
-	});
-	
-	
+
+	// Obtenemos parámetros de query
+	// curso, periodo
+	// Pueden indicarse varios separados por comas
+	var curso = req.query.curso;
+	var periodo = req.query.periodo;
+
+	Queries.cursosperiodos(curso,periodo)
+	    .then(function(cps) {
+		var q = {};
+		q.usuario = res.locals.user._id;
+		q.periodo = {};
+		q.periodo.$in = cps;
+		return Fct.findAsync(q);
+	    })
+	    .then(function(fcts) {
+		var col = renderCollectionFcts(req, res, fcts);
+		res.json(col);
+	    })
+	    .catch(next);
 
     });
 

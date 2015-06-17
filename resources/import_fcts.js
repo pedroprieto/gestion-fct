@@ -2,6 +2,7 @@ var Fct = require('../models/fct');
 var auth_sao = require('../auth/auth_sao');
 var fctnums = require('../aux/get_fcts_sao');
 var detallesFCT = require('../aux/get_fct_sao');
+var cps = require('../aux/cursoperiodofct');
 
 module.exports = function(app) {
 
@@ -34,7 +35,7 @@ module.exports = function(app) {
 	var itemdata = {
 	    prompt: "Introduzca el período que desea importar",
 	    name: "periodo",
-	    value: "ultimo"
+	    value: cps.getCpActual()
 	};
 	data.push(itemdata);
 
@@ -49,7 +50,13 @@ module.exports = function(app) {
     /**
      * POST
      */
-    app.post(app.lookupRoute('import_fcts'), function(req, res) {
+    app.post(app.lookupRoute('import_fcts'), function(req, res, next) {
+
+	// TODO: mejorar
+	var cp = req.body.template.data[0].value;
+	var curso = cps.getcurso(cp);
+	var periodo = cps.getperiodo(cp);
+	
 	var errcol = req.app.locals.errcj();
 	// TODO: poner ruta absoluta
 	errcol.href = req.protocol + '://' + req.get('host') + req.originalUrl;
@@ -61,7 +68,7 @@ module.exports = function(app) {
 		res.status(500).json(errcol);
 	    } else {
 		// Obtenemos la lista de FCTs de SAO
-		fctnums(sao_conn_data, function(err, lista_fcts) {
+		fctnums(sao_conn_data, curso, periodo, function(err, lista_fcts) {
 
 		    if (err) {
 			errcol.error.message = 'Error al obtener la lista de FCTs de SAO';
