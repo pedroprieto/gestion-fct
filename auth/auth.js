@@ -31,15 +31,16 @@ module.exports = function(passport, BasicStrategy) {
 				    usuario.username = username;
 				    usuario.password = password;			    
 				}
-				return usuario.saveAsync();
+				usuario.saveAsync()
+				    .then(function(user) {
+					user=user[0];
+					return done(null,user);
+				    })
+				    .catch(done);
 			    } else {
 				// Acceso a SAO incorrecto
 				return done(null,false);
 			    }
-			})
-			.then(function(user) {
-			    user=user[0];
-			    return done(null,user);
 			})
 			.catch(done)
 		} else {
