@@ -1,8 +1,9 @@
 // Función para obtener las FCTs del sistema SAO
 
 var request = require('request');
+var Promise = require('bluebird');
 
-module.exports = function(data, curso, periodo, callback) {
+module.exports = Promise.promisify(function(data, curso, periodo, callback) {
 
     // Curso: p. ej. 2014-2015
     // Periodo:
@@ -36,4 +37,4 @@ module.exports = function(data, curso, periodo, callback) {
     
     request(options, retorno);
 
-};
+});

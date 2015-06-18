@@ -106,7 +106,7 @@ module.exports = function(app) {
 	if (!Array.isArray(data)) {
 	    var err = new Error('Los datos enviados no se ajustan al formato collection + json.');
 	    err.status = 400;
-	    throw err;
+	    return next(err);
 	}
 
 

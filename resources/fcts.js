@@ -105,20 +105,16 @@ module.exports = function(app) {
 	item = new Fct(fctdata);
 
 	// Creamos un array de visitas. ¿Es necesario realmente?
-	item.visitas = new Array();
+	item.visitas = [];
 
-	item.save(function (err, item) {
-	    if (err) {
-		return console.error(err);
-		res.status(400).send('Error al guardar los datos de la base de datos');  
-	    } else {
-		res.location(req.buildLink('fct', {fct: item._id}).href);
+	item.saveAsync()
+	    .then(function (f) {
+		// f es un vector: la segunda casilla es el número de registros
+		f=f[0];
+		res.location(req.buildLink('fct', {fct: f._id}).href);
 		res.status(201).end();
-	    }
-	});
-
-	
-	
+	    })
+	    .catch(next);	
     });
 
     /**

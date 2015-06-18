@@ -3,6 +3,7 @@ var auth_sao = require('../auth/auth_sao');
 var fctnums = require('../aux/get_fcts_sao');
 var detallesFCT = require('../aux/get_fct_sao');
 var cps = require('../aux/cursoperiodofct');
+var Promise = require('bluebird');
 
 module.exports = function(app) {
 
@@ -56,74 +57,52 @@ module.exports = function(app) {
 	var cp = req.body.template.data[0].value;
 	var curso = cps.getcurso(cp);
 	var periodo = cps.getperiodo(cp);
+	var sao_conn;
 	
 	var errcol = req.app.locals.errcj();
 	// TODO: poner ruta absoluta
 	errcol.href = req.protocol + '://' + req.get('host') + req.originalUrl;
 	
-	auth_sao(req.user.username,req.user.password,function(sao_conn_data) {
-	    if (sao_conn_data === false) {
-		errcol.error.title = 'Error al iniciar sesión en SAO';
-		errcol.error.message = 'Error al iniciar sesión en SAO';
-		res.status(500).json(errcol);
-	    } else {
-		// Obtenemos la lista de FCTs de SAO
-		fctnums(sao_conn_data, curso, periodo, function(err, lista_fcts) {
-
-		    if (err) {
-			errcol.error.message = 'Error al obtener la lista de FCTs de SAO';
-			errcol.error.title = 'Error al obtener la lista de FCTs de SAO';
-			res.status(500).json(errcol);
-		    } else {
-			// Tenemos las FCTs
-			var fctsrestantes = lista_fcts.length;
-
-			var onComplete = function() {
-			    if (errcol.error.title !== "") {
-				res.status(500).json(errcol);
-			    } else {
-				// TODO
-				res.location(req.buildLink('fcts').href);
-				res.status(201).end();
-			    }
-			};
-
-
-			if (fctsrestantes === 0) {
-			    onComplete();
-			} else {
-			    lista_fcts.forEach(function(key) {
-				// Para cada FCT de la lista obtenemos sus datos
-				detallesFCT(sao_conn_data, key[0], function(err, fct_data) {
-				    if (err) {
-					errcol.error.message += 'Error al importar la FCT desde SAO. ';
-					errcol.error.title = 'Error al importar la FCT desde SAO';
-					errcol.code += err;
-				    } else {
-					// Creamos FCT y salvamos
-					var nfct = new Fct(fct_data);
-					// Guardamos la referencia al usuario
-					nfct.usuario = res.locals.user._id;
-					nfct.save(function (er) {
-					    if (er) {
-						errcol.error.title = 'Error al importar la FCT desde SAO';
-						errcol.error.message += 'Error al guardar en base de datos la FCT del alumno ' + nfct.alumno + '. ';
-						errcol.error.code += JSON.stringify(er);
-					    }
-					    // saved!
-					    if (--fctsrestantes === 0) {
-						// No quedan registros por salvar
-						onComplete();
-					    }
-					});
-				    }
-				});
-			    });
-			}
-		    }
+	auth_sao(req.user.username,req.user.password)
+	    .then(function(sao_conn_data) {
+		if (sao_conn_data === false) {
+		    var err = new Error();
+		    err.name = 'Error al iniciar sesión en SAO';
+		    err.message = 'Error al iniciar sesión en SAO';
+		    err.status = 500;
+		    throw err;
+		} else {
+		    // Obtenemos la lista de FCTs de SAO
+		    sao_conn = sao_conn_data;
+		    return fctnums(sao_conn_data, curso, periodo);
+		}
+	    })
+	    .then(function(lista_fcts) {
+		var promises_fct = [];
+		lista_fcts.forEach(function(key) {
+		    // Para cada FCT de la lista obtenemos sus datos
+		    promises_fct.push(detallesFCT(sao_conn, key[0]));
 		});
-	    }
-	});
+		return Promise.all(promises_fct);
+	    })
+	    .then(function(fcts_data) {
+		var fcts = [];
+		fcts_data.forEach(function(key) {
+		    // Creamos FCT y salvamos
+		    var nfct = new Fct(key);
+		    // Guardamos la referencia al usuario
+		    // TODO: falta comprobar si existen para actualizar en lugar de salvar
+		    nfct.usuario = res.locals.user._id;
+		    fcts.push(nfct.saveAsync());
+		});
+		return Promise.all(fcts);
+	    })
+	    .then(function(fcts) {
+		// TODO
+		res.location(req.buildLink('fcts').href);
+		res.status(201).end();
+	    })
+	    .catch(next);
     });
 };
 

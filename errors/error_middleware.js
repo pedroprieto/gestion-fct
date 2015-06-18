@@ -17,6 +17,14 @@ module.exports.logErrors = function(err, req, res, next){
 module.exports.respondError = function(err, req, res, next){
     var status, message;
 
+    /*switch(err.name) {
+    case 'personalizado':
+	console.log('pedro personalizado');
+	break;
+    default:
+	console.log('estándar');
+    }*/
+
     var errcol = req.app.locals.errcj();
     errcol.href = req.protocol + '://' + req.get('host') + req.originalUrl;
     

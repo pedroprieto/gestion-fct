@@ -2,8 +2,9 @@
 
 var request = require('request');
 var cheerio = require('cheerio');
+var Promise = require('bluebird');
 
-module.exports = function(data, idFCT, callback) {
+module.exports = Promise.promisify(function(data, idFCT, callback) {
 
     var options = { 
 	url: 'https://fct.edu.gva.es/index.php?accion=10&idFct=' + idFCT,
@@ -51,10 +52,10 @@ module.exports = function(data, idFCT, callback) {
 	    };
 	    callback(null,res);
 	} else {
-	    callback(new Error("Error"));
+	    callback(new Error("Error en la conexión a SAO"));
 	}
     }
     
     request(options, retorno);
 
-};
+});
