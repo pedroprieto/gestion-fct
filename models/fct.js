@@ -1,5 +1,6 @@
 var Promise = require("bluebird");
 var moment = require('moment');
+var Queries = require('../routes/queries');
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
@@ -132,6 +133,50 @@ fctSchema.statics.tx_cj = function (doc, ret, options) {
     }
 
     return item;
+
+};
+
+// Función que devuelve una lista de FCTs filtradas por los parámetros de la query pasada como parámetro
+fctSchema.statics.findQuery = function (query, usuario, cb) {
+    // Obtenemos parámetros de query
+    // curso, periodo
+    // Pueden indicarse varios separados por comas
+    var curso = query.curso;
+    var periodo = query.periodo;
+
+    // Búsqueda general
+    var search = query.search;
+
+    // Query
+    var q = {};
+    q.usuario = usuario._id;
+
+    // Cursos y períodos
+    var cps = Queries.cursosperiodos(curso,periodo);
+    q.periodo = {};
+    q.periodo.$in = cps;
+    
+    // Búsqueda general
+    if (typeof query.search !== 'undefined') {
+	console.log('ey');
+	var re =  new RegExp(search, "i");
+	q.$or = [];
+	//q.$or.push({tutor: re});
+	//q.$or.push({ciclo: re});
+	q.$or.push({empresa: re});
+	q.$or.push({dir_empresa: re});
+	q.$or.push({instructor: re});
+	q.$or.push({nif_instructor: re});
+	q.$or.push({alumno: re});
+	q.$or.push({nif_alumno: re});
+	//q.$or.push({grupo: re});
+	q.$or.push({periodo: re});
+	//q.$or.push({fecha_inicio: re});
+	//q.$or.push({fecha_fin: re});
+	//q.$or.push({horas: re});
+    }
+    
+    return this.find(q, cb);
 
 };
 

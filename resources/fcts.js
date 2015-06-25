@@ -55,20 +55,7 @@ module.exports = function(app) {
      */
     app.get(app.lookupRoute('fcts'), function(req, res, next) {
 
-	// Obtenemos parámetros de query
-	// curso, periodo
-	// Pueden indicarse varios separados por comas
-	var curso = req.query.curso;
-	var periodo = req.query.periodo;
-
-	Queries.cursosperiodos(curso,periodo)
-	    .then(function(cps) {
-		var q = {};
-		q.usuario = res.locals.user._id;
-		q.periodo = {};
-		q.periodo.$in = cps;
-		return Fct.findAsync(q);
-	    })
+	Fct.findQueryAsync(req.query, res.locals.user)
 	    .then(function(fcts) {
 		var col = renderCollectionFcts(req, res, fcts);
 		res.json(col);
