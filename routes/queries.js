@@ -9,8 +9,8 @@ module.exports.cursosperiodos = function (curso, periodo) {
     var cursosperiodos = [];
 
     // Si no existe parámetro curso, por defecto se indican todos los cursos
-    if (typeof curso === 'undefined') {
-	if (typeof periodo === 'undefined') {
+    if ((typeof curso === 'undefined') || (curso === "")) {
+	if ((typeof periodo === 'undefined') || (periodo === "")) {
 	    // Si no existe curso ni período, se indica el actual
 	    cursosperiodos.push(cps.getCpActual());
 	    return cursosperiodos;
@@ -20,7 +20,7 @@ module.exports.cursosperiodos = function (curso, periodo) {
 	}
     } else {
 	cursos = curso.split(',');
-	if (typeof periodo === 'undefined') {
+	if ((typeof periodo === 'undefined') || (periodo === "")) {
 	    periodos = ['1', '2'];
 	} else {
 	    periodos = periodo.split(',');
@@ -37,14 +37,7 @@ module.exports.cursosperiodos = function (curso, periodo) {
 	}
     }
 
-    if (cursosperiodos.length === 0) {
-	//TODO: devolvemos curso último
-	cursosperiodos.push(cps.getCpActual());
-	return cursosperiodos;
-    } else {
-	return cursosperiodos;
-    }
-
     
+    return cursosperiodos;    
     
 };

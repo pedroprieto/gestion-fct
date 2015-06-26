@@ -28,7 +28,7 @@ module.exports = function(app) {
 
 	var filename = res.locals.user.username + "_" + docfile + ".docx";
 
-	Fct.find({ 'usuario': res.locals.user._id }).populate('visitas').execAsync()
+	Fct.findQuery(req.query, res.locals.user).populate('visitas').execAsync()
 	    .then(function(fcts) {
 		var doc= {
 		    certs: JSON.parse(JSON.stringify(fcts))

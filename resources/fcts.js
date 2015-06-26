@@ -3,6 +3,7 @@ var visit = require('../models/visit');
 var Fct = require('../models/fct');
 var User = require('../models/user');
 var Queries = require('../routes/queries');
+var cps = require('../aux/cursoperiodofct');
 
 module.exports = function(app) {
 
@@ -41,6 +42,35 @@ module.exports = function(app) {
 	});
 
 	// Queries
+	var cpactual = cps.getCpActual();
+	var c_actual = cps.getcurso(cpactual);
+	var p_actual = cps.getperiodo(cpactual);
+	col.queries = [];
+	col.queries.push(
+	    {
+		href: req.buildLink('fcts').href,
+		rel: "search",
+		name: "search",
+		prompt: "Búsqueda de FCTs",
+		data: [
+		    {
+			name: "curso",
+			value: typeof req.query.curso!== 'undefined' ? req.query.curso : c_actual,
+			prompt: "Curso"
+		    },
+		    {
+			name: "periodo",
+			value: typeof req.query.periodo!== 'undefined' ? req.query.periodo : p_actual,
+			prompt: "Período"
+		    },
+		    {
+			name: "search",
+			value: req.query.search || "",
+			prompt: "Búsqueda por texto"
+		    }
+		]
+	    }
+	);
 
 	// Template
 

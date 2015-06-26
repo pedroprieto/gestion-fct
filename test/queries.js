@@ -7,7 +7,7 @@ describe('Comprobar la generación de consultas a partir de queries.', function 
 	var c1_t = '2012-2013';
 	var c2_t = '2012-2013,2011-2012';
 	var c3_f = '20122013';
-	var c4_t = '20122013, 2013-2014';
+	var c4_t = '20122013,2013-2014';
 	var p1_t = '1';
 	var p2_t = '2';
 	var p3_t = '1,2';
@@ -23,31 +23,13 @@ describe('Comprobar la generación de consultas a partir de queries.', function 
 	    cp = (cur_year - 1) + '-' + (cur_year) + '_2';
 	}
 	
-	return cps.cursosperiodos(c1_t, p1_t)
-	    .then(function(c) {
-		c.should.have.length(1);
-		return cps.cursosperiodos(c2_t, p2_t);
-	    })
-	    .then(function(c) {
-		c.should.have.length(2);
-		return cps.cursosperiodos(c2_t, p3_t);
-	    })
-	    .then(function(c) {
-		c.should.have.length(4);
-		return cps.cursosperiodos(c3_f, p3_t);
-	    })
-	    .then(function(c) {
-		c.should.have.length(1);
-		return cps.cursosperiodos(c3_f, p4_f);
-	    })
-	    .then(function(c) {
-		c[0].should.be.equal(cp);
-		return cps.cursosperiodos(c4_t, p5_t);
-	    })
-	    .then(function(c) {
-		c.should.have.length(1);
-	    });
-	
+	cps.cursosperiodos(c1_t, p1_t).should.have.length(1);
+	cps.cursosperiodos(c2_t, p2_t).should.have.length(2);
+	cps.cursosperiodos(c2_t, p3_t).should.have.length(4);
+	cps.cursosperiodos(c3_f, p3_t).should.have.length(0);
+	cps.cursosperiodos(c3_f, p4_f).should.have.length(0);
+	cps.cursosperiodos(c4_t, p5_t).should.have.length(1);
+        
     });
 
 });

@@ -158,7 +158,6 @@ fctSchema.statics.findQuery = function (query, usuario, cb) {
     
     // Búsqueda general
     if (typeof query.search !== 'undefined') {
-	console.log('ey');
 	var re =  new RegExp(search, "i");
 	q.$or = [];
 	//q.$or.push({tutor: re});
