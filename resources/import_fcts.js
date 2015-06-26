@@ -87,13 +87,12 @@ module.exports = function(app) {
 	    })
 	    .then(function(fcts_data) {
 		var fcts = [];
-		fcts_data.forEach(function(key) {
-		    // Creamos FCT y salvamos
-		    var nfct = new Fct(key);
+		fcts_data.forEach(function(f) {
 		    // Guardamos la referencia al usuario
-		    // TODO: falta comprobar si existen para actualizar en lugar de salvar
-		    nfct.usuario = res.locals.user._id;
-		    fcts.push(nfct.saveAsync());
+		    f.usuario = res.locals.user._id;
+		    // Hacemos un upsert: si existe FCT con mismo NIF de alumno y nombre de empresa, se actualiza;
+		    // En caso contrario, se crea un nuevo registro
+		    fcts.push(Fct.findOneAndUpdateAsync({nif_alumno: f.nif_alumno, empresa: f.empresa }, f, {upsert: true}));
 		});
 		return Promise.all(fcts);
 	    })
@@ -105,7 +104,3 @@ module.exports = function(app) {
 	    .catch(next);
     });
 };
-
-    
-
-
