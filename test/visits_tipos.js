@@ -27,7 +27,8 @@ describe('Comprobar que no se pueden grabar visitas del mismo tipo.', function (
 	alumno: "alumno test",
 	instructor: "instructor test",
 	grupo: "grupo test",
-	periodo: "periodo test",
+	curso: "2014-2015",
+	periodo: "2",
 	fecha_inicio: new Date(),
 	fecha_fin:new Date(),
 	horas: '400'

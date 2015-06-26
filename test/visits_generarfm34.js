@@ -24,7 +24,8 @@ describe('Comprobar la correcta generación de FM 34s', function () {
 	instructor: "instructor test",
 	nif_instructor: "12345678k",
 	grupo: "grupo test",
-	periodo: "periodo test",
+	curso: "2014-2015",
+	periodo: "1",
 	fecha_inicio: new Date(),
 	fecha_fin:new Date(),
 	horas: 400
@@ -40,7 +41,8 @@ describe('Comprobar la correcta generación de FM 34s', function () {
 	instructor: "instructor test 2",
 	nif_instructor: "12345678k",
 	grupo: "grupo test 2",
-	periodo: "periodo test 2",
+	curso: "2014-2015",
+	periodo: "2",
 	fecha_inicio: new Date(),
 	fecha_fin:new Date(),
 	horas: 400

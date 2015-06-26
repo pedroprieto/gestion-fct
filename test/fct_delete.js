@@ -26,7 +26,8 @@ describe('Comprobar el borrado de FCT y sus visitas asociadas.', function () {
 	instructor: "instructor test",
 	nif_instructor: "12345678k",
 	grupo: "grupo test",
-	periodo: "periodo test",
+	curso: "2014-2015",
+	periodo: 2,
 	fecha_inicio: new Date(),
 	fecha_fin:new Date(),
 	horas: 400

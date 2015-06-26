@@ -15,11 +15,13 @@ describe('Importar FCTs del sistema SAO', function () {
     it('Debe crear las fcts del usuario correspondiente (último período activo en SAO) al hacer una petición POST a /import_fcts', function (done) {
 	this.timeout(40000);
 	var request = req('');
-	var cpvalido = "2014-2015_2";
+	var curso = "2014-2015";
+	var periodo = 2;
 	var data = {
 	    template: {
 		data: [
-		    {name: "periodo", value: cpvalido}
+		    {name: "curso", value: curso},
+		    {name: "periodo", value: periodo}
 		]
 	    }
 	};
@@ -37,8 +39,8 @@ describe('Importar FCTs del sistema SAO', function () {
 		// Conexión a la 'location' especificada al llamar a /import_fcts
 		// Añadimos la query
 		    .get(loc)
-		    .query({ curso: cps.getcurso(cpvalido) })
-		    .query({ periodo: cps.getperiodo(cpvalido) })
+		    .query({ curso: curso })
+		    .query({ periodo: periodo })
 		    .set("Authorization", "basic " + new Buffer(user + ':' + password).toString("base64"))
 		    .expect(200)
 		    .end(function (err, res) {

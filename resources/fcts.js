@@ -2,7 +2,6 @@ var mongoose = require('mongoose');
 var visit = require('../models/visit');
 var Fct = require('../models/fct');
 var User = require('../models/user');
-var Queries = require('../routes/queries');
 var cps = require('../aux/cursoperiodofct');
 
 module.exports = function(app) {
@@ -42,10 +41,10 @@ module.exports = function(app) {
 	});
 
 	// Queries
-	var cpactual = cps.getCpActual();
-	var c_actual = cps.getcurso(cpactual);
-	var p_actual = cps.getperiodo(cpactual);
+	var c_actual = cps.getCursoActual();
+	var p_actual = cps.getPeriodoActual();
 	col.queries = [];
+	// TODO: queda pendiente problema con valores actuales cuando campos vacíos
 	col.queries.push(
 	    {
 		href: req.buildLink('fcts').href,

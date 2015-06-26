@@ -31,8 +31,9 @@ describe('Crear una visita en una FCT', function () {
 	nif_alumno: "12345678k",
 	instructor: "instructor test ",
 	nif_instructor: "12345678k",
+	curso: "2014-2015",
+	periodo: "1",
 	grupo: "grupo test",
-	periodo: "periodo test",
 	fecha_inicio: new Date(),
 	fecha_fin:new Date(),
 	horas: 400
@@ -50,7 +51,8 @@ describe('Crear una visita en una FCT', function () {
 	alumno: "alumno test 2",
 	instructor: "instructor test 2",
 	grupo: "grupo test 2",
-	periodo: "periodo test 2",
+	curso: "2014-2015",
+	periodo: "2",
 	fecha_inicio: new Date(),
 	fecha_fin:new Date(),
 	horas: 400
@@ -67,7 +69,8 @@ describe('Crear una visita en una FCT', function () {
 	alumno: "alumno test 3",
 	instructor: "instructor test 3",
 	grupo: "grupo test 3",
-	periodo: "periodo test 3",
+	curso: "2014-2015",
+	periodo: "2",
 	fecha_inicio: new Date(),
 	fecha_fin:new Date(),
 	horas: 400
@@ -85,7 +88,8 @@ describe('Crear una visita en una FCT', function () {
 	nif_instructor: "123456789k",
 	instructor: "instructor test 4",
 	grupo: "grupo test 4",
-	periodo: "periodo test 4",
+	curso: "2014-2015",
+	periodo: "2",
 	fecha_inicio: new Date(),
 	fecha_fin:new Date(),
 	horas: 400

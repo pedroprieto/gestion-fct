@@ -33,12 +33,20 @@ module.exports = function(app) {
 	// Template
 	var data = [];
 	
-	var itemdata = {
+	var itemdata1 = {
+	    prompt: "Introduzca el curso que desea importar",
+	    name: "curso",
+	    value: cps.getCursoActual()
+	};
+
+	var itemdata2 = {
 	    prompt: "Introduzca el período que desea importar",
 	    name: "periodo",
-	    value: cps.getCpActual()
+	    value: cps.getPeriodoActual()
 	};
-	data.push(itemdata);
+	
+	data.push(itemdata1);
+	data.push(itemdata2);
 
 	col.template.data = data;
 
@@ -54,9 +62,13 @@ module.exports = function(app) {
     app.post(app.lookupRoute('import_fcts'), function(req, res, next) {
 
 	// TODO: mejorar
-	var cp = req.body.template.data[0].value;
-	var curso = cps.getcurso(cp);
-	var periodo = cps.getperiodo(cp);
+	var curso = req.body.template.data.filter(function( obj ) {
+	    return obj.name == 'curso';
+	})[0].value;
+	var periodo = req.body.template.data.filter(function( obj ) {
+	    return obj.name == 'periodo';
+	})[0].value;
+	
 	var sao_conn;
 	
 	var errcol = req.app.locals.errcj();

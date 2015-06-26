@@ -26,7 +26,8 @@ describe('Crear una visita en una FCT', function () {
 		{name: "instructor", value: "instructor test"},
 		{name: "nif_instructor", value: "123456789k"},
 		{name: "grupo", value: "grupo test"},
-		{name: "periodo", value: "periodo test"},
+		{name: "curso", value: "2014-2015"},
+		{name: "periodo", value: "2"},
 		{name: "fecha_inicio", value: new Date().toString()},
 		{name: "fecha_fin", value: new Date().toString()},
 		{name: "horas", value: "400"}

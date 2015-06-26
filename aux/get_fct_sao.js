@@ -44,7 +44,8 @@ module.exports = Promise.promisify(function(data, idFCT, callback) {
 		tutor: datos_tutor.eq(1).text().trim(),
 		instructor: $("input[name='instructor']").val().trim(),
 		nif_instructor: $("input[name='dni_inst']").val().trim(),
-		periodo: $('#curso option[selected]').text().trim() + '_' +  $('#periodo option[selected]').val().trim(),
+		curso: $('#curso option[selected]').text().trim(),
+		periodo: $('#periodo option[selected]').val().trim(),
 		fecha_inicio: fecha_inicio,
 		fecha_fin: fecha_fin,
 		horas: $("input[name='fct_horas']").val().trim()

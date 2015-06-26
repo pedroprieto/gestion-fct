@@ -25,6 +25,10 @@ module.exports = Promise.promisify(function(data, curso, periodo, callback) {
 
 	    var res = body.match(/javascript:verDetallesFCT\('(\d+)'\)/g);
 
+	    // Mejorar? No enviar error y hacer otra cosa?
+	    if (res === null)
+		return callback(new Error("No se han encontrado datos."));
+
 	    for (i=0;i<res.length;i++) {
 		res[i] = res[i].match(/(\d+)/g);
 	    }

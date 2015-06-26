@@ -1,6 +1,6 @@
 var Promise = require("bluebird");
 var moment = require('moment');
-var Queries = require('../routes/queries');
+var cps = require('../aux/cursoperiodofct');
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
@@ -24,7 +24,8 @@ fctSchema = new Schema( {
     alumno: {type: String, required: true},
     nif_alumno: {type: String, required: true},
     grupo: {type: String, required: true},
-    periodo: {type: String, required: true},
+    curso: {type: String, required: true},
+    periodo: {type: Number, required: true},
     fecha_inicio: {type: Date, required: true},
     fecha_fin: {type: Date, required: true},
     horas: { type: Number, min: 0, max: 1000, required: true },
@@ -138,27 +139,56 @@ fctSchema.statics.tx_cj = function (doc, ret, options) {
 
 // Función que devuelve una lista de FCTs filtradas por los parámetros de la query pasada como parámetro
 fctSchema.statics.findQuery = function (query, usuario, cb) {
-    // Obtenemos parámetros de query
-    // curso, periodo
-    // Pueden indicarse varios separados por comas
-    var curso = query.curso;
-    var periodo = query.periodo;
-
-    // Búsqueda general
-    var search = query.search;
+    // Parámetros de query: curso, periodo, search
+    // Curso y periodo: pueden indicarse varios separados por comas
 
     // Query
     var q = {};
     q.usuario = usuario._id;
 
-    // Cursos y períodos
-    var cps = Queries.cursosperiodos(curso,periodo);
+
+    // Crear vectores con cursos y períodos para búsqueda
+    var cursos = [];
+    var periodos = [];
+
+    // Si no existe parámetro curso, por defecto se indican todos los cursos
+    if ((typeof query.curso === 'undefined') || (query.curso === "")) {
+	if ((typeof query.periodo === 'undefined') || (query.periodo === "")) {
+	    // Si no existe curso ni período, se indica el actual
+	    cursos.push(cps.getCursoActual());
+	    periodos.push(cps.getPeriodoActual());
+	} else {
+	    cursos = cps.getcursoslist();
+	    periodos = query.periodo.split(',');
+	}
+    } else {
+	cursos = query.curso.split(',');
+	if ((typeof query.periodo === 'undefined') || (query.periodo === "")) {
+	    periodos = cps.getperiodoslist();
+	} else {
+	    periodos = query.periodo.split(',');
+	}
+
+    }
+
+    // Convertir periodos a número y eliminar los no números
+    var periodos = periodos
+	.map(function (n) {
+	    return parseInt(n); 
+	})
+	.filter(function( x ) {
+	    return !isNaN(x);
+	});
+
+    q.curso = {};
+    q.curso.$in = cursos;
+    
     q.periodo = {};
-    q.periodo.$in = cps;
+    q.periodo.$in = periodos;
     
     // Búsqueda general
     if (typeof query.search !== 'undefined') {
-	var re =  new RegExp(search, "i");
+	var re =  new RegExp(query.search, "i");
 	q.$or = [];
 	//q.$or.push({tutor: re});
 	//q.$or.push({ciclo: re});
@@ -169,7 +199,8 @@ fctSchema.statics.findQuery = function (query, usuario, cb) {
 	q.$or.push({alumno: re});
 	q.$or.push({nif_alumno: re});
 	//q.$or.push({grupo: re});
-	q.$or.push({periodo: re});
+	//q.$or.push({curso: re});
+	//q.$or.push({periodo: re});
 	//q.$or.push({fecha_inicio: re});
 	//q.$or.push({fecha_fin: re});
 	//q.$or.push({horas: re});
