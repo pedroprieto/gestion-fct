@@ -470,21 +470,53 @@ function domHelp() {
   }
   
   function input(args) {
-    var p, lbl, inp;
+      var p, lbl, inp;
 
-    p = node("p");
-    lbl = node("label");
-    inp = node("input");
-    lbl.className = "data";
-    lbl.innerHTML = args.prompt||"";
-    inp.name = args.name||"";
-    inp.className = "value";
-    inp.value = args.value||"";
-    push(lbl,p);
-    push(inp,p);
-    
-    return p;
+      p = node("p");
+      lbl = node("label");
+      lbl.className = "data";
+      lbl.innerHTML = args.prompt||"";
+      inp = processinput(args);
+      push(lbl,p);
+      push(inp,p);
+      
+      return p;
   }
+
+    function processinput(args) {
+	var inp;
+	
+	inp = node("input");
+	
+	switch(args.name) {
+	case 'impresion':
+	    inp = node("textarea");
+	    break;	
+	case 'hora_salida':
+	case 'hora_regreso':
+	    inp.type = "time";
+	    break;
+	case 'distancia':
+	    inp.type = "number";
+	    break;
+	case 'fecha':
+	    inp.type = 'date';
+	    break;
+	case 'empresa':
+	case 'tipo':
+	case 'localidad':
+	default:
+	    inp.type = "text";
+	    break;
+
+	}
+
+	inp.name = args.name||"";
+	inp.className = "value";
+	inp.value = args.value||"";
+	
+	return inp;
+    }
   
   function data(args) {
     var p, s1, s2;
