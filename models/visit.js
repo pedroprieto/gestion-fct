@@ -6,6 +6,16 @@ var moment = require('moment');
 var mongoose = require('mongoose')
 ,Schema = mongoose.Schema;
 var tipos = 'inicial seguimiento final otra'.split(' ');
+
+var schemaOptions = {
+    toObject: {
+      virtuals: true
+    }
+    ,toJSON: {
+      virtuals: true
+    }
+};
+
 var visitSchema = new Schema( {
     empresa: {type: String, required: true},
     tipo: {type: String, enum: tipos, required: true },
@@ -19,7 +29,7 @@ var visitSchema = new Schema( {
     impresion: {type: String, required: true},
     _fct : { type: Schema.Types.ObjectId, ref: 'Fct' },
     _usuario: { type: Schema.Types.ObjectId, ref: 'User' }
-});
+}, schemaOptions);
 
 // Propiedades virtuales
 visitSchema.virtual('fecha_texto').get(function () {
