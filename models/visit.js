@@ -170,9 +170,13 @@ visitSchema.statics.genfm34 = function (userid, cb) {
 	{
 	    $group: {
 		_id: {
-		    year: { $year: '$fecha'},
+		    /*year: { $year: '$fecha'},
 		    month: { $month: '$fecha'},
-		    dayOfMonth: { $dayOfMonth: '$fecha'},
+		    dayOfMonth: { $dayOfMonth: '$fecha'},*/
+		    // Fix para problema con timezone de Mongo.
+		    year: { $year : [{ $add: [ "$fecha", 7200000 ]}] }, 
+		    month: { $month : [{ $add: [ "$fecha", 7200000 ]}] }, 
+		    dayOfMonth: { $dayOfMonth : [{ $add: [ "$fecha", 7200000 ]}] },
 		    hora_salida: '$hora_salida',
 		    hora_regreso: '$hora_regreso'
 		},	    
