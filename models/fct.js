@@ -29,6 +29,7 @@ fctSchema = new Schema( {
     fecha_inicio: {type: Date, required: true},
     fecha_fin: {type: Date, required: true},
     horas: { type: Number, min: 0, max: 1000, required: true },
+    distancia: {type: Number},
     usuario: { type: Schema.Types.ObjectId, ref: 'user', required: true },
     visitas: [{ type: Schema.Types.ObjectId, ref: 'visit' }]
 }, schemaOptions);

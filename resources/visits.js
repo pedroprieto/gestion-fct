@@ -159,7 +159,8 @@ module.exports = function(app) {
 		var fcts_promises = [];
 		for (var i in vs) {
 		    var f = Fct.updateAsync({usuario: res.locals.user._id, _id: list_fcts_filtradas[i]}, {
-			$push: {visitas: vs[i][0]._id}
+			$push: {visitas: vs[i][0]._id},
+			distancia: vs[i][0].distancia
 		    });
 		    fcts_promises.push(f);
 		}
@@ -250,7 +251,7 @@ module.exports = function(app) {
 	Fct.findAsync({empresa: res.locals.fct.empresa, usuario: res.locals.user._id, _id: {'$ne': fct._id}}, '_id')
 	    .then(function(fcts) {
 		related = fcts.map(function (key) {return key._id;}).join();
-		col.template = Visit.visit_template(tipo, related);
+		col.template = Visit.visit_template(tipo, related, res.locals.fct.distancia);
 		
 		//Send
 		res.json({collection: col});

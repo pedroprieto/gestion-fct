@@ -112,7 +112,7 @@ visitSchema.statics.tx_cj = function (doc, ret, options) {
 };
 
 // Función estática para generar template
-visitSchema.statics.visit_template = function (tipo, related) {
+visitSchema.statics.visit_template = function (tipo, related, distancia) {
     var template = {};
     
     template.data = [];
@@ -123,6 +123,9 @@ visitSchema.statics.visit_template = function (tipo, related) {
 
 	    if (p === 'tipo') {
 		if (tipo !== undefined) v = tipo;
+	    }
+	    if (p === 'distancia') {
+		if (distancia !== undefined) v = distancia;
 	    }
 	    if (p==='anyo' || p==='semana' || p==='empresa') continue;
 	    
