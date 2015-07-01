@@ -64,6 +64,7 @@ fctSchema.virtual('ffin_texto').get(function () {
 
 // Devuelve la visita inicial. Requiere que 'visitas' esté populado
 fctSchema.virtual('visita_ini').get(function () {
+    if (this.visitas == null) return null;
     if (this.visitas.length == 0) return null;
     return this.visitas.filter(function (v) {
 	return v.tipo == "inicial";
@@ -72,6 +73,7 @@ fctSchema.virtual('visita_ini').get(function () {
 
 // Devuelve la visita de seguimiento. Requiere que 'visitas' esté populado
 fctSchema.virtual('visita_seg').get(function () {
+    if (this.visitas == null) return null;
     if (this.visitas.length == 0) return null;
     return this.visitas.filter(function (v) {
 	return v.tipo == "seguimiento";
@@ -80,6 +82,7 @@ fctSchema.virtual('visita_seg').get(function () {
 
 // Devuelve la visita final. Requiere que 'visitas' esté populado
 fctSchema.virtual('visita_fin').get(function () {
+    if (this.visitas == null) return null;
     if (this.visitas.length == 0) return null;
     return this.visitas.filter(function (v) {
 	return v.tipo == "final";
@@ -88,6 +91,7 @@ fctSchema.virtual('visita_fin').get(function () {
 
 // Devuelve las visitas adicionales. Requiere que 'visitas' esté populado
 fctSchema.virtual('visita_otra').get(function () {
+    if (this.visitas == null) return null;
     if (this.visitas.length == 0) return null;
     return this.visitas.filter(function (v) {
 	return v.tipo == "otra";
