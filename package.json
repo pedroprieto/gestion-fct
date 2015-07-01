@@ -17,7 +17,9 @@
 	"passport-http": "x",
 	"request": "^2.55.0",
 	"bluebird": "2.9.x",
-	"moment": "2.10.x"
+	"moment": "2.10.x",
+	"osrm-client": ">= 0.0.1",
+	"node-geocoder": ">= 0.0.1"
     },
     "devDependencies": {
 	"grunt": "^0.4.5",
