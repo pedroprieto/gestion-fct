@@ -174,9 +174,9 @@ visitSchema.statics.genfm34 = function (userid, cb) {
 		    month: { $month: '$fecha'},
 		    dayOfMonth: { $dayOfMonth: '$fecha'},*/
 		    // Fix para problema con timezone de Mongo.
-		    year: { $year : [{ $add: [ "$fecha", 7200000 ]}] }, 
-		    month: { $month : [{ $add: [ "$fecha", 7200000 ]}] }, 
-		    dayOfMonth: { $dayOfMonth : [{ $add: [ "$fecha", 7200000 ]}] },
+		    year: { $year : [{ $subtract: [ "$fecha", 14400000 ]}] }, 
+		    month: { $month : [{ $subtract: [ "$fecha", 14400000 ]}] }, 
+		    dayOfMonth: { $dayOfMonth : [{ $subtract: [ "$fecha", 14400000 ]}] },
 		    hora_salida: '$hora_salida',
 		    hora_regreso: '$hora_regreso'
 		},	    
@@ -192,13 +192,25 @@ visitSchema.statics.genfm34 = function (userid, cb) {
 	    }
 
 	},
+	// Ordenación de resultados
+	{ "$sort": {
+	    '_id.year': 1, 
+            '_id.month': 1, 
+            '_id.dayOfMonth': 1
+	} },
 	{
 	    $group: {
 		_id: {semana: '$semana', anyo: '$anyo'},
 		visits: { $push: '$$ROOT'}
 	    }
 
-	}, cb);
+	},
+	// Ordenación de resultados
+	{ "$sort": {
+	    '_id.anyo': 1, 
+            '_id.semana': 1
+	} },
+	cb);
 };
 
 // Función estática para generar un FM34 devuelto por la función anterior en formato Collection + JS
