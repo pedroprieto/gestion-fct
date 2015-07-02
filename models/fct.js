@@ -66,36 +66,44 @@ fctSchema.virtual('ffin_texto').get(function () {
 fctSchema.virtual('visita_ini').get(function () {
     if (this.visitas == null) return null;
     if (this.visitas.length == 0) return null;
-    return this.visitas.filter(function (v) {
-	return v.tipo == "inicial";
+    var a= this.visitas.filter(function (v) {
+        return v.tipo == "inicial";
     })[0];
+    a.fecha.setTime(a.fecha.getTime() + 14400000);
+    return a;
 });
 
 // Devuelve la visita de seguimiento. Requiere que 'visitas' esté populado
 fctSchema.virtual('visita_seg').get(function () {
     if (this.visitas == null) return null;
     if (this.visitas.length == 0) return null;
-    return this.visitas.filter(function (v) {
-	return v.tipo == "seguimiento";
+    var a= this.visitas.filter(function (v) {
+        return v.tipo == "seguimiento";
     })[0];
+    a.fecha.setTime(a.fecha.getTime() + 14400000);
+    return a;
 });
 
 // Devuelve la visita final. Requiere que 'visitas' esté populado
 fctSchema.virtual('visita_fin').get(function () {
     if (this.visitas == null) return null;
     if (this.visitas.length == 0) return null;
-    return this.visitas.filter(function (v) {
-	return v.tipo == "final";
+    var a= this.visitas.filter(function (v) {
+        return v.tipo == "final";
     })[0];
+    a.fecha.setTime(a.fecha.getTime() + 14400000);
+    return a;
 });
 
 // Devuelve las visitas adicionales. Requiere que 'visitas' esté populado
 fctSchema.virtual('visita_otra').get(function () {
     if (this.visitas == null) return null;
     if (this.visitas.length == 0) return null;
-    return this.visitas.filter(function (v) {
-	return v.tipo == "otra";
-    });
+    var a= this.visitas.filter(function (v) {
+        return v.tipo == "otra";
+    })[0];
+    a.fecha.setTime(a.fecha.getTime() + 14400000);
+    return a;
 });
 
 fctSchema.statics.prompts.es_ES =  es_ES;
