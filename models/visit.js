@@ -164,7 +164,8 @@ visitSchema.statics.genfm34 = function (userid, cb) {
     return this.aggregate(
 	{
 	    $match: {
-		_usuario: userid
+		_usuario: userid,
+		tipo: { $ne: 'otra' }
 	    }
 	},
 	{
