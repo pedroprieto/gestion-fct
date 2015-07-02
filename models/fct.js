@@ -55,55 +55,53 @@ var es_ES = {
 
 // Propiedades virtuales
 fctSchema.virtual('finicio_texto').get(function () {
-    return moment(this.fecha_inicio).format("LL");
+    // Para corregir problema con locale y fecha en Mongo
+    var a = this.fecha_inicio;
+    a.setTime(a.getTime() + 14400000);
+    return moment(a).format("LL");
 });
 
 fctSchema.virtual('ffin_texto').get(function () {
-    return moment(this.fecha_fin).format("LL");
+    // Para corregir problema con locale y fecha en Mongo
+    var a = this.fecha_fin;
+    a.setTime(a.getTime() + 14400000);
+    return moment(a).format("LL");
 });
 
 // Devuelve la visita inicial. Requiere que 'visitas' esté populado
 fctSchema.virtual('visita_ini').get(function () {
     if (this.visitas == null) return null;
     if (this.visitas.length == 0) return null;
-    var a= this.visitas.filter(function (v) {
-        return v.tipo == "inicial";
+    return this.visitas.filter(function (v) {
+	return v.tipo == "inicial";
     })[0];
-    a.fecha.setTime(a.fecha.getTime() + 14400000);
-    return a;
 });
 
 // Devuelve la visita de seguimiento. Requiere que 'visitas' esté populado
 fctSchema.virtual('visita_seg').get(function () {
     if (this.visitas == null) return null;
     if (this.visitas.length == 0) return null;
-    var a= this.visitas.filter(function (v) {
-        return v.tipo == "seguimiento";
+    return this.visitas.filter(function (v) {
+	return v.tipo == "seguimiento";
     })[0];
-    a.fecha.setTime(a.fecha.getTime() + 14400000);
-    return a;
 });
 
 // Devuelve la visita final. Requiere que 'visitas' esté populado
 fctSchema.virtual('visita_fin').get(function () {
     if (this.visitas == null) return null;
     if (this.visitas.length == 0) return null;
-    var a= this.visitas.filter(function (v) {
-        return v.tipo == "final";
+    return this.visitas.filter(function (v) {
+	return v.tipo == "final";
     })[0];
-    a.fecha.setTime(a.fecha.getTime() + 14400000);
-    return a;
 });
 
 // Devuelve las visitas adicionales. Requiere que 'visitas' esté populado
 fctSchema.virtual('visita_otra').get(function () {
     if (this.visitas == null) return null;
     if (this.visitas.length == 0) return null;
-    var a= this.visitas.filter(function (v) {
-        return v.tipo == "otra";
-    })[0];
-    a.fecha.setTime(a.fecha.getTime() + 14400000);
-    return a;
+    return this.visitas.filter(function (v) {
+	return v.tipo == "otra";
+    });
 });
 
 fctSchema.statics.prompts.es_ES =  es_ES;
