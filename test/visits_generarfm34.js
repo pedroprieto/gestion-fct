@@ -72,7 +72,7 @@ describe('Comprobar la correcta generación de FM 34s', function () {
 
     var v3_other_hour = new Visit({
 	empresa: 'empresa3',
-	tipo: 'otra',
+	tipo: 'final',
 	distancia: 30,
 	fecha: new Date(2015,4,8),
 	hora_salida: '15:00',
@@ -83,7 +83,7 @@ describe('Comprobar la correcta generación de FM 34s', function () {
 
     var v4_same_week = new Visit({
 	empresa: 'empresa4',
-	tipo: 'otra',
+	tipo: 'inicial',
 	distancia: 30,
 	fecha: new Date(2015,4,5),
 	hora_salida: '15:00',
@@ -94,7 +94,7 @@ describe('Comprobar la correcta generación de FM 34s', function () {
 
     var v5_other_week = new Visit({
 	empresa: 'empresa5',
-	tipo: 'otra',
+	tipo: 'seguimiento',
 	distancia: 30,
 	fecha: new Date(2015,3,8),
 	hora_salida: '15:00',
@@ -103,9 +103,9 @@ describe('Comprobar la correcta generación de FM 34s', function () {
 	impresion: 'texto impresión test 5'
     });
 
-    var v6_same_week_dif_fct = new Visit({
+    var v6_same_week = new Visit({
 	empresa: 'empresa6',
-	tipo: 'otra',
+	tipo: 'final',
 	distancia: 30,
 	fecha: new Date(2015,4,7),
 	hora_salida: '15:00',
@@ -130,16 +130,16 @@ describe('Comprobar la correcta generación de FM 34s', function () {
 		v1._fct = f1._id;
 		v2_same_date._fct = f1._id;
 		v3_other_hour._fct = f1._id;
-		v4_same_week._fct = f1._id;
-		v5_other_week._fct = f1._id;
-		v6_same_week_dif_fct._fct = f2._id;
+		v4_same_week._fct = f2._id;
+		v5_other_week._fct = f2._id;
+		v6_same_week._fct = f2._id;
 		v1._usuario = usuario._id;
 		v2_same_date._usuario = usuario._id;
 		v3_other_hour._usuario = usuario._id;
 		v4_same_week._usuario = usuario._id;
 		v5_other_week._usuario = usuario._id;
-		v6_same_week_dif_fct._usuario = usuario._id;
-		return Promise.join(v1.saveAsync(), v2_same_date.saveAsync(), v3_other_hour.saveAsync(), v4_same_week.saveAsync(), v5_other_week.saveAsync(), v6_same_week_dif_fct.saveAsync());
+		v6_same_week._usuario = usuario._id;
+		return Promise.join(v1.saveAsync(), v2_same_date.saveAsync(), v3_other_hour.saveAsync(), v4_same_week.saveAsync(), v5_other_week.saveAsync(), v6_same_week.saveAsync());
 	    })
 	    .then(function(vs) {
 		return Visit.genfm34Async(usuario._id);
