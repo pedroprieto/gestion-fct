@@ -8,6 +8,8 @@ var BasicStrategy = require('passport-http').BasicStrategy;
 var authSaoFct = require('./auth/auth.js')(passport, BasicStrategy);
 var error_handling = require('./errors/error_middleware.js');
 
+// Timezone para UTC y que no haya problemas con fechas
+process.env.TZ = 'UTC';
 
 var app = exports.app =  express();
 namedRoutes.extend(app);
