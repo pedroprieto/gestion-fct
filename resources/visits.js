@@ -277,6 +277,8 @@ module.exports = function(app) {
 
 	var tipo = res.locals.tipo_visita;
 	var fct = res.locals.fct;
+	var localidad = fct.localidad;
+	var distancia = fct.distancia;
 
 	// Collection object
 	var col = req.app.locals.cj();
@@ -301,7 +303,7 @@ module.exports = function(app) {
 	Fct.findAsync({empresa: res.locals.fct.empresa, usuario: res.locals.user._id, _id: {'$ne': fct._id}}, '_id')
 	    .then(function(fcts) {
 		related = fcts.map(function (key) {return key._id;}).join();
-		col.template = Visit.visit_template(tipo, related, res.locals.fct.distancia);
+		col.template = Visit.visit_template(localidad, tipo, related, distancia);
 		
 		//Send
 		res.json({collection: col});

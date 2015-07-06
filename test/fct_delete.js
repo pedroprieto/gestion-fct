@@ -21,6 +21,7 @@ describe('Comprobar el borrado de FCT y sus visitas asociadas.', function () {
 	ciclo: "Ciclo test",
 	empresa: "Empresa test",
 	dir_empresa: "Dir empresa 1",
+	localidad: "Alicante",
 	alumno: "alumno test",
 	nif_alumno: "12345678k",
 	instructor: "instructor test",

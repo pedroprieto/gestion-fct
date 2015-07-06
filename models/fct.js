@@ -19,6 +19,7 @@ fctSchema = new Schema( {
     ciclo: {type: String, required: true},
     empresa: {type: String, required: true},
     dir_empresa: {type: String, required: true},
+    localidad: {type: String, required: true},
     instructor: {type: String, required: true},
     nif_instructor: {type: String, required: true},
     alumno: {type: String, required: true},

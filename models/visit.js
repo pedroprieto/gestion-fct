@@ -124,7 +124,7 @@ visitSchema.statics.tx_cj = function (doc, ret, options) {
 };
 
 // Función estática para generar template
-visitSchema.statics.visit_template = function (tipo, related, distancia) {
+visitSchema.statics.visit_template = function (localidad, tipo, related, distancia) {
     var template = {};
     
     template.data = [];
@@ -133,6 +133,9 @@ visitSchema.statics.visit_template = function (tipo, related, distancia) {
 	var v = '';
 	if (p.substring(0,1) != '_') {
 
+	    if (p === 'localidad') {
+		if (typeof localidad !== undefined) v = localidad;
+	    }
 	    if (p === 'tipo') {
 		if (typeof tipo !== undefined) v = tipo;
 	    }

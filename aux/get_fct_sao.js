@@ -33,12 +33,14 @@ module.exports = Promise.promisify(function(data, idFCT, callback) {
 
 	    var datos_alumno = $('#celdaDatosAlumno td');
 	    var datos_empresa = $('#celdaDatosEmpresa td');
+	    var datos_ct = $('#celdaDatosCT td');
 	    var datos_tutor = $('#celdaDatosTutor td');
 	    var res = {
 		alumno: datos_alumno.eq(2).text().trim(),
 		nif_alumno: datos_alumno.eq(1).text().trim(),
 		empresa:  datos_empresa.eq(1).text().trim(),
 		dir_empresa: datos_empresa.eq(2).text().trim(),
+		localidad: datos_ct.eq(2).text().trim(),
 		ciclo: $('#seleccionCiclo option[selected]').text().trim(),
 		grupo: datos_tutor.eq(2).text().trim(),
 		tutor: datos_tutor.eq(1).text().trim(),

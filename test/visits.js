@@ -21,6 +21,7 @@ describe('Crear una visita en una FCT', function () {
 		{name: "ciclo", value: "Ciclo test"},
 		{name: "empresa", value: "empresa test"},
 		{name: "dir_empresa", value: "dir empresa test"},
+		{name: "localidad", value: "Alicante"},
 		{name: "alumno", value: "alumno test"},
 		{name: "nif_alumno", value: "123456789k"},
 		{name: "instructor", value: "instructor test"},

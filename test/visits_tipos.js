@@ -22,6 +22,7 @@ describe('Comprobar que no se pueden grabar visitas del mismo tipo.', function (
 	ciclo: "Ciclo test",
 	empresa: "Empresa test",
 	dir_empresa: "Dir empresa 2",
+	localidad: "Alicante",
 	nif_alumno: "12345678k",
 	nif_instructor: "12345678k",
 	alumno: "alumno test",
