@@ -203,7 +203,6 @@ module.exports = function(app) {
     app.put(app.lookupRoute('visit'), function(req, res, next) {
 
 	var visit = res.locals.visit;
-	console.log(visit._id);
 	var fct = res.locals.fct;
 
 	// get data array
@@ -234,7 +233,6 @@ module.exports = function(app) {
 
 	// Guardamos
 	visit.set(visitdata);
-	console.log(visit._id);
 	visit.saveAsync()
 	    .then(function (vs) {
 		res.location(req.buildLink('visit').href);

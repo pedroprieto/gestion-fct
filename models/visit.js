@@ -27,6 +27,7 @@ var visitSchema = new Schema( {
     hora_regreso: {type: String, match: /^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/, required: true},
     localidad: {type: String,required: true},
     impresion: {type: String, required: true},
+    presencial: { type: Boolean, default: true },
     _fct : { type: Schema.Types.ObjectId, ref: 'Fct' },
     _usuario: { type: Schema.Types.ObjectId, ref: 'User' }
 }, schemaOptions);
@@ -142,6 +143,14 @@ visitSchema.statics.visit_template = function (localidad, tipo, related, distanc
 	    if (p === 'distancia') {
 		if (typeof distancia !== undefined) v = distancia;
 	    }
+	    if (p === 'presencial') {
+		v='true';
+		if (typeof tipo !== undefined) {
+		    if (tipo === 'otra') {
+			v='false';
+		    }
+		}
+	    }
 	    if (p==='anyo' || p==='semana' || p==='empresa') continue;
 	    
 	    template.data.push({
@@ -170,7 +179,7 @@ visitSchema.statics.genfm34 = function (userid, cb) {
 	{
 	    $match: {
 		_usuario: userid,
-		tipo: { $ne: 'otra' }
+		presencial: true
 	    }
 	},
 	{
