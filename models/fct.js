@@ -212,7 +212,7 @@ fctSchema.statics.findQuery = function (query, usuario, cb) {
 	//q.$or.push({horas: re});
     }
     
-    return this.find(q, cb);
+    return this.find(q, null, { sort: {empresa: 1} }, cb);
 
 };
 

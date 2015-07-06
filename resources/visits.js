@@ -84,7 +84,7 @@ module.exports = function(app) {
      */
     app.get(app.lookupRoute('visits'), function(req, res, next) {
 
-	Visit.findAsync({ '_usuario': res.locals.user._id , '_fct': res.locals.fct._id})
+	Visit.findAsync({ '_usuario': res.locals.user._id , '_fct': res.locals.fct._id}, null, { sort: {fecha: 1} })
 	    .then(function (visits) {
 		var col = renderCollectionVisits(req, res, visits);
 		res.json(col);
