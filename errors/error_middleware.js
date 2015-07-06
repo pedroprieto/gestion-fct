@@ -40,7 +40,7 @@ module.exports.respondError = function(err, req, res, next){
 	    message = 'Oops, there was a problem!'
 	}
     }
-    if (req.accepts('json')) {
+    if (req.accepts('application/vnd.collection+json')) {
 	errcol.error.title = err.name || 'Error';
 	errcol.error.message = message;
 //	errcol.error.code = err.stack;

@@ -48,7 +48,9 @@ visitSchema.pre('save', function (next) {
 visitSchema.pre('save', function (next) {
     var tipo = this.tipo;
 
-    if (tipo === 'otra') return next();
+    // Si la visita es del tipo 'otra', se pueden crear varias
+    // Si la visita no es nueva (estamos haciendo una actualización), no hay que comprobar nada
+    if ((tipo === 'otra') || (!this.isNew)) return next();
 
     this.constructor.find({_fct: this._fct, _usuario: this._usuario, tipo: tipo}, function (err, docs) {
 	if (err) next(err);
@@ -132,10 +134,10 @@ visitSchema.statics.visit_template = function (tipo, related, distancia) {
 	if (p.substring(0,1) != '_') {
 
 	    if (p === 'tipo') {
-		if (tipo !== undefined) v = tipo;
+		if (typeof tipo !== undefined) v = tipo;
 	    }
 	    if (p === 'distancia') {
-		if (distancia !== undefined) v = distancia;
+		if (typeof distancia !== undefined) v = distancia;
 	    }
 	    if (p==='anyo' || p==='semana' || p==='empresa') continue;
 	    
@@ -148,7 +150,7 @@ visitSchema.statics.visit_template = function (tipo, related, distancia) {
     }
 
     // Añadimos FCTs relacionadas en el campo 'related' de la plantilla
-    if (related !== "") {
+    if (typeof related !== undefined) {
 	template.data.push({
 	    name : 'related',
 	    value : related,

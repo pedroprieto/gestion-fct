@@ -40,7 +40,11 @@ module.exports = function(app) {
 
 	// Queries
 
-	// Template
+	// Template (para PUT sólo)
+	col.template = Visit.visit_template();
+
+
+	// Links a templates para visitas específicas
 	var t1;
 	var tipos_existentes = '';
 	for (var i in visitlist) {
@@ -99,9 +103,6 @@ module.exports = function(app) {
 	
 	// get data array
 	data = req.body.template.data;
-
-
-	data = req.body.template.data;
 	
 	if (!Array.isArray(data)) {
 	    var err = new Error('Los datos enviados no se ajustan al formato collection + json.');
@@ -127,7 +128,9 @@ module.exports = function(app) {
 	// Comprobamos si se quieren crear visitas relacionadas
 	// La propiedad 'related' es una cadena con las ids de las FCTs relacionadas separadas por coma
 	if (visitdata.hasOwnProperty('related')) {
-	    list_fcts = visitdata.related.split(",");
+	    if (visitdata.related !== "") {
+		list_fcts = visitdata.related.split(",");
+	    }
 	}
 	
 	// Añadimos la FCT actual
@@ -192,6 +195,53 @@ module.exports = function(app) {
 	var col = renderCollectionVisits(req, res, visits);
 	    
 	res.json(col);
+    });
+
+    /**
+     * PUT visita
+     */
+    app.put(app.lookupRoute('visit'), function(req, res, next) {
+
+	var visit = res.locals.visit;
+	console.log(visit._id);
+	var fct = res.locals.fct;
+
+	// get data array
+	var data = req.body.template.data;
+	
+	if (!Array.isArray(data)) {
+	    var err = new Error('Los datos enviados no se ajustan al formato collection + json.');
+	    err.status = 400;
+	    return next(err);
+	}
+
+
+	// Aprovechamos que Mongoose elimina los campos no definidos en el modelo. Por tanto, no hay que filtrar los datos
+	// Convertimos el formato "template" de collection.json y devolvemos un objecto JavaScript convencional
+	var visitdata = data.reduce(function(a,b){
+	    a[b.name] = b.value;
+	    return a;
+	} , {});
+
+	// Añadimos el usuario
+	visitdata._usuario = res.locals.user._id;
+
+	// Añadimos la empresa (no está puesta en el template)
+	visitdata.empresa = res.locals.fct.empresa;
+
+	// Añadimos la FCT
+	visitdata._fct = fct._id;
+
+	// Guardamos
+	visit.set(visitdata);
+	console.log(visit._id);
+	visit.saveAsync()
+	    .then(function (vs) {
+		res.location(req.buildLink('visit').href);
+		res.status(200).end();
+	    })
+	    .catch(next);
+	
     });
 
     /**

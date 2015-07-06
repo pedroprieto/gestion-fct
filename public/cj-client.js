@@ -400,8 +400,8 @@ function cj() {
 
     data = [];
     form = e.target;
-    nodes = document.getElementsByClassName('value');
     //nodes = d.tags("input",form);
+    nodes = d.classes("value",form);
     for(i=0,x=nodes.length;i<x;i++) {
       if(nodes[i].name && nodes[i].name!=='') {
         data.push({name:nodes[i].name,value:nodes[i].value+""});
@@ -415,7 +415,8 @@ function cj() {
 
     data = [];
     form = e.target;
-    nodes = d.tags("input",form);
+    //nodes = d.tags("input",form);      
+    nodes = d.classes("value",form);
     for(i=0,x=nodes.length;i<x;i++) {
       if(nodes[i].name && nodes[i].name!=='') {
         data.push({name:nodes[i].name,value:nodes[i].value+""});
@@ -584,6 +585,16 @@ function domHelp() {
     return rtn;
   }
 
+  function classes(c,elm) {
+    if(elm) {
+      rtn = elm.getElementsByClassName(c);
+    }
+    else {
+      rtn = document.getElementsByClassName(c);
+    }
+    return rtn;
+  }
+
   function find(id) {
     return document.getElementById(id);
   }
@@ -606,6 +617,7 @@ function domHelp() {
   that = {};
   that.push = push;
   that.tags = tags;
+  that.classes = classes;
   that.find = find;
   that.text = text;
   that.node = node;
