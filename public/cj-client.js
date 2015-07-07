@@ -73,7 +73,7 @@ function cj() {
     if(g.cj.collection.links) {
       coll = g.cj.collection.links;
       ul = d.node("ul");
-      ul.onclick = httpGet;
+      //ul.onclick = httpGet;
       
       for(var link of coll) {
 
@@ -91,8 +91,12 @@ function cj() {
           img = d.image({href:link.href,className:link.rel});
           d.push(img, li);
         }
-        else {
-          a = d.anchor({rel:link.rel,href:link.href,text:link.prompt});
+        else if(isAttachment(link)===true) {
+	  a = d.anchor({rel:link.rel,href:link.href,text:link.prompt,render: link.render});
+          d.push(a, li);
+	} else {
+          a = d.anchor({rel:link.rel,href:link.href,text:link.prompt,render: link.render});
+	  a.onclick = httpGet;
           d.push(a, li);
         }
         d.push(li, ul);
@@ -323,6 +327,13 @@ function cj() {
   function isHiddenLink(link) {
     var rtn = false;
     if(link.render && (link.render==="none" || link.render==="hidden" || link.rel==="stylesheet")) {
+      rtn = true;
+    }
+    return rtn;
+  }
+  function isAttachment(link) {
+    var rtn = false;
+    if(link.render && link.render==="attachment") {
       rtn = true;
     }
     return rtn;

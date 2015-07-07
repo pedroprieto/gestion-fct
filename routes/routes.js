@@ -10,9 +10,9 @@ module.exports = function(app) {
     app.defineRoute('fm34sdocx', '/api/users/:user/fm34s/docx', 'document', 'FM34 en formato DOCX');
     app.defineRoute('fm34', '/api/users/:user/fm34s/items/:fm34', 'fm34 item', 'FM 34');
     app.defineRoute('fcts', '/api/users/:user/fcts', 'fcts', 'Lista de FCTs del usuario');
-    app.defineRoute('certs_alumno', '/api/users/:user/fcts/certs_alumno', 'certs_alumno collection', 'Lista de certificados del alumno');
-    app.defineRoute('certs_instructor', '/api/users/:user/fcts/certs_instructor', 'certs_instructor collection', 'Lista de certificados del instructor');
-    app.defineRoute('fm18s', '/api/users/:user/fcts/fm18s', 'fm18 collection', 'Lista de FM 18');
+    app.defineRoute('certs_alumno', '/api/users/:user/fcts/certs_alumno', 'certs_alumno collection', 'Lista de certificados del alumno', 'attachment');
+    app.defineRoute('certs_instructor', '/api/users/:user/fcts/certs_instructor', 'certs_instructor collection', 'Lista de certificados del instructor', 'attachment');
+    app.defineRoute('fm18s', '/api/users/:user/fcts/fm18s', 'fm18 collection', 'Lista de FM 18', 'attachment');
     app.defineRoute('fct', '/api/users/:user/fcts/items/:fct', 'item', 'FCT');
     app.defineRoute('login', '/api/login', 'url', 'Login');
     app.defineRoute('import_fcts', '/api/users/:user/import_fcts', 'url', 'Importar FCTs de SAO');

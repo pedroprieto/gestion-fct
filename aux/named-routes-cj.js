@@ -36,12 +36,13 @@ exports.extend = function (app) {
      * @return {Application} for chaining
      * @api public
      */
-    defineRoute = function (routeName, route, rel, prompt) {
+    defineRoute = function (routeName, route, rel, prompt, render) {
 	namedRoutes[routeName] = {
 	    route: route,
 	    rel: rel,
 	    prompt: prompt
 	};
+	if (typeof render !== undefined) namedRoutes[routeName].render = render;
 	return app;
     };
     /**
@@ -151,6 +152,8 @@ exports.extend = function (app) {
 	    link.href = URL.format(full_url);
 	    link.rel = route.rel;
 	    link.prompt = route.prompt;
+	    if (typeof route.render !== undefined) link.render = route.render;
+	    
 	    
 	    return link;
 	};
