@@ -68,11 +68,10 @@ function cj() {
     var ul, li, a, img;
     var head, lnk;
     
-    elm = d.find("links");
-    d.clear(elm);
+    ul = d.find("links");
+    d.clear(ul);
     if(g.cj.collection.links) {
       coll = g.cj.collection.links;
-      ul = d.node("ul");
       //ul.onclick = httpGet;
       
       for(var link of coll) {
@@ -101,8 +100,8 @@ function cj() {
         }
         d.push(li, ul);
       }
-      d.push(ul, elm);
     }
+    $( "#links li" ).clone().appendTo( "#mobile-links" );
   }
 
   // handle item collection
@@ -112,39 +111,45 @@ function cj() {
     var dl, dt, dd;
     var p, s1, s2, img;
     var a1, a2, a3;
+    var ca;
 
     elm = d.find("items");
     d.clear(elm);
     if(g.cj.collection.items) {
       coll = g.cj.collection.items;
-      ul = d.node("ul");
+      ul = d.node("div");
 
       for(var item of coll) {
-        li = d.node("li");
-        dl = d.node("dl");
-        dt = d.node("dt");
+        li = d.node("div");
+	li.className = "card blue-grey darken-1";
+        dl = d.node("div");
+	dl.className = "card-content white-text";
+        dt = d.node("span");
+	dt.className = "card-title";
+	ca = d.node("div");
+	ca.className = "card-action";
         
         // item link
         a1 = d.anchor({href:item.href,rel:item.rel,className:"item link",text:item.rel});
         a1.onclick = httpGet;
-        d.push(a1,dt);
+        d.push(a1,ca);
         
         // edit link
         if(isReadOnly(item)===false && hasTemplate(g.cj.collection)===true) {
           a2 = d.anchor({href:item.href,rel:"edit",className:"item action",text:"Edit"});
           a2.onclick = cjEdit;
-          d.push(a2, dt);
+          d.push(a2, ca);
         }
 
         // delete link
         if(isReadOnly(item)===false) {
           a3 = d.anchor({href:item.href,className:"item action",rel:"delete",text:"Delete"});
           a3.onclick = httpDelete;
-          d.push(a3,dt);
+          d.push(a3,ca);
         }
         d.push(dt,dl);
         
-        dd = d.node("dd");
+        dd = dl;
         for(var data of item.data) {
           p = d.data({className:"item "+data.name,text:data.prompt+"&nbsp;",value:data.value+"&nbsp;"});
           d.push(p,dd);
@@ -162,13 +167,14 @@ function cj() {
             else {
               a = d.anchor({className:"item",href:link.href,rel:link.rel,text:link.prompt});
               a.onclick = httpGet;
-              d.push(a, p);
+              d.push(a, ca);
             }
             d.push(p,dd);
           }
         }
-        d.push(dd,dl);
+        //d.push(dd,dl);
         d.push(dl,li);
+	d.push(ca,li);
         d.push(li,ul);
       }
       d.push(ul,elm);

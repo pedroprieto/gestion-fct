@@ -8,11 +8,27 @@
   -->
   <head>
     <title>Cj</title>
-    <link href="cj-client.css" rel="stylesheet" />
+    
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/css/materialize.min.css">
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   </head>
   <body>
     <h1 id="title"></h1>
-    <div id="links"></div>
+    <nav>
+      <div class="nav-wrapper">
+	<a href="#" data-activates="mobile-links" class="button-collapse"><i class="material-icons">menu</i></a>
+	<ul id="mobile-links" class="side-nav">
+	</ul>
+	<ul id="links" class="right hide-on-med-and-down">
+	</ul>
+      </div>
+    </nav>
     <div id="items"></div>
     <div id="edit" class="display:none;"></div>
     <div id="queries"></div>
@@ -23,6 +39,10 @@
     </div>
   </body>
   <script src="cj-client.js">//na </script>
+  <!-- <link href="cj-client.css" rel="stylesheet" />-->
+  <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/js/materialize.min.js"></script>
   <script>
     window.onload = function() {
     var pg = cj();
@@ -30,6 +50,14 @@
     var slashes = http.concat("//");
     var host = slashes.concat(window.location.host);
     pg.init(host + "/api");
+    
+
+        
     }
+
+    $( document ).ready(function(){
+        $(".button-collapse").sideNav();
+
+    })
   </script>
 </html>
