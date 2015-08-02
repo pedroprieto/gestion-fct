@@ -53,6 +53,11 @@ module.exports = function(app) {
 		prompt: "Búsqueda de FCTs",
 		data: [
 		    {
+			name: "search",
+			value: req.query.search || "",
+			prompt: "Búsqueda por texto"
+		    },
+		    {
 			name: "curso",
 			value: typeof req.query.curso!== 'undefined' ? req.query.curso : c_actual,
 			prompt: "Curso"
@@ -61,12 +66,8 @@ module.exports = function(app) {
 			name: "periodo",
 			value: typeof req.query.periodo!== 'undefined' ? req.query.periodo : p_actual,
 			prompt: "Período"
-		    },
-		    {
-			name: "search",
-			value: req.query.search || "",
-			prompt: "Búsqueda por texto"
 		    }
+		    
 		]
 	    }
 	);

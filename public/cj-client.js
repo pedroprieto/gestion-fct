@@ -20,6 +20,10 @@ function cj() {
     g.url = '';
     g.cj = null;
     g.ctype = "application/vnd.collection+json";
+    // Link rel='profile' de la collection
+    g.profile = "";
+    // Link rel='type' de la collection
+    g.type = "";
 
     // init library and start
     function init(url) {
@@ -42,12 +46,16 @@ function cj() {
 	template();
 	error();
 	cjClearEdit();
+	$(".collapsible").collapsible();
+
     }
 
     // handle response dump
     function dump() {
 	var elm = d.find("dump");
 	elm.innerText = JSON.stringify(g.cj, null, 2);
+	g.profile = "";
+	g.type = "";
     }
     
     // handle title
@@ -83,6 +91,16 @@ function cj() {
 		    d.push(lnk,head);
 		    continue;
 		}
+
+		// Store collection profile
+		if(isProfileLink(link)===true) {
+		    g.profile = link.href;
+		}
+
+		// Store collection type
+		if(isTypeLink(link)===true) {
+		    g.type = link.href;
+		}
 		
 		// render embedded images, if asked
 		li = d.node("li");
@@ -107,68 +125,43 @@ function cj() {
     // handle item collection
     function items() {
 	var elm, coll;
-	var ul, li;
-	var dl, dt, dd;
-	var p, s1, s2, img;
-	var a1, a2, a3;
-	var ca;
 	var el;
+	var col_container;
 
-	elm = d.find("items");
-	d.clear(elm);
+	elm = $("#items");
+	elm.empty();
+
+	col_container = render["fcts"]();
+	elm.append(col_container);
+	
 	if(g.cj.collection.items) {
 	    coll = g.cj.collection.items;
-	    ul = elm;
-
 	    for(var item of coll) {
-		// Opcionalmente, utilizar otro método en función del item
-		el = renderItem(item);
-		d.push(el,elm);
-		
+		el = render["fct"](item);
+		col_container.append(el);
 	    }
-	    //d.push(ul,elm);
 	}
     }
     
     // handle query collection
     function queries() {
-	var elm, coll;
-	var ul, li;
-	var form, fs, lg, p, lbl, inp;
+	var elm, coll,li;
+	var queries_container;
 
-	elm = d.find("queries");
-	d.clear(elm);
+	elm = $("#queries");
+	elm.empty();
 	if(g.cj.collection.queries) {
-	    ul = d.node("ul");
+	    queries_container = renderQueriesContainer();
+	    //ul = d.node("ul");
 	    coll = g.cj.collection.queries;
 	    for(var query of coll) {
-		li = d.node("li");
-		form = d.node("form");
-		form.action = query.href;
-		form.className = query.rel;
-		form.method = "get";
-		form.onsubmit = httpQuery;
-		fs = d.node("fieldset");
-		lg = d.node("legend");
-		lg.innerHTML = query.prompt + "&nbsp;";
-		d.push(lg,fs);
-		for(var data of query.data) {
-		    p = d.input({prompt:data.prompt,name:data.name,value:data.value});
-		    d.push(p,fs);
-		}
-		p = d.node("p");
-		inp = d.node("input");
-		inp.type = "submit";
-		d.push(inp,p);
-		d.push(p,fs);
-		d.push(fs,form);
-		d.push(form,li);
-		d.push(li,ul);
+		li = renderQuery(query);
+		queries_container.append(li);
 	    }
-	    d.push(ul,elm);
+	    elm.append(queries_container);
 	}
     }
-    
+
     // handle template object
     function template() {
 	var elm, coll;
@@ -289,6 +282,20 @@ function cj() {
     function isAttachment(link) {
 	var rtn = false;
 	if(link.render && link.render==="attachment") {
+	    rtn = true;
+	}
+	return rtn;
+    }
+    function isProfileLink(link) {
+	var rtn = false;
+	if(link.rel && link.rel==="profile") {
+	    rtn = true;
+	}
+	return rtn;
+    }
+    function isTypeLink(link) {
+	var rtn = false;
+	if(link.rel && link.rel==="type") {
 	    rtn = true;
 	}
 	return rtn;
@@ -415,6 +422,76 @@ function cj() {
 	}
     }
 
+    var render = {
+	fcts: renderCollection,
+	fct: renderItemCollectionMaterial,
+	query: renderQuery
+	//search: renderQueryItem
+    };
+
+	
+    function renderQuery(query) {
+	var ul, li;
+	var form, fs, lg, p, lbl, inp;
+	var header,body;
+	var div;
+
+	li = $("<li>");
+	header = $("<div>").addClass("collapsible-header").html('<i class="material-icons">search</i>' + query.prompt);
+	li.append(header);
+	body = $("<div>").addClass("collapsible-body");
+	form = $("<form>").attr("action",query.href).addClass(query.rel).attr("method","get").submit(httpQuery);
+	div = $("<div>").addClass("row");
+
+	for(var data of query.data) {
+	    p = d.input({prompt:data.prompt,name:data.name,value:data.value});
+	    if (data.name === "search") {
+		p.className += " offset-s1 col s5";
+	    } else {
+		p.className += " col s2";
+	    }
+	    div.append(p);
+	}
+	
+	p = $("<div>").addClass("col s1 input-field");
+	inp = $("<button>").attr("type","submit").addClass("btn waves-effect waves-light").html('<i class="material-icons">search</i>');
+	p.append(inp);
+	div.append(p);
+	form.append(div);
+	body.append(form);
+	li.append(body);
+	return li;
+    }
+
+
+    function renderCollapsible() {
+	
+	var a = $('<ul class="collapsible" data-collapsible="accordion">');
+	return a;
+    }
+
+    function renderCollection() {
+	
+	var a = $('<ul class="collection">');
+	return a;
+    }
+
+    function renderQueriesContainer() {
+	var a;
+	switch (g.type) {
+	default:
+	    a = $('<ul>');
+	    a.addClass("collapsible");
+	    a.attr("data-collapsible","accordion");
+	    $('.collapsible').collapsible();
+	    
+	}
+
+	return a;
+
+    }
+    
+
 
     function renderItem(item) {
 	var li,dl,dt,ca,a1;
@@ -433,7 +510,7 @@ function cj() {
 	a1.onclick = httpGet;
 	d.push(a1,ca);    
     
-    // edit link
+	// edit link
 	if(isReadOnly(item)===false && hasTemplate(g.cj.collection)===true) {
 	    a2 = d.anchor({href:item.href,rel:"edit",className:"item action",text:"Edit"});
 	    a2.onclick = cjEdit;
@@ -478,6 +555,148 @@ function cj() {
 
     }
 
+    function renderItem2(item) {
+	var li,dl,dt,ca,a1;
+	
+	li = d.node("li");
+	li.className = "";
+	dl = d.node("div");
+	dl.className = "collapsible-body container";
+	dt = d.node("div");
+	dt.className = " row";
+	ca = d.node("div");
+	ca.className = "collapsible-header";
+	
+	// item link
+	a1 = d.anchor({href:item.href,rel:item.rel,className:"item link",text:'<i class="material-icons">info_outline</i>'});//ERROR!!! HAY QUE PONER item.rel
+	a1.onclick = httpGet;
+	d.push(a1,ca);    
+    
+	// edit link
+	if(isReadOnly(item)===false && hasTemplate(g.cj.collection)===true) {
+	    a2 = d.anchor({href:item.href,rel:"edit",className:"item action",text:'<i class="material-icons">call_made</i>'});
+	    a2.onclick = cjEdit;
+	    d.push(a2, ca);
+	}
+
+	// delete link
+	if(isReadOnly(item)===false) {
+	    a3 = d.anchor({href:item.href,className:"item action",rel:"delete",text:'<i class="material-icons">call_made</i>'});
+	    a3.onclick = httpDelete;
+	    d.push(a3,ca);
+	}
+	d.push(dt,dl);
+	
+	dd = dl;
+	for(var data of item.data) {
+	    p = d.data({className:"item "+data.name,text:data.prompt+"&nbsp;",value:data.value+"&nbsp;"});
+	    if ((data.name === "empresa") || (data.name === "alumno")) {
+		p.className = "item empresa";
+		d.push(p,ca);
+	    } else {
+		d.push(p,dt);
+	    }
+	}
+	if(item.links) {
+	    for(var link of item.links) {
+		
+		
+		// render as images, if asked
+		if(isImage(link)===true) {
+		    p = d.node("p");
+		    p.className = "item";
+		    img = d.image({className:"image "+link.rel,rel:link.rel,href:link.href});         
+		    d.push(img, p);
+		    d.push(p,dd);
+		}
+		else {
+		    a = d.anchor({className:"item",href:link.href,rel:link.rel,text:link.prompt});
+		    a.onclick = httpGet;
+		    d.push(a, ca);
+		}
+		//d.push(p,dd);
+	    }
+	}
+	//d.push(dd,dl);
+
+	d.push(ca,li);
+	d.push(dl,li);
+	return li;
+
+    }
+
+    function renderItemCollectionMaterial(item) {
+	var li,dl,dt,ca,a1;
+	
+	li = d.node("li");
+	li.className = "collection-item";
+	dl = d.node("div");
+	dl.className = "";
+	dt = d.node("div");
+	dt.className = " row";
+	ca = d.node("div");
+	ca.className = "";
+	
+	// item link
+	/*a1 = d.anchor({href:item.href,rel:item.rel,className:"item link secondary-content",text:'<i class="material-icons">info_outline</i>'});//ERROR!!! HAY QUE PONER item.rel
+	a1.onclick = httpGet;
+	d.push(a1,ca); */   
+    
+	// edit link
+	if(isReadOnly(item)===false && hasTemplate(g.cj.collection)===true) {
+	    a2 = d.anchor({href:item.href,rel:"edit",className:"item action secondary-content",text:'<i class="material-icons">call_made</i>'});
+	    a2.onclick = cjEdit;
+	    d.push(a2, ca);
+	}
+
+	// delete link
+	if(isReadOnly(item)===false) {
+	    a3 = d.anchor({href:item.href,className:"item action secondary-content",rel:"delete",text:'<i class="material-icons">delete</i>'});
+	    a3.onclick = httpDelete;
+	    d.push(a3,ca);
+	}
+	d.push(dt,dl);
+	
+	dd = dl;
+	for(var data of item.data) {
+	    p = d.data({className:"item "+data.name,text:data.prompt+"&nbsp;",value:data.value+"&nbsp;"});
+	    if ((data.name === "empresa") || (data.name === "alumno")) {
+		p.className = "item empresa";
+		d.push(p,ca);
+	    } else {
+		d.push(p,dt);
+	    }
+	}
+	if(item.links) {
+	    for(var link of item.links) {
+		
+		
+		// render as images, if asked
+		if(isImage(link)===true) {
+		    p = d.node("p");
+		    p.className = "item";
+		    img = d.image({className:"image "+link.rel,rel:link.rel,href:link.href});         
+		    d.push(img, p);
+		    d.push(p,dd);
+		}
+		else {
+		    a = d.anchor({className:"item secondary-content",href:link.href,rel:link.rel,text:link.prompt});
+		    a.onclick = httpGet;
+		    d.push(a, ca);
+		}
+		//d.push(p,dd);
+	    }
+	}
+	//d.push(dd,dl);
+
+	d.push(ca,li);
+	d.push(dl,li);
+	return li;
+
+    }
+
+
+
 
     // export function
     var that = {};
@@ -504,11 +723,14 @@ function domHelp() {
     function input(args) {
 	var p, lbl, inp;
 
-	p = node("p");
+	p = node("div");
+	p.className += "input-field";
 	lbl = node("label");
 	lbl.className = "data";
 	lbl.innerHTML = args.prompt||"";
+	lbl.setAttribute("for",args.name);
 	inp = processinput(args);
+	inp.setAttribute("id",args.name);
 	push(lbl,p);
 	push(inp,p);
 	
@@ -553,10 +775,11 @@ function domHelp() {
     function data(args) {
 	var p, s1, s2;
 
-	p = node("p");
+	p = node("span");
 	p.className = args.className||"";
+	p.className += " col s3";
 	s1 = node('span');
-	s1.className = "prompt";
+	s1.className = "prompt title";
 	s1.innerHTML = args.text||"";;
 	s2 = node("span");
 	s2.className = "value";
@@ -574,7 +797,8 @@ function domHelp() {
 	a.rel = args.rel||"";
 	a.href = args.href||"";
 	a.className = args.className||"";
-	push(text(args.text||"link"), a);
+	//push(text(args.text||"link"), a);
+	a.innerHTML = args.text || "link";
 
 	return a;
     }
