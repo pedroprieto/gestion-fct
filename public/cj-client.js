@@ -429,7 +429,7 @@ function cj() {
 	//search: renderQueryItem
     };
 
-	
+    
     function renderQuery(query) {
 	var ul, li;
 	var form, fs, lg, p, lbl, inp;
@@ -509,7 +509,7 @@ function cj() {
 	a1 = d.anchor({href:item.href,rel:item.rel,className:"item link",text:item.rel});
 	a1.onclick = httpGet;
 	d.push(a1,ca);    
-    
+	
 	// edit link
 	if(isReadOnly(item)===false && hasTemplate(g.cj.collection)===true) {
 	    a2 = d.anchor({href:item.href,rel:"edit",className:"item action",text:"Edit"});
@@ -571,7 +571,7 @@ function cj() {
 	a1 = d.anchor({href:item.href,rel:item.rel,className:"item link",text:'<i class="material-icons">info_outline</i>'});//ERROR!!! HAY QUE PONER item.rel
 	a1.onclick = httpGet;
 	d.push(a1,ca);    
-    
+	
 	// edit link
 	if(isReadOnly(item)===false && hasTemplate(g.cj.collection)===true) {
 	    a2 = d.anchor({href:item.href,rel:"edit",className:"item action",text:'<i class="material-icons">call_made</i>'});
@@ -639,9 +639,9 @@ function cj() {
 	
 	// item link
 	/*a1 = d.anchor({href:item.href,rel:item.rel,className:"item link secondary-content",text:'<i class="material-icons">info_outline</i>'});//ERROR!!! HAY QUE PONER item.rel
-	a1.onclick = httpGet;
-	d.push(a1,ca); */   
-    
+	  a1.onclick = httpGet;
+	  d.push(a1,ca); */   
+	
 	// edit link
 	if(isReadOnly(item)===false && hasTemplate(g.cj.collection)===true) {
 	    a2 = d.anchor({href:item.href,rel:"edit",className:"item action secondary-content",text:'<i class="material-icons">call_made</i>'});
