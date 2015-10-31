@@ -177,7 +177,7 @@ function cj() {
 	    form.onsubmit = httpPost;
 	    fs = d.node("fieldset");
 	    lg = d.node("legend");
-	    lg.innerHTML = "Add";
+	    lg.innerHTML = "";
 	    d.push(lg,fs);
 	    for(var data of coll) { 
 		p = d.input({prompt:data.prompt+"&nbsp;",name:data.name,value:data.value});
@@ -186,6 +186,7 @@ function cj() {
 	    p = d.node("p");
 	    inp = d.node("input");
 	    inp.type = "submit";
+	    inp.className = "btn waves-effect waves-light red lighten-3";
 	    d.push(inp,p);
 	    d.push(p,fs);
 	    d.push(fs,form);
