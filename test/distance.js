@@ -4,7 +4,7 @@ var promise = require('bluebird');
 var osrm = promise.promisifyAll(osrm2);
 var dis = require('../aux/calc_distancia');
 
-describe('Calculador de distancias.', function () {
+describe.skip('Calculador de distancias.', function () {
     it('Distancia aproximada.', function () {
 
 	// Esta dirección no es capturada correctamente por el sistema de mapas
