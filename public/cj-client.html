@@ -10,35 +10,45 @@
     <title>Cj</title>
     
     <!-- Compiled and minified CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/css/materialize.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.1/css/materialize.min.css">
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <link rel="stylesheet" href="./styles.css">
 
     
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   </head>
   <body>
-    <div class="container">
-      <h1 id="title"></h1>
-      <nav>
-	<div class="nav-wrapper">
-	  <a href="#" data-activates="mobile-links" class="button-collapse"><i class="material-icons">menu</i></a>
-	  <ul id="mobile-links" class="side-nav">
-	  </ul>
-	  <ul id="links" class="right hide-on-med-and-down">
-	  </ul>
+    <header>
+      
+      <nav class="top-nav">
+	<div class="container">
+	  <div class="nav-wrapper">
+	    <a href="#" class="button-collapse top-nav full hide-on-large-only" data-activates="links"><i class="mdi-navigation-menu"></i></a>
+	    <a class="brand-logo" id="title">FCT IES Mare Nostrum</a>
+	  </div>
 	</div>
       </nav>
-      <div id="queries"></div>
-      <div id="items"></div>
-      <div id="edit" class="display:none;"></div>
-      <div id="template"></div>
-      <div id="error"></div>
-      <div>
-	<pre id="dump"></pre>
+      <div class="container">
+	
       </div>
-    </div>
+      <ul id="links" class="side-nav fixed">
+      </ul>
+    </header>
+      <main>
+	<div class="container">
+	  <div id="queries"></div>
+	  <div id="items"></div>
+	  <div id="edit" class="display:none;"></div>
+	  <div id="template"></div>
+	  <div id="error"></div>
+	  <div>
+	    <pre id="dump"></pre>
+	  </div>
+	</div>
+      </main>
   </body>
   <script src="cj-client.js">//na </script>
   <!-- <link href="cj-client.css" rel="stylesheet" />-->
@@ -53,8 +63,11 @@
     var slashes = http.concat("//");
     var host = slashes.concat(window.location.host);
     pg.init(host + "/api");
-    $(".button-collapse").sideNav();
+    $(".button-collapse").sideNav({
+        menuWidth: 300
+    });
 
+    
     
     });
 

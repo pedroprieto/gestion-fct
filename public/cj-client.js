@@ -119,7 +119,6 @@ function cj() {
 		d.push(li, ul);
 	    }
 	}
-	$( "#links li" ).clone().appendTo( "#mobile-links" );
     }
 
     // handle item collection
@@ -731,6 +730,10 @@ function domHelp() {
 	lbl.setAttribute("for",args.name);
 	inp = processinput(args);
 	inp.setAttribute("id",args.name);
+	// Problema con labels Materialize
+	if (inp.value != "") {
+	    lbl.className += " active";
+	}
 	push(lbl,p);
 	push(inp,p);
 	
@@ -766,7 +769,7 @@ function domHelp() {
 	}
 
 	inp.name = args.name||"";
-	inp.className = "value";
+	inp.className = "value validate";
 	inp.value = args.value||"";
 	
 	return inp;
