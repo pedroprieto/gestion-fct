@@ -75,11 +75,10 @@ define(["./process_inputs"], function(processinput) { return {    cj: function(p
 	var ul, li, a, img;
 	var head, lnk;
 
-	elm = d.find("links");
-	d.clear(elm);
+	ul = d.find("links");
+	d.clear(ul);
 	if(g.cj.collection.links) {
 	    coll = g.cj.collection.links;
-	    ul = d.node("ul");
 	    //ul.onclick = httpGet;
 	    
 	    for(var link of coll) {
@@ -118,7 +117,6 @@ define(["./process_inputs"], function(processinput) { return {    cj: function(p
 		}
 		d.push(li, ul);
 	    }
-	    d.push(ul, elm);
 	}
     }
 
