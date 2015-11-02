@@ -12,7 +12,7 @@
   - report issues to https://github.com/collection-json/cj-client
 */
 
-define(["./process_inputs"], function(processinput) { return {    cj: function(processinput) {
+define(["./process_inputs","./render_client"], function(processinput, renderClient) { return {    cj: function() {
 
     var d = this.domHelp();  
     var g = {};
@@ -46,6 +46,7 @@ define(["./process_inputs"], function(processinput) { return {    cj: function(p
 	template();
 	error();
 	cjClearEdit();
+	renderClient();
 
     }
 

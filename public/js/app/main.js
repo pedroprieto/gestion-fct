@@ -1,4 +1,4 @@
-define(["app/cj-client", "jquery", "materialize"], function(cjclient) {
+define(["app/cj-client", "jquery"], function(cjclient) {
     
     $(function() {
 	var pg = cjclient.cj();
@@ -6,13 +6,8 @@ define(["app/cj-client", "jquery", "materialize"], function(cjclient) {
 	var slashes = http.concat("//");
 	var host = slashes.concat(window.location.host);
 	pg.init(host + "/api");
-	$(".button-collapse").sideNav({
-            menuWidth: 300
-	});
-	/*	// Problema con labels Materialize
-	if (inp.value != "") {
-	    lbl.className += " active";
-	}*/
+	
+	
     });
 
 

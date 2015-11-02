@@ -3,11 +3,13 @@ requirejs.config({
     "paths": {
 	"app": "../app",
 	"jquery": "http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min",
-	"materialize": "http://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.1/js/materialize.min"
+	'hammerjs': 'https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.4/hammer.min',
+	"materialize": "http://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.1/js/materialize.min",
+	"jquery-hammer": "jquery.hammer"
     },
     shim: {
         'materialize': {
-            deps: ['jquery']
+            deps: ['jquery','jquery-hammer']
         },
         'jquery': {
             exports: '$'
