@@ -1,5 +1,4 @@
-define(["app/cj-client"], function(cjclient) {
-    //the jquery.alpha.js and jquery.beta.js plugins have been loaded.
+define(["app/cj-client", "jquery", "materialize"], function(cjclient) {
     
     $(function() {
 	var pg = cjclient.cj();
@@ -10,6 +9,10 @@ define(["app/cj-client"], function(cjclient) {
 	$(".button-collapse").sideNav({
             menuWidth: 300
 	});
+	/*	// Problema con labels Materialize
+	if (inp.value != "") {
+	    lbl.className += " active";
+	}*/
     });
 
 
