@@ -10,6 +10,9 @@ define(["app/cj-client"], function(cjclient) {
 	$(".button-collapse").sideNav({
             menuWidth: 300
 	});
+	$(".collapsible").collapsible();
+
+	
     });
 
 
