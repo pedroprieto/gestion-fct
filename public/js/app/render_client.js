@@ -5,13 +5,10 @@ define(["jquery", "materialize"], function() {
             menuWidth: 300
 	});
 	// Problemas con labels Materialize
-	$('input[value!=""]').siblings().addClass("active");
+	$("input").filter(function() {
+            return this.value.length !== 0;
+	}).siblings().addClass("active");
 	
-	/*	// Problema con labels Materialize
-		if (inp.value != "") {
-		lbl.className += " active";
-		}*/
-
 	// Items container
 	$("#items ul").addClass("collection");
 	$("#items ul li").addClass("collection-item");
