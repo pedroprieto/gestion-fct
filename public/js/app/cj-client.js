@@ -141,20 +141,20 @@ define(["./process_inputs","./render_client"], function(processinput, renderClie
 		dt = d.node("dt");
 		
 		// item link
-		a1 = d.anchor({href:item.href,rel:item.rel,className:"item link",text:item.rel});
+		a1 = d.anchor({href:item.href,rel:item.rel,className:"item-link",text:item.rel});
 		a1.onclick = httpGet;
 		d.push(a1,dt);
 		
 		// edit link
 		if(isReadOnly(item)===false && hasTemplate(g.cj.collection)===true) {
-		    a2 = d.anchor({href:item.href,rel:"edit",className:"item action",text:"Edit"});
+		    a2 = d.anchor({href:item.href,rel:"edit",className:"item-edit",text:"Edit"});
 		    a2.onclick = cjEdit;
 		    d.push(a2, dt);
 		}
 
 		// delete link
 		if(isReadOnly(item)===false) {
-		    a3 = d.anchor({href:item.href,className:"item action",rel:"delete",text:"Delete"});
+		    a3 = d.anchor({href:item.href,className:"item-delete",rel:"delete",text:"Delete"});
 		    a3.onclick = httpDelete;
 		    d.push(a3,dt);
 		}
@@ -167,8 +167,8 @@ define(["./process_inputs","./render_client"], function(processinput, renderClie
 		}
 		if(item.links) {
 		    for(var link of item.links) {
-			p = d.node("p");
-			p.className = "item";
+			p = d.node("div");
+			p.className = "itemlinks";
 			
 			// render as images, if asked
 			if(isImage(link)===true) {
@@ -196,6 +196,7 @@ define(["./process_inputs","./render_client"], function(processinput, renderClie
 	var elm, coll;
 	var ul, li;
 	var form, fs, lg, p, lbl, inp;
+	var tit;
 
 	elm = d.find("queries");
 	d.clear(elm);
@@ -204,6 +205,11 @@ define(["./process_inputs","./render_client"], function(processinput, renderClie
 	    coll = g.cj.collection.queries;
 	    for(var query of coll) {
 		li = d.node("li");
+		li.className = query.name;
+		tit = d.node("div");
+		tit.className = "query_title";
+		tit.innerHTML = query.prompt;
+		d.push(tit,li);
 		form = d.node("form");
 		form.action = query.href;
 		form.className = query.rel;
@@ -217,9 +223,11 @@ define(["./process_inputs","./render_client"], function(processinput, renderClie
 		    p = d.input({prompt:data.prompt,name:data.name,value:data.value});
 		    d.push(p,fs);
 		}
-		p = d.node("p");
-		inp = d.node("input");
+		p = d.node("div");
+		p.className = "submit-query";
+		inp = d.node("button");
 		inp.type = "submit";
+		inp.className = "submit-query-button";
 		d.push(inp,p);
 		d.push(p,fs);
 		d.push(fs,form);
@@ -323,7 +331,6 @@ define(["./process_inputs","./render_client"], function(processinput, renderClie
 	    d.push(p,fs);
 	    d.push(fs,form);
 	    d.push(form, elm);
-	    elm.style.display = "block";
 	}
 	return false;
     }
@@ -518,7 +525,7 @@ define(["./process_inputs","./render_client"], function(processinput, renderClie
 	var p, lbl, inp;
 
 	p = node("div");
-	p.className += "input-field";
+	p.className += args.name;
 	lbl = node("label");
 	lbl.className = "data";
 	lbl.innerHTML = args.prompt||"";

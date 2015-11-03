@@ -2,6 +2,22 @@ header, main, footer {
     padding-left: 240px;
 }
 
+legend {
+    display: none;
+}
+
+fieldset {
+    border: 0;
+}
+
+#items .itemlinks, #items dt {
+    text-align: right;
+}
+
+.item-link {
+    display: none;
+}
+
 @media only screen and (max-width : 992px) {
     header, main, footer {
 	padding-left: 0;
