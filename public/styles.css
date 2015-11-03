@@ -10,14 +10,23 @@ fieldset {
     border: 0;
 }
 
-#items .itemlinks, #items dt {
+#items .item-links, #items .item-actions {
     text-align: right;
 }
 
-.item-link {
+.item-href {
     display: none;
 }
 
+
+/* Ocultar datos de los items*/
+.item-data-object {
+    display: none;
+}
+
+.item-data-object.empresa, .item-data-object.alumno {
+    display: block;
+}
 @media only screen and (max-width : 992px) {
     header, main, footer {
 	padding-left: 0;

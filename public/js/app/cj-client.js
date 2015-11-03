@@ -137,11 +137,13 @@ define(["./process_inputs","./render_client"], function(processinput, renderClie
 
 	    for(var item of coll) {
 		li = d.node("li");
-		dl = d.node("dl");
-		dt = d.node("dt");
+		//dl = d.node("dl");
+		//dt = d.node("dt");
+		dt = d.node("div");
+		dt.className = "item-actions";
 		
 		// item link
-		a1 = d.anchor({href:item.href,rel:item.rel,className:"item-link",text:item.rel});
+		a1 = d.anchor({href:item.href,rel:item.rel,className:"item-href",text:item.rel});
 		a1.onclick = httpGet;
 		d.push(a1,dt);
 		
@@ -158,17 +160,21 @@ define(["./process_inputs","./render_client"], function(processinput, renderClie
 		    a3.onclick = httpDelete;
 		    d.push(a3,dt);
 		}
-		d.push(dt,dl);
+		//d.push(dt,dl);
+		d.push(dt,li);
 		
-		dd = d.node("dd");
+		//dd = d.node("dd");
+		dd = d.node("div");
+		dd.className = "item-data";
 		for(var data of item.data) {
-		    p = d.data({className:"item "+data.name,text:data.prompt+"&nbsp;",value:data.value+"&nbsp;"});
+		    p = d.data({className:"item-data-object "+data.name,text:data.prompt+"&nbsp;",value:data.value+"&nbsp;"});
 		    d.push(p,dd);
 		}
+		d.push(dd,li);
 		if(item.links) {
+		    p = d.node("div");
+		    p.className = "item-links";
 		    for(var link of item.links) {
-			p = d.node("div");
-			p.className = "itemlinks";
 			
 			// render as images, if asked
 			if(isImage(link)===true) {
@@ -176,15 +182,17 @@ define(["./process_inputs","./render_client"], function(processinput, renderClie
 			    d.push(img, p);
 			}
 			else {
-			    a = d.anchor({className:"item",href:link.href,rel:link.rel,text:link.prompt});
+			    a = d.anchor({className:"item-link",href:link.href,rel:link.rel,text:link.prompt});
 			    a.onclick = httpGet;
 			    d.push(a, p);
 			}
-			d.push(p,dd);
+			//d.push(p,dd);
+			//d.push(d,ul);
 		    }
+		    d.push(p,li);
 		}
-		d.push(dd,dl);
-		d.push(dl,li);
+		//d.push(dd,dl);
+		//d.push(dl,li);
 		d.push(li,ul);
 	    }
 	    d.push(ul,elm);

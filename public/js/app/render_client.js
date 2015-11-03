@@ -13,7 +13,7 @@ define(["jquery", "materialize"], function() {
 	$("#items ul").addClass("collection");
 	$("#items ul li").addClass("collection-item");
 
-	//$(".item-link").html('<i class="material-icons">delete</i>');
+	//$(".item-href").html('<i class="material-icons">delete</i>');
 	$(".item-delete").html('<i class="material-icons">delete</i>');
 	$("a[rel=visits]").html('<i class="material-icons">phone</i>');
 	
