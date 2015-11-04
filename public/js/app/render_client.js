@@ -27,8 +27,16 @@ define(["jquery", "materialize"], function() {
 	$("#queries div").addClass("col s2 input-field");
 	$("#queries div.search").addClass("offset-s1 col s5").removeClass("s2");
 	$("#queries .submit-query").addClass("col s1").removeClass("s2");
-	$(".submit-query-button").addClass("btn waves-effect waves-light").html('<i class="material-icons">search</i>');
+	$(".submit-query-button").html('<i class="material-icons">search</i>');
 
+	// Template
+	$(".submit-template-button").html('<i class="material-icons">done</i>');
+
+	// Edit
+	$(".submit-edit-button").html('<i class="material-icons">done</i>');
+
+	// General
+	$("button").addClass("btn waves-effect waves-light");
 	
     };
     

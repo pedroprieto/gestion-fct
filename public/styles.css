@@ -10,11 +10,35 @@ fieldset {
     border: 0;
 }
 
-#items .item-links, #items .item-actions {
+.collection .item-links, .collection .item-actions {
     text-align: right;
 }
 
+.collection li {
+    display: flex;
+    
+}
+
+.collection .item-actions {
+    flex: 1 1 0;
+    order: 3;
+}
+
+.collection .item-links {
+    flex: 1 1 0;
+    order: 2;
+}
+
+.collection .item-data {
+    flex: 5 1 0;
+    order: 1;
+}
+
 .item-href {
+    display: none;
+}
+
+.item-data .prompt {
     display: none;
 }
 

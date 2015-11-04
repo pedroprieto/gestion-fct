@@ -269,7 +269,8 @@ define(["./process_inputs","./render_client"], function(processinput, renderClie
 		d.push(p,fs);
 	    }
 	    p = d.node("p");
-	    inp = d.node("input");
+	    inp = d.node("button");
+	    inp.className = "submit-template-button";
 	    inp.type = "submit";
 	    d.push(inp,p);
 	    d.push(p,fs);
@@ -333,7 +334,8 @@ define(["./process_inputs","./render_client"], function(processinput, renderClie
 		d.push(p,fs);
 	    }
 	    p = d.node("p");
-	    inp = d.node("input");
+	    inp = d.node("button");
+	    inp.className = "submit-edit-button";
 	    inp.type = "submit";
 	    d.push(inp,p);
 	    d.push(p,fs);
