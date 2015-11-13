@@ -36,8 +36,13 @@ module.exports.getperiodoslist =  function() {
     c2.value = "2";
     c2.prompt = "2";
 
+    var todos = {};
+    todos.value = "1,2";
+    todos.prompt = "Todos";
+
     ps.push(c1);
     ps.push(c2);
+    ps.push(todos);
 
     return ps;
     
