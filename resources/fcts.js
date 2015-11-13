@@ -60,12 +60,15 @@ module.exports = function(app) {
 		    {
 			name: "curso",
 			value: typeof req.query.curso!== 'undefined' ? req.query.curso : c_actual,
-			prompt: "Curso"
+			prompt: "Curso",
+			options: cps.getcursoslist()
+			//options: [{"value" : "1", "prompt" : "qui"}, {"value" : "2", "prompt" : "quo"}, {"value" : "2", "prompt" : "qua"}] 
 		    },
 		    {
 			name: "periodo",
 			value: typeof req.query.periodo!== 'undefined' ? req.query.periodo : p_actual,
-			prompt: "Período"
+			prompt: "Período",
+			options: cps.getperiodoslist()
 		    }
 		    
 		]
