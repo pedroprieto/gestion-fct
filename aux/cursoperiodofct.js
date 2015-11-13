@@ -16,6 +16,7 @@ module.exports.getcursoslist =  function() {
     }
 
     if (mes_actual >= 7) {
+	cp = {};
 	cp.value = cp.prompt = (curso_final) + '-' + (curso_final + 1);
 	cps.push(cp);
     }

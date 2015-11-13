@@ -5,7 +5,7 @@ define(["jquery", "materialize"], function() {
             menuWidth: 300
 	});
 	// Problemas con labels Materialize
-	$("input").filter(function() {
+	$("input,select").filter(function() {
             return this.value.length !== 0;
 	}).siblings().addClass("active");
 	
@@ -14,8 +14,9 @@ define(["jquery", "materialize"], function() {
 	$("#items ul li").addClass("collection-item");
 
 	//$(".item-href").html('<i class="material-icons">delete</i>');
-	$(".item-delete").html('<i class="material-icons">delete</i>');
-	$("a[rel=visits]").html('<i class="material-icons">phone</i>');
+	// No funciona por el tema de herencia de onclicks. FIX
+	//$(".item-delete").html('<i class="material-icons">delete</i>');
+	//$("a[rel=visits]").html('<i class="material-icons">phone</i>');
 	
 
 	// Queries container
@@ -37,6 +38,10 @@ define(["jquery", "materialize"], function() {
 
 	// General
 	$("button").addClass("btn waves-effect waves-light");
+
+	// Select
+	$('select').material_select();
+	//$('select').addClass('browser-default');
 	
     };
     

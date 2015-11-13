@@ -228,7 +228,8 @@ define(["./process_inputs","./render_client"], function(processinput, renderClie
 		lg.innerHTML = query.prompt + "&nbsp;";
 		d.push(lg,fs);
 		for(var data of query.data) {
-		    p = d.input({prompt:data.prompt,name:data.name,value:data.value});
+		    //p = d.input({prompt:data.prompt,name:data.name,value:data.value});
+		    p = d.input(data);
 		    d.push(p,fs);
 		}
 		p = d.node("div");
@@ -265,7 +266,8 @@ define(["./process_inputs","./render_client"], function(processinput, renderClie
 	    lg.innerHTML = "";
 	    d.push(lg,fs);
 	    for(var data of coll) { 
-		p = d.input({prompt:data.prompt+"&nbsp;",name:data.name,value:data.value});
+		//p = d.input({prompt:data.prompt+"&nbsp;",name:data.name,value:data.value});
+		p = d.input(data);
 		d.push(p,fs);
 	    }
 	    p = d.node("p");
@@ -330,7 +332,8 @@ define(["./process_inputs","./render_client"], function(processinput, renderClie
 	    for(var data of coll) {
 		dv = cjData(item, data.name);
 		tx=(dv!==null?dv.value+"":"");
-		p = d.input({prompt:data.prompt,name:data.name,value:tx});
+		//p = d.input({prompt:data.prompt,name:data.name,value:tx});
+		p = d.input(data);
 		d.push(p,fs);
 	    }
 	    p = d.node("p");
@@ -441,7 +444,8 @@ define(["./process_inputs","./render_client"], function(processinput, renderClie
 	q=0;
 	form = e.target;
 	query = form.action+"/?";
-	nodes = d.tags("input", form);
+	//nodes = d.tags("input", form);
+	nodes = form.querySelectorAll("input,select");
 	for(i=0, x=nodes.length;i<x;i++) {
 	    if(nodes[i].name && nodes[i].name!=='') {
 		if(q++!==0) {
