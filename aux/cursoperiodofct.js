@@ -25,7 +25,22 @@ module.exports.getcursoslist =  function() {
 }
 
 module.exports.getperiodoslist =  function() {
-    return [1,2];
+    //return [1,2];
+    var ps = [];
+    
+    var c1 = {};
+    c1.value = "1";
+    c1.prompt = "1";
+
+    var c2 = {};
+    c2.value = "2";
+    c2.prompt = "2";
+
+    ps.push(c1);
+    ps.push(c2);
+
+    return ps;
+    
 }
 
 module.exports.getCursoActual = function() {

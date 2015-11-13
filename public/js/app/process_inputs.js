@@ -6,6 +6,7 @@ define(function() {
 	inp = document.createElement("input");
 	
 	switch(args.name) {
+	case 'periodo':
 	case 'curso':
 	    inp = document.createElement("select");
 	    var op,t;
