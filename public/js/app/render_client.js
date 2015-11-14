@@ -42,7 +42,9 @@ define(["jquery", "materialize"], function() {
 	// Select
 	$('select').material_select();
 	//$('select').addClass('browser-default');
-	
+
+	// Textarea
+	$('textarea').addClass('materialize-textarea');
     };
     
 });

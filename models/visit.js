@@ -79,6 +79,7 @@ var es_ES = {
     hora_salida: "Hora de salida",
     hora_regreso: "Hora de regreso",
     localidad: "Localidad",
+    presencial: "Presencial",
     impresion: "Impresión general de la visita"
 };
 

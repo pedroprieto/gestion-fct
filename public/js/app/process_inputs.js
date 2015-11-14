@@ -18,6 +18,9 @@ define(function() {
 		inp.appendChild(op);
 	    }
 	    break;
+	case 'presencial':
+	    inp.type = "checkbox";
+	    break;
 	case 'impresion':
 	    inp = document.createElement("textarea");
 	    break;	

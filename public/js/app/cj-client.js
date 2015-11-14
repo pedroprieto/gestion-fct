@@ -540,14 +540,15 @@ define(["./process_inputs","./render_client"], function(processinput, renderClie
 
 	p = node("div");
 	p.className += args.name;
+	p.className += " input-field";
 	lbl = node("label");
 	lbl.className = "data";
 	lbl.innerHTML = args.prompt||"";
 	lbl.setAttribute("for",args.name);
 	inp = processinput(args);
 	inp.setAttribute("id",args.name);
-	push(lbl,p);
 	push(inp,p);
+	push(lbl,p);
 	
 	return p;
     }
