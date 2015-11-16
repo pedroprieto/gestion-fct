@@ -36,13 +36,15 @@ module.exports = function(app) {
 	var itemdata1 = {
 	    prompt: "Introduzca el curso que desea importar",
 	    name: "curso",
-	    value: cps.getCursoActual()
+	    value: cps.getCursoActual(),
+	    options: cps.getcursoslist()
 	};
 
 	var itemdata2 = {
 	    prompt: "Introduzca el período que desea importar",
 	    name: "periodo",
-	    value: cps.getPeriodoActual()
+	    value: cps.getPeriodoActual(),
+	    options: cps.getperiodoslist()
 	};
 	
 	data.push(itemdata1);

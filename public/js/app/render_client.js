@@ -5,7 +5,7 @@ define(["jquery", "materialize"], function() {
             menuWidth: 300
 	});
 	// Problemas con labels Materialize
-	$("input,select").filter(function() {
+	$("input").filter(function() {
             return this.value.length !== 0;
 	}).siblings().addClass("active");
 	

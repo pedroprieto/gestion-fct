@@ -40,6 +40,19 @@ module.exports = function(app) {
 	    return item;
 	});
 
+	// If no items
+	if (fctlist.length == 0) {
+	    var item = {};
+	    item.data = [];
+	    var d = {};
+	    d.name = "mensaje";
+	    d.prompt = "No hay FCTs en este período. Si desea importar, haga click aquí en el enlace de importar";
+	    item.data.push(d);
+	    item.links = [];
+	    item.links.push(req.buildLink('import_fcts'));
+	    col.items.push(item);
+	}
+
 	// Queries
 	var c_actual = cps.getCursoActual();
 	var p_actual = cps.getPeriodoActual();

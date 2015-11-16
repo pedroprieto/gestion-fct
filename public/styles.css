@@ -48,9 +48,18 @@ fieldset {
     display: none;
 }
 
-.item-data-object.empresa, .item-data-object.alumno {
+.item-data-object.empresa, .item-data-object.alumno, .item-data-object.mensaje {
     display: block;
 }
+
+.item-data-object.mensaje .value {
+    display: none;
+}
+
+.item-data-object.mensaje .prompt {
+    display: block;
+}
+
 @media only screen and (max-width : 992px) {
     header, main, footer {
 	padding-left: 0;

@@ -10,12 +10,14 @@ define(function() {
 	case 'curso':
 	    inp = document.createElement("select");
 	    var op,t;
-	    for (var i of args.options) {
-		op = document.createElement("option");
-		op.value = i.value;
-		t = document.createTextNode(i.prompt);
-		op.appendChild(t);
-		inp.appendChild(op);
+	    if (typeof args.options !== 'undefined') {
+		for (var i of args.options) {
+		    op = document.createElement("option");
+		    op.value = i.value;
+		    t = document.createTextNode(i.prompt);
+		    op.appendChild(t);
+		    inp.appendChild(op);
+		}
 	    }
 	    break;
 	case 'presencial':
