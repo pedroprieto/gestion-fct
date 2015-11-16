@@ -21,8 +21,8 @@ module.exports = function(app) {
 	// Collection Links
 	col.links.push(req.buildLink('fcts'));
 	col.links.push(req.buildLink('fct'));
-	req.buildLink('visits');
-	col.links.push(req.buildLink('fm34s'));
+	col.links.push(req.buildLink('visits'));
+	//col.links.push(req.buildLink('fm34s'));
 
 	// Items
 	col.items = visitlist.map(function(v) {
@@ -285,10 +285,9 @@ module.exports = function(app) {
 	col.href = req.buildLink('visits').href;
 	
 	// Links
-	//col.links.push(req.app.buildLink('fcts'));
-	// col.links.push({'rel':'collection', "prompt": "FCTs", 'href' : "/fcts"});
-	// col.links.push({'rel':'collection', "prompt": "Visitas", 'href' : "/visits"});
-	// col.links.push({'rel':'collection', "prompt": "FM34s", 'href' : "/fm34s"});
+	col.links.push(req.buildLink('fcts'));
+	col.links.push(req.buildLink('fct'));
+	req.buildLink('visits');
 
 	// Items
 
