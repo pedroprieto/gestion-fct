@@ -489,7 +489,7 @@ define(["./process_inputs","./render_client"], function(processinput, renderClie
 	return false;
     }
     function httpDelete(e) {
-	if(confirm("Ready to delete?")===true) {
+	if(confirm("¿Seguro que desea eliminar?")===true) {
 	    req(e.target.href, "delete", null);
 	}
 	return false;

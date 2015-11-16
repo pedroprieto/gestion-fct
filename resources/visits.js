@@ -171,8 +171,32 @@ module.exports = function(app) {
 		return Promise.all(fcts_promises);
 	    })
 	    .then(function(fctsactualizadas) {
-		res.location(req.buildLink('visit', {visit: visita_base}).href);
-		res.status(201).end();
+		//res.location(req.buildLink('visit', {visit: visita_base}).href);
+		//res.status(201).end();
+
+		// Respondemos con una collection con mensaje al usuario
+		var col = res.app.locals.cj();
+
+		// Collection href
+		col.href = req.buildLink('visits').href;
+				
+		// Collection Links
+		col.links.push(req.buildLink('fcts'));
+		col.links.push(req.buildLink('fct'));
+		col.links.push(req.buildLink('visits'));
+		var item = {};
+		item.data = [];
+		var d = {};
+		d.name = "mensaje";
+		d.prompt = "Visita creada correctamente. Haga click en el enlace para volver a la lista de visitas.";
+		item.data.push(d);
+		item.links = [];
+		item.links.push(req.buildLink('visits'));
+		col.items.push(item);
+
+		res.status(201).location(req.buildLink('visit', {visit: visita_base}).href).json({collection: col});
+
+		
 
 	    })
 	    .catch(next);
@@ -235,8 +259,29 @@ module.exports = function(app) {
 	visit.set(visitdata);
 	visit.saveAsync()
 	    .then(function (vs) {
-		res.location(req.buildLink('visit').href);
-		res.status(200).end();
+		/*res.location(req.buildLink('visit').href);
+		  res.status(200).end();*/
+		// Respondemos con una collection con mensaje al usuario
+		var col = res.app.locals.cj();
+
+		// Collection href
+		col.href = req.buildLink('visit').href;
+		
+		// Collection Links
+		col.links.push(req.buildLink('fcts'));
+		col.links.push(req.buildLink('fct'));
+		col.links.push(req.buildLink('visits'));
+		var item = {};
+		item.data = [];
+		var d = {};
+		d.name = "mensaje";
+		d.prompt = "Visita actualizada correctamente. Haga click en el enlace para volver a la lista de visitas.";
+		item.data.push(d);
+		item.links = [];
+		item.links.push(req.buildLink('visits'));
+		col.items.push(item);
+
+		res.status(200).location(req.buildLink('visit').href).json({collection: col});
 	    })
 	    .catch(next);
 	
@@ -258,7 +303,28 @@ module.exports = function(app) {
 	// Eliminamos visita
 	visit.removeAsync()
 	    .then(function(v) {
-		res.status(204).end();
+		//res.status(204).end();
+		// Respondemos con una collection con mensaje al usuario
+		var col = res.app.locals.cj();
+
+		// Collection href
+		col.href = req.buildLink('visits').href;
+				
+		// Collection Links
+		col.links.push(req.buildLink('fcts'));
+		col.links.push(req.buildLink('fct'));
+		col.links.push(req.buildLink('visits'));
+		var item = {};
+		item.data = [];
+		var d = {};
+		d.name = "mensaje";
+		d.prompt = "Visita eliminada correctamente. Haga click en el enlace para volver a la lista de visitas.";
+		item.data.push(d);
+		item.links = [];
+		item.links.push(req.buildLink('visits'));
+		col.items.push(item);
+
+		res.status(200).json({collection: col});
 	    })
 	    .catch(next);
 
