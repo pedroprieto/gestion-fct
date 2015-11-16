@@ -112,8 +112,30 @@ module.exports = function(app) {
 	    })
 	    .then(function(fcts) {
 		// TODO
-		res.location(req.buildLink('fcts').href);
-		res.status(201).end();
+		/*res.location(req.buildLink('fcts').href);
+		  res.status(201).end();*/
+		// Respondemos con una collection con mensaje al usuario
+		var col = res.app.locals.cj();
+
+		// Collection href
+		col.href = req.buildLink('fcts').href;
+				
+		// Collection Links
+		var l = req.buildLink('fcts');
+		l.href += "?curso=" + curso + "&periodo=" + periodo;
+		
+		col.links.push(l);
+		var item = {};
+		item.data = [];
+		var d = {};
+		d.name = "mensaje";
+		d.prompt = "FCTs importadas correctamente. Haga click en el enlace para visualizar la lista de FCTs.";
+		item.data.push(d);
+		item.links = [];		
+		item.links.push(l);
+		col.items.push(item);
+
+		res.status(201).location(req.buildLink('fcts').href).json({collection: col});
 	    })
 	    .catch(next);
     });
