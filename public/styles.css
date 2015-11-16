@@ -44,13 +44,13 @@ fieldset {
 
 
 /* Ocultar datos de los items*/
-.item-data-object {
+.item-data-object.nif_alumno, .item-data-object.horas, .item-data-object.fecha_fin, .item-data-object.fecha_inicio, .item-data-object.periodo, .item-data-object.curso, .item-data-object.instructor, .item-data-object.nif_instructor .item-data-object.tutor, .item-data-object.grupo, .item-data-object.ciclo, .item-data-object.localidad, .item-data-object.dir_empresa, .item-data-object.distancia {
     display: none;
 }
 
-.item-data-object.empresa, .item-data-object.alumno, .item-data-object.mensaje {
+/*.item-data-object.empresa, .item-data-object.alumno, .item-data-object.mensaje {
     display: block;
-}
+}*/
 
 .item-data-object.mensaje .value {
     display: none;
