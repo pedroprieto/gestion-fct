@@ -53,7 +53,7 @@ define(["./process_inputs","./render_client"], function(processinput, renderClie
     // handle response dump
     function dump() {
 	var elm = d.find("dump");
-	elm.innerText = JSON.stringify(g.cj, null, 2);
+	elm.textContent = JSON.stringify(g.cj, null, 2);
 	g.profile = "";
 	g.type = "";
     }
