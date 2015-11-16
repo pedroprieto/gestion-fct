@@ -175,11 +175,12 @@ visitSchema.statics.visit_template = function (localidad, tipo, related, distanc
 }
 
 // Función estática para generar FM34
-visitSchema.statics.genfm34 = function (userid, cb) {
+visitSchema.statics.genfm34 = function (userid, start, end, cb) {
     return this.aggregate(
 	{
 	    $match: {
 		_usuario: userid,
+		fecha: { $gt: start, $lt: end },
 		presencial: true
 	    }
 	},
@@ -230,12 +231,16 @@ visitSchema.statics.genfm34_cj = function (fm34) {
 
   
     var item = {};
-    //item.href = base + '/' + coll[i].name;
-    item.href = "prueba";
     item.data = [];
     item.links = [];
 
-    var isoweek = moment(fm34._id.anyo + "-W" + fm34._id.semana, moment.ISO_8601);
+    var sem;
+    if (fm34._id.semana < 10) {
+	sem = "0" + fm34._id.semana;
+    } else {
+	sem = fm34._id.semana;
+    }
+    var isoweek = moment(fm34._id.anyo + "-W" + sem, moment.ISO_8601);
 
     var princ = isoweek.startOf('isoWeek').format("DD/MM/YYYY");
     var fin = isoweek.endOf('isoWeek').format("DD/MM/YYYY");
@@ -255,13 +260,13 @@ visitSchema.statics.genfm34_cj = function (fm34) {
     // TODO: en realidad no son enlaces a recursos, sino al resumen (agrupadas visitas con misma fecha y hora
     // Falta aclarar cómo hacerlo
 
-    for(var p in fm34.visits) {
+    /*for(var p in fm34.visits) {
 	item.links.push({
 	    rel : 'visit item',
 	    href : p._id,
 	    prompt : 'Visita'
 	});
-    };		
+	};*/
 
     return item;
     

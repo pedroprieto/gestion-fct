@@ -144,7 +144,7 @@ describe('Comprobar la correcta generación de FM 34s', function () {
 		return Promise.join(v1.saveAsync(), v2_same_date.saveAsync(), v3_other_hour.saveAsync(), v4_same_week.saveAsync(), v5_other_week.saveAsync(), v6_same_week.saveAsync());
 	    })
 	    .then(function(vs) {
-		return Visit.genfm34Async(usuario._id);
+		return Visit.genfm34Async(usuario._id, new Date(2015,1,1), new Date(2015,12,31));
 	    })
 	    .then(function(fm34s) {
 		console.log(fm34s);

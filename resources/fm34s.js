@@ -15,23 +15,61 @@ module.exports = function(app) {
      */
     app.get(app.lookupRoute('fm34s'), function(req, res, next) {
 
-	Visit.genfm34Async(res.locals.user._id)
+	// Query
+	var ultimos_meses = req.query.mes;
+
+	if (isNaN(ultimos_meses))
+	    ultimos_meses = 1;
+
+	var end = moment('01/01/2018').toDate();
+	var start = moment();
+	start.month(start.month()-ultimos_meses);
+	start = start.toDate();
+
+	Visit.genfm34Async(res.locals.user._id, start, end)
 	    .then(function (fm34s) {
 
 		var col = req.app.locals.cj();
 
-		// Links
-		//col.links.push(req.app.buildLink('visits'));
-		// col.links.push({'rel':'collection', "prompt": "FCTs", 'href' : "/fcts"});
-		// col.links.push({'rel':'collection', "prompt": "Visitas", 'href' : "/visits"});
-		// col.links.push({'rel':'collection', "prompt": "FM34s", 'href' : "/fm34s"});
+		// Collection href
+		col.href = req.buildLink('fm34s').href;
 
+		// Collection Links
+		col.links.push(req.buildLink('fcts'));
+		
 		// Items
-		col.items = fm34s.map(function(v) {
-		    return Visit.genfm34_cj(v);
+		col.items = fm34s.map(function(f) {
+		    // Item data
+		    var item =  Visit.genfm34_cj(f);
+
+		    // Item href
+		    var isoweek = moment(f._id.anyo + "-W" + f._id.semana, moment.ISO_8601);
+		    var princ = isoweek.startOf('isoWeek').format("DD-MM-YYYY");
+		    item.href = req.buildLink('fm34', {fm34: princ}).href;
+
+		    // Item links
+		    item.links.push(req.buildLink('fm34docx', {fm34: princ}));
+
+		    return item;
 		});
 
 		// Queries
+		col.queries = [];
+		col.queries.push(
+		    {
+			href: req.buildLink('fm34s').href,
+			rel: "search",
+			name: "search",
+			prompt: "Búsqueda de FM34s",
+			data: [
+			    {
+				name: "mes",
+				value: req.query.mes || "",
+				prompt: "Últimos meses"
+			    }			    
+			]
+		    }
+		);
 
 		// Template		
 
@@ -114,7 +152,7 @@ module.exports = function(app) {
     /**
      * GET para versión DOCX del FM34
      */
-    app.get(app.lookupRoute('fm34') + "/docx", function(req, res) {
+    app.get(app.lookupRoute('fm34docx'), function(req, res) {
 	var id = req.params.id;
 	fs=require('fs');
  	Docxtemplater=require('docxtemplater');

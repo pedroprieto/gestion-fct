@@ -5,6 +5,7 @@
 var User = require('../models/user');
 var Visit = require('../models/visit');
 var Fct = require('../models/fct');
+var moment = require('moment');
 
 
 module.exports = function(app) {
@@ -68,21 +69,25 @@ module.exports = function(app) {
     });
 
     app.param('fm34', function(req, res, next, fm34id) {
-	// TODO
-	/*if (! objectIdRegex.test(String(id))) {
-	  return next('route')
-	  }*/
-	/*Fm34.findOneAsync({ '_id': fm34id })
-	    .then(function(fm34) {
+	// fm34id almacena la fecha del lunes de la semana del fm34
 
-		if (!fm34) {
-		    return next('route');
-		}
-		
-		res.locals.fm34 = fm34;
-		next();
-	    })
-	    .catch(next);*/
+	// Comprobamos si el parámetro es lunes
+	var start = moment(fm34id,"DD-MM-YYYY");
+	if (( start.isValid() == false ) || ( start.isoWeekday() !== 1)) {
+	    return next('route');
+	} else {
+	    var end = start + 7;
+	    console.log(end);
+	    Visit.genfm34Async( res.locals.user_id, fm34id )
+		.then(function(fm34) {
+		    if (!fm34) {
+			return next('route');
+		    }
+		    res.locals.fm34 = fm34;
+		    next();
+		})
+		.catch(next);
+	}
     });
 
     app.param('tipo', function(req, res, next, tipo) {
