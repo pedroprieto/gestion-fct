@@ -311,11 +311,15 @@ define(["./process_inputs","./render_client"], function(processinput, renderClie
     // render editable form for an item
     function cjEdit(e) {
 	var elm, coll;
-	var form, fs, lg, p, lbl, inp;
+	var form, fs, lg, p, lbl, inp, inp2;
 	var data, item, dv, tx;
 	
-	elm = d.find("edit");
-	d.clear(elm);
+	// Display edit form in the place of the item
+	elm = e.target.parentNode.parentNode;
+	// Hide item data
+	d.classes('item-actions',elm)[0].style.display = "none";
+	d.classes('item-data',elm)[0].style.display = "none";
+	d.classes('item-links',elm)[0].style.display = "none";
 	
 	// get data from selected item
 	item = cjItem(e.target.href);
@@ -342,13 +346,30 @@ define(["./process_inputs","./render_client"], function(processinput, renderClie
 	    inp = d.node("button");
 	    inp.className = "submit-edit-button";
 	    inp.type = "submit";
+	    inp2 = d.node("button");
+	    inp2.className = "submit-edit-cancel-button";
+	    inp2.onclick = cjCancelEdit;
+	    inp2.type = "button";
 	    d.push(inp,p);
+	    d.push(inp2,p);
 	    d.push(p,fs);
 	    d.push(fs,form);
 	    d.push(form, elm);
 	    elm.style.display = "block";
 	}
 	return false;
+    }
+    function cjCancelEdit(e) {
+	var item_el = e.target.parentNode.parentNode.parentNode.parentNode;
+
+	// Delete edit form
+	var f = d.classes('edit',item_el)[0];
+	item_el.removeChild(f);
+	// Show item data
+	d.classes('item-actions',item_el)[0].style.display = "block";
+	d.classes('item-data',item_el)[0].style.display = "block";
+	d.classes('item-links',item_el)[0].style.display = "block";
+	return;
     }
     function cjClearEdit() {
 	var elm;
