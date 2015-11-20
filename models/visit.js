@@ -180,7 +180,7 @@ visitSchema.statics.genfm34 = function (userid, start, end, cb) {
 	{
 	    $match: {
 		_usuario: userid,
-		fecha: { $gt: start, $lt: end },
+		fecha: { $gte: start, $lte: end },
 		presencial: true
 	    }
 	},

@@ -76,10 +76,12 @@ module.exports = function(app) {
 	if (( start.isValid() == false ) || ( start.isoWeekday() !== 1)) {
 	    return next('route');
 	} else {
-	    var end = start + 7;
-	    console.log(end);
-	    Visit.genfm34Async( res.locals.user_id, fm34id )
+	    var end = moment(start);
+	    end.date(start.date() + 6);
+	    Visit.genfm34Async( res.locals.user._id, start.toDate(), end.toDate() )
 		.then(function(fm34) {
+		    // Returns array.
+		    fm34=fm34[0];
 		    if (!fm34) {
 			return next('route');
 		    }

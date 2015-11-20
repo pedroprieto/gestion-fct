@@ -21,7 +21,7 @@ module.exports = function(app) {
 	if (isNaN(ultimos_meses))
 	    ultimos_meses = 1;
 
-	var end = moment('01/01/2018').toDate();
+	var end = moment().toDate();
 	var start = moment();
 	start.month(start.month()-ultimos_meses);
 	start = start.toDate();
@@ -123,6 +123,7 @@ module.exports = function(app) {
     /**
      * GET
      */
+    // TODO
     app.get(app.lookupRoute('fm34'), function(req, res, next) {
 
 	var fm34 = res.locals.fm34;
@@ -152,53 +153,28 @@ module.exports = function(app) {
     /**
      * GET para versión DOCX del FM34
      */
-    app.get(app.lookupRoute('fm34docx'), function(req, res) {
-	var id = req.params.id;
-	fs=require('fs');
- 	Docxtemplater=require('docxtemplater');
+    app.get(app.lookupRoute('fm34docx'), function(req, res, next) {
 
-	//Load the docx file as a binary
-	content=fs
-	    .readFileSync(__dirname+"/../office_templates/prueba.docx","binary")
+	var fm34 = res.locals.fm34;
+	var isoweek = moment().isoWeek(fm34._id.semana).isoWeekYear(fm34._id.anyo);
+	fm34.semanaDe = isoweek.startOf('isoWeek').format("DD/MM/YYYY");
+	fm34.semanaAl = isoweek.endOf('isoWeek').format("DD/MM/YYYY");
+	var fm34s = [];
+	fm34s.push(fm34);
+	//set the templateVariables
+	var doc = {
+	    fm34s: fm34s
+	};
 
-	doc=new Docxtemplater(content);
+	gendoc(doc, fm34docfile).then(function(buf) {
 
-	fm34.findOne({ '_id': id }, function (err,fm34) {
-	    if (err) return console.error(err);
+	    var filename = res.locals.user.username + "_fm34_" + ".docx";
+	    res.type('application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+	    res.set({"Content-Disposition":"attachment; filename=\"" + filename +  "\""});
+	    res.send(buf);
 
-
-	    
-	    //set the templateVariables
-	    
-	    doc.setData({
-		"fm34s" : [
-		    // Para cambiar el formato de la fecha
-		    JSON.parse(JSON.stringify(fm34))
-		]
-	    });
-
-	    //apply them (replace all occurences of {first_name} by Hipp, ...)
-	    doc.render();
-
-	    var buf = doc.getZip()
-		.generate({type:"nodebuffer"});
-
-	    fs.writeFile("test.docx", buf, function(err) {
-		if (err) throw err;
-		//res.set('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
-		//res.download("test.docx");
-		res.download("test.docx", function(err){
-		    if (err) {
-			// handle error, keep in mind the response may be partially-sent
-			// so check res.headerSent
-		    } else {
-			// descarga completada
-			fs.unlink("test.docx");
-		    }
-		});
-	    });
-	    
-	});
+	})
+	    .catch(next);
 
     });
 	    
