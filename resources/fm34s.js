@@ -6,9 +6,29 @@ var fm34docfile = 'prueba';
 
 
 module.exports = function(app) {
-    // TODO
-    route = '';
-    baseUrl = '';
+
+    function renderFm34Items(req,res,fm34s) {
+
+	var items = fm34s.map(function(f) {
+	    // Item data
+	    var item =  Visit.genfm34_cj(f);
+
+	    // Item href
+	    var isoweek = moment(f._id.anyo + "-W" + f._id.semana, moment.ISO_8601);
+	    var princ = isoweek.startOf('isoWeek').format("DD-MM-YYYY");
+	    item.href = req.buildLink('fm34', {fm34: princ}).href;
+
+	    // Item links
+	    item.links.push(req.buildLink('fm34docx', {fm34: princ}));
+
+	    return item;
+	});
+
+	return items;
+
+    }
+
+
     
     /**
      * GET lista de FM 34
@@ -38,20 +58,7 @@ module.exports = function(app) {
 		col.links.push(req.buildLink('fcts'));
 		
 		// Items
-		col.items = fm34s.map(function(f) {
-		    // Item data
-		    var item =  Visit.genfm34_cj(f);
-
-		    // Item href
-		    var isoweek = moment(f._id.anyo + "-W" + f._id.semana, moment.ISO_8601);
-		    var princ = isoweek.startOf('isoWeek').format("DD-MM-YYYY");
-		    item.href = req.buildLink('fm34', {fm34: princ}).href;
-
-		    // Item links
-		    item.links.push(req.buildLink('fm34docx', {fm34: princ}));
-
-		    return item;
-		});
+		col.items = renderFm34Items(req, res, fm34s);
 
 		// Queries
 		col.queries = [];
@@ -123,24 +130,24 @@ module.exports = function(app) {
     /**
      * GET
      */
-    // TODO
     app.get(app.lookupRoute('fm34'), function(req, res, next) {
 
 	var fm34 = res.locals.fm34;
+
+	var fm34s = [];
+	fm34s.push(fm34);
+	
 	var col = req.app.locals.cj();
 
-	// Links
-	//col.links.push(req.app.buildLink('fcts', {user: res.locals.user.username}));
-	col.links.push({'rel':'collection', "prompt": "FCTs", 'href' : "/fcts"});
-	col.links.push({'rel':'collection', "prompt": "Visitas", 'href' : "/visits"});
-	col.links.push({'rel':'collection', "prompt": "FM34s", 'href' : "/fm34s"});
+	// Collection href
+	col.href = req.buildLink('fm34s').href;
 
-	// Items
-
-	var item = fm34.toObject({transform: Fm34.tx_cj});
-//	item.links.push(req.app.buildLink('visits', {user: res.locals.user.username, fct: visit._id.toString()}));
-	col.items.push(item);
+	// Collection Links
+	col.links.push(req.buildLink('fcts'));
 	
+	// Items
+	col.items = renderFm34Items(req, res, fm34s);
+
 
 	// Queries
 
