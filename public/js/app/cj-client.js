@@ -335,8 +335,7 @@ define(["./process_inputs","./render_client"], function(processinput, renderClie
 	    for(var data of coll) {
 		dv = cjData(item, data.name);
 		tx=(dv!==null?dv.value+"":"");
-		//p = d.input({prompt:data.prompt,name:data.name,value:tx});
-		p = d.input(data);
+		p = d.input({prompt:data.prompt,name:data.name,value:tx});
 		d.push(p,fs);
 	    }
 	    p = d.node("p");
@@ -347,6 +346,7 @@ define(["./process_inputs","./render_client"], function(processinput, renderClie
 	    d.push(p,fs);
 	    d.push(fs,form);
 	    d.push(form, elm);
+	    elm.style.display = "block";
 	}
 	return false;
     }
