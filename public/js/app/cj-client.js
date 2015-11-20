@@ -24,6 +24,10 @@ define(["./process_inputs","./render_client"], function(processinput, renderClie
     g.profile = "";
     // Link rel='type' de la collection
     g.type = "";
+    // Flag to display or not the template
+    // If there are any links with rel=template, the template form is not displayed
+    // In this case, it is assumed that the template is for editing only
+    g.showtemplate = true;
 
     // init library and start
     function init(url) {
@@ -56,6 +60,7 @@ define(["./process_inputs","./render_client"], function(processinput, renderClie
 	elm.textContent = JSON.stringify(g.cj, null, 2);
 	g.profile = "";
 	g.type = "";
+	g.showtemplate = true;
     }
     
     // handle title
@@ -121,6 +126,8 @@ define(["./process_inputs","./render_client"], function(processinput, renderClie
 		    a.onclick = httpGet;
 		    d.push(a, li);
 		    d.push(li,local_nav);
+		    // Do not show template
+		    g.showtemplate = false;		    
 		}
 		else {
 		    a = d.anchor({rel:link.rel,href:link.href,text:link.prompt,render: link.render});
@@ -263,13 +270,14 @@ define(["./process_inputs","./render_client"], function(processinput, renderClie
     }
 
     // handle template object
+    // It is only displayed if there are no template links (it is assumed that the template is for editing)
     function template() {
 	var elm, coll;
 	var form, fs, lg, p, lbl, inp;
 
 	elm = d.find("template");
 	d.clear(elm);
-	if(hasTemplate(g.cj.collection)===true) {
+	if((hasTemplate(g.cj.collection)===true) && (g.showtemplate === true)) {
 	    coll = g.cj.collection.template.data;
 	    form = d.node("form");
 	    form.action = g.cj.collection.href;
