@@ -7,9 +7,9 @@ module.exports = function(app) {
     app.defineRoute('users', '/api/users');
     app.defineRoute('user', '/api/users/:user');
     app.defineRoute('fm34s', '/api/users/:user/fm34s', 'fm34s collection', 'Conjunto de FM 34');
-    app.defineRoute('fm34sdocx', '/api/users/:user/fm34s/docx', 'document', 'FM34 en formato DOCX');
+    app.defineRoute('fm34sdocx', '/api/users/:user/fm34s/docx', 'document', 'FM34 en formato DOCX', 'attachment');
     app.defineRoute('fm34', '/api/users/:user/fm34s/items/:fm34', 'fm34 item', 'FM 34');
-    app.defineRoute('fm34docx', '/api/users/:user/fm34s/items/:fm34/docx', 'fm34 item', 'FM 34 en formato DOCX');
+    app.defineRoute('fm34docx', '/api/users/:user/fm34s/items/:fm34/docx', 'fm34 item', 'FM 34 en formato DOCX', 'attachment');
     app.defineRoute('fcts', '/api/users/:user/fcts', 'fcts', 'Lista de FCTs del usuario');
     app.defineRoute('certs_alumno', '/api/users/:user/fcts/certs_alumno', 'certs_alumno collection', 'Lista de certificados del alumno', 'attachment');
     app.defineRoute('certs_instructor', '/api/users/:user/fcts/certs_instructor', 'certs_instructor collection', 'Lista de certificados del instructor', 'attachment');

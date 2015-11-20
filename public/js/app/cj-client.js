@@ -181,8 +181,11 @@ define(["./process_inputs","./render_client"], function(processinput, renderClie
 			    img = d.image({className:"image "+link.rel,rel:link.rel,href:link.href});         
 			    d.push(img, p);
 			}
-			else {
-			    a = d.anchor({className:"item-link",href:link.href,rel:link.rel,text:link.prompt});
+			else if(isAttachment(link)===true) {
+			    a = d.anchor({className:"item-link",href:link.href,rel:link.rel,text:link.prompt,render: link.render});
+			    d.push(a, p);
+			} else {
+			    a = d.anchor({className:"item-link",href:link.href,rel:link.rel,text:link.prompt,render: link.render});
 			    a.onclick = httpGet;
 			    d.push(a, p);
 			}
