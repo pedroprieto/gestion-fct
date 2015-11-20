@@ -45,7 +45,7 @@ define(["./process_inputs","./render_client"], function(processinput, renderClie
 	queries();
 	template();
 	error();
-	cjClearEdit();
+	//cjClearEdit();
 	renderClient();
 
     }
@@ -75,9 +75,12 @@ define(["./process_inputs","./render_client"], function(processinput, renderClie
 	var elm, coll;
 	var ul, li, a, img;
 	var head, lnk;
+	var local_nav;
 
 	ul = d.find("links");
+	local_nav = d.find("local-nav-list");
 	d.clear(ul);
+	d.clear(local_nav);
 	if(g.cj.collection.links) {
 	    coll = g.cj.collection.links;
 	    //ul.onclick = httpGet;
@@ -107,16 +110,25 @@ define(["./process_inputs","./render_client"], function(processinput, renderClie
 		if(isImage(link)===true) {
 		    img = d.image({href:link.href,className:link.rel});
 		    d.push(img, li);
+		    d.push(li, ul);
 		}
 		else if(isAttachment(link)===true) {
 		    a = d.anchor({rel:link.rel,href:link.href,text:link.prompt,render: link.render});
 		    d.push(a, li);
-		} else {
+		    d.push(li, ul);
+		} else if(isTemplateLink(link)===true) {
 		    a = d.anchor({rel:link.rel,href:link.href,text:link.prompt,render: link.render});
 		    a.onclick = httpGet;
 		    d.push(a, li);
+		    d.push(li,local_nav);
 		}
-		d.push(li, ul);
+		else {
+		    a = d.anchor({rel:link.rel,href:link.href,text:link.prompt,render: link.render});
+		    a.onclick = httpGet;
+		    d.push(a, li);
+		    d.push(li, ul);
+		}
+		
 	    }
 	}
     }
@@ -357,6 +369,8 @@ define(["./process_inputs","./render_client"], function(processinput, renderClie
 	    d.push(form, elm);
 	    elm.style.display = "block";
 	}
+	// Aplicar estilos con render
+	renderClient();
 	return false;
     }
     function cjCancelEdit(e) {
@@ -394,6 +408,13 @@ define(["./process_inputs","./render_client"], function(processinput, renderClie
     function isAttachment(link) {
 	var rtn = false;
 	if(link.render && link.render==="attachment") {
+	    rtn = true;
+	}
+	return rtn;
+    }
+    function isTemplateLink(link) {
+	var rtn = false;
+	if(link.rel && link.rel.indexOf("template")>-1) {
 	    rtn = true;
 	}
 	return rtn;

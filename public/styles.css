@@ -60,6 +60,10 @@ fieldset {
     display: block;
 }
 
+#dump {
+    display: none;
+}
+
 @media only screen and (max-width : 992px) {
     header, main, footer {
 	padding-left: 0;

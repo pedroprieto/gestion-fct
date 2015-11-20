@@ -8,6 +8,10 @@ define(["jquery", "materialize"], function() {
 	$("input").filter(function() {
             return this.value.length !== 0;
 	}).siblings().addClass("active");
+
+	// Local navs (template links)
+	$("#local-nav-list li").css("display", "inline-block");
+	$("#local-nav-list a").addClass("btn waves-effect waves-light");
 	
 	// Items container
 	$("#items ul").addClass("collection");
