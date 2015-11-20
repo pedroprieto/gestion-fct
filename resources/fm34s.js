@@ -14,7 +14,7 @@ module.exports = function(app) {
 	    var item =  Visit.genfm34_cj(f);
 
 	    // Item href
-	    var isoweek = moment(f._id.anyo + "-W" + f._id.semana, moment.ISO_8601);
+	    var isoweek = moment().isoWeek(f._id.semana).isoWeekYear(f._id.anyo);
 	    var princ = isoweek.startOf('isoWeek').format("DD-MM-YYYY");
 	    item.href = req.buildLink('fm34', {fm34: princ}).href;
 

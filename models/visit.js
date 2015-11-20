@@ -234,13 +234,7 @@ visitSchema.statics.genfm34_cj = function (fm34) {
     item.data = [];
     item.links = [];
 
-    var sem;
-    if (fm34._id.semana < 10) {
-	sem = "0" + fm34._id.semana;
-    } else {
-	sem = fm34._id.semana;
-    }
-    var isoweek = moment(fm34._id.anyo + "-W" + sem, moment.ISO_8601);
+    var isoweek = moment().isoWeek(fm34._id.semana).isoWeekYear(fm34._id.anyo);
 
     var princ = isoweek.startOf('isoWeek').format("DD/MM/YYYY");
     var fin = isoweek.endOf('isoWeek').format("DD/MM/YYYY");
