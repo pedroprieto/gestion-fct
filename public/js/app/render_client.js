@@ -1,9 +1,7 @@
 define(["jquery", "materialize"], function() {
 
     return function() {
-	$("a.button-collapse").sideNav({
-            menuWidth: 300
-	});
+	
 	// Problemas con labels Materialize
 	$("input").filter(function() {
             return this.value.length !== 0;

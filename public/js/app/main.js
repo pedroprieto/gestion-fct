@@ -1,4 +1,4 @@
-define(["app/cj-client", "jquery"], function(cjclient) {
+define(["app/cj-client", "jquery", "materialize"], function(cjclient) {
     
     $(function() {
 	var pg = cjclient.cj();
@@ -6,6 +6,11 @@ define(["app/cj-client", "jquery"], function(cjclient) {
 	var slashes = http.concat("//");
 	var host = slashes.concat(window.location.host);
 	pg.init(host + "/api");
+
+	// Materialize sideNav
+	$("a.button-collapse").sideNav({
+            menuWidth: 300
+	});
 	
 	
     });
