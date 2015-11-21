@@ -107,7 +107,8 @@ define(["./process_inputs","./render_client"], function(processinput, renderClie
 
 		// Store collection type
 		if(isTypeLink(link)===true) {
-		    g.type = link.href;
+		    // Type link is in format profile#type
+		    g.type = link.href.substr(link.href.indexOf('#')+1);
 		}
 		
 		// render embedded images, if asked

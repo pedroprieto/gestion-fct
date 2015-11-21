@@ -24,6 +24,9 @@ module.exports = function(app) {
     // Cliente
     app.defineRoute('cliente', '/client', 'cliente', 'Cliente');
 
+    // Collection types
+    app.defineRoute('type_mensajes', '/api/alps/gestion_fct_profile#mensajes', 'type', 'Collection tipo mensajes');
+
     
     
 }

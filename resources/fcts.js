@@ -51,6 +51,7 @@ module.exports = function(app) {
 	    item.links = [];
 	    item.links.push(req.buildLink('import_fcts'));
 	    col.items.push(item);
+	    col.links.push(req.buildLink('type_mensajes'));
 	}
 
 	// Queries
