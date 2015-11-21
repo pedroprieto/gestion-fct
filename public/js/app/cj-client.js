@@ -600,6 +600,7 @@ define(["./process_inputs","./render_client"], function(processinput, renderClie
 	lbl.setAttribute("for",args.name);
 	inp = processinput(args);
 	inp.setAttribute("id",args.name);
+	//inp.setAttribute("placeholder",args.prompt||"");
 	push(inp,p);
 	push(lbl,p);
 

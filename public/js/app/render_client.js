@@ -3,9 +3,12 @@ define(["jquery", "materialize"], function() {
     return function() {
 	
 	// Problemas con labels Materialize
-	$("input").filter(function() {
+	$("input,textarea").filter(function() {
             return this.value.length !== 0;
 	}).siblings().addClass("active");
+
+	// Problemas con labels Firefox
+	$("input[type=date],input[type=time]").siblings().addClass("active");
 
 	// Local navs (template links)
 	$("#local-nav-list li").css("display", "inline-block");
@@ -47,6 +50,10 @@ define(["jquery", "materialize"], function() {
 
 	// Textarea
 	$('textarea').addClass('materialize-textarea');
+
+	// Form inputs
+	$("#template fieldset").addClass("row");
+	$("#template .input-field").addClass("col s12");
     };
     
 });
