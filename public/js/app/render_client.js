@@ -18,6 +18,13 @@ define(["jquery", "materialize"], function() {
 	$("#items ul").addClass("collection");
 	$("#items ul li").addClass("collection-item");
 
+	// Items container para collection "mensajes"
+	$("#items .mensajes").removeClass("collection");
+	$("#items .mensajes li").removeClass("collection-item").addClass("card blue-grey darken-1");
+	$("#items .mensajes li .item-data").addClass("card-content white-text");
+	$("#items .mensajes li .item-links").addClass("card-action");
+	$("#items .mensajes li .item-actions").hide();
+
 	//$(".item-href").html('<i class="material-icons">delete</i>');
 	// No funciona por el tema de herencia de onclicks. FIX
 	//$(".item-delete").html('<i class="material-icons">delete</i>');
@@ -30,10 +37,14 @@ define(["jquery", "materialize"], function() {
 	$("#queries form").addClass("collapsible-body");
 	$('.collapsible').collapsible();
 	$("#queries fieldset").addClass("row");
-	$("#queries div").addClass("col s2 input-field");
-	$("#queries div.search").addClass("offset-s1 col s5").removeClass("s2");
-	$("#queries .submit-query").addClass("col s1").removeClass("s2");
+	$("#queries div.search").addClass("offset-s1 col s5");
+	$("#queries div.curso").addClass("col s3 input-field");
+	$("#queries div.periodo").addClass("col s2 input-field");
+	$("#queries .submit-query").addClass("col s2 right-align input-field");
 	$(".submit-query-button").html('<i class="material-icons">search</i>');
+
+	// Search query
+	$(".search .query_title").append('<i class="material-icons">search</i>');
 
 	// Template
 	$(".submit-template-button").html('<i class="material-icons">done</i>');

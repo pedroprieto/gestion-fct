@@ -153,6 +153,7 @@ define(["./process_inputs","./render_client"], function(processinput, renderClie
 	if(g.cj.collection.items) {
 	    coll = g.cj.collection.items;
 	    ul = d.node("ul");
+	    ul.className = g.type || "";
 
 	    for(var item of coll) {
 		li = d.node("li");
