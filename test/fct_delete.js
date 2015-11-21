@@ -82,7 +82,7 @@ describe('Comprobar el borrado de FCT y sus visitas asociadas.', function () {
 		// Delete FCT
 		    .delete(app.buildLink('fct',{user: user_test1.username, fct: f1._id}).href)
 		    .set("Authorization", "basic " + new Buffer(user_test1.username + ':' + user_test1.password).toString("base64"))
-		    .expect(204);
+		    .expect(200);
 	    })
 	    .then(function(r) {
 		return Visit.findAsync();
