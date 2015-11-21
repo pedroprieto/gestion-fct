@@ -184,6 +184,7 @@ module.exports = function(app) {
 		col.links.push(req.buildLink('fcts'));
 		col.links.push(req.buildLink('fct'));
 		col.links.push(req.buildLink('visits'));
+		col.links.push(req.buildLink('type_mensajes'));
 		var item = {};
 		item.data = [];
 		var d = {};
@@ -271,6 +272,7 @@ module.exports = function(app) {
 		col.links.push(req.buildLink('fcts'));
 		col.links.push(req.buildLink('fct'));
 		col.links.push(req.buildLink('visits'));
+		col.links.push(req.buildLink('type_mensajes'));
 		var item = {};
 		item.data = [];
 		var d = {};
@@ -314,6 +316,7 @@ module.exports = function(app) {
 		col.links.push(req.buildLink('fcts'));
 		col.links.push(req.buildLink('fct'));
 		col.links.push(req.buildLink('visits'));
+		col.links.push(req.buildLink('type_mensajes'));
 		var item = {};
 		item.data = [];
 		var d = {};

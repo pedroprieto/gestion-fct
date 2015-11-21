@@ -185,7 +185,27 @@ module.exports = function(app) {
 	    })
 	    .then(function(fctborrada) {
 		//res.location(req.app.buildLink('visit', {user: res.locals.user.username, fct: res.locals.fct._id, visit: item._id}).href);
-		res.status(204).end();
+		//res.status(204).end();
+		// Respondemos con una collection con mensaje al usuario
+		var col = res.app.locals.cj();
+
+		// Collection href
+		col.href = req.buildLink('fcts').href;
+				
+		// Collection Links
+		col.links.push(req.buildLink('fcts'));
+		col.links.push(req.buildLink('type_mensajes'));
+		var item = {};
+		item.data = [];
+		var d = {};
+		d.name = "mensaje";
+		d.prompt = "FCT eliminada correctamente. Haga click en el enlace para volver a la lista de FCTs.";
+		item.data.push(d);
+		item.links = [];
+		item.links.push(req.buildLink('fcts'));
+		col.items.push(item);
+
+		res.status(200).json({collection: col});
 		
 	    })
 	    .catch(next);

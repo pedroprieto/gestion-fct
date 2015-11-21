@@ -123,6 +123,7 @@ module.exports = function(app) {
 		// Collection Links
 		var l = req.buildLink('fcts');
 		l.href += "?curso=" + curso + "&periodo=" + periodo;
+		col.links.push(req.buildLink('type_mensajes'));
 		
 		col.links.push(l);
 		var item = {};
