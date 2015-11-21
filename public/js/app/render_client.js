@@ -24,6 +24,7 @@ define(["jquery", "materialize"], function() {
 	$("#items .mensajes li .item-data").addClass("card-content white-text");
 	$("#items .mensajes li .item-links").addClass("card-action");
 	$("#items .mensajes li .item-actions").hide();
+	$("#items .mensajes li .item-data").prepend('<span class="card-title"> <i class="material-icons">info_outline</i> Información</span>');
 
 	//$(".item-href").html('<i class="material-icons">delete</i>');
 	// No funciona por el tema de herencia de onclicks. FIX
