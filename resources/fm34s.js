@@ -71,7 +71,7 @@ module.exports = function(app) {
 			data: [
 			    {
 				name: "mes",
-				value: req.query.mes || "",
+				value: req.query.mes || "1",
 				prompt: "Últimos meses"
 			    }			    
 			]

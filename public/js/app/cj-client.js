@@ -103,12 +103,14 @@ define(["./process_inputs","./render_client"], function(processinput, renderClie
 		// Store collection profile
 		if(isProfileLink(link)===true) {
 		    g.profile = link.href;
+		    continue;
 		}
 
 		// Store collection type
 		if(isTypeLink(link)===true) {
 		    // Type link is in format profile#type
 		    g.type = link.href.substr(link.href.indexOf('#')+1);
+		    continue;
 		}
 		
 		// render embedded images, if asked
