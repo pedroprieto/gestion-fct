@@ -27,7 +27,7 @@ var visitSchema = new Schema( {
     hora_regreso: {type: String, match: /^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/, required: true},
     localidad: {type: String,required: true},
     impresion: {type: String, required: true},
-    presencial: { type: Boolean, default: true },
+    presencial: { type: Boolean, default: false },
     _fct : { type: Schema.Types.ObjectId, ref: 'Fct' },
     _usuario: { type: Schema.Types.ObjectId, ref: 'User' }
 }, schemaOptions);

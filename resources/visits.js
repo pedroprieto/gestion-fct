@@ -118,6 +118,9 @@ module.exports = function(app) {
 	    return a;
 	} , {});
 
+	// Si no se envía el campo 'presencial', se considera que es 'false'
+	visitdata.presencial = visitdata.presencial || 'false';
+
 	// Añadimos el usuario
 	visitdata._usuario = res.locals.user._id;
 
@@ -247,6 +250,9 @@ module.exports = function(app) {
 	    a[b.name] = b.value;
 	    return a;
 	} , {});
+
+	// Si no se envía el campo 'presencial', se considera que es 'false'
+	visitdata.presencial = visitdata.presencial || 'false';
 
 	// Añadimos el usuario
 	visitdata._usuario = res.locals.user._id;

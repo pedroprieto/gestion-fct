@@ -34,6 +34,12 @@ define(function() {
 	    inp.type = "checkbox";
 	    if (args.value == 'true')
 		inp.setAttribute("checked","checked");
+	    // Como se muestra como checkbox, el cliente enviará o no el datos si el checkbox está pulsado.
+	    // Por tanto, si se activa el checkbox, se enviará presencial=true siempre
+	    // Si no se envía el checkbox, no se envía nada
+	    // Por ello, cambiamos el valor a 'true'; si el servidor envía 'false' como sugerencia, el checkbox se mostrará desactivado
+	    // y aún así su valor será true por si el usuario lo activa.
+	    args.value = 'true';
 	    break;
 	case 'impresion':
 	    inp = document.createElement("textarea");
