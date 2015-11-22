@@ -19,7 +19,6 @@ module.exports = function(app) {
 	
 	
 	// Collection Links
-	col.links.push(req.buildLink('fcts'));
 	col.links.push(req.buildLink('import_fcts'));
 	col.links.push(req.buildLink('fm34s'));
 	col.links.push(req.buildLink('certs_alumno'));
@@ -167,6 +166,11 @@ module.exports = function(app) {
 	fcts.push(fct);
 
 	var col = renderCollectionFcts(req, res, fcts);
+
+	// Link lista FCTs
+	var fctslinks = req.buildLink('fcts');
+	fctslinks.href += "?curso=" + res.locals.fct.curso + "&periodo=" + res.locals.fct.periodo;
+	col.collection.links.unshift(fctslinks);
 	    
 	res.json(col);
 

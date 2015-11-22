@@ -19,7 +19,10 @@ module.exports = function(app) {
 	
 	
 	// Collection Links
-	col.links.push(req.buildLink('fcts'));
+	var fctslinks = req.buildLink('fcts');
+	fctslinks.href += "?curso=" + res.locals.fct.curso + "&periodo=" + res.locals.fct.periodo;
+	col.links.push(fctslinks);
+	
 	col.links.push(req.buildLink('fct'));
 	col.links.push(req.buildLink('visits'));
 	//col.links.push(req.buildLink('fm34s'));
@@ -361,7 +364,9 @@ module.exports = function(app) {
 	col.href = req.buildLink('visits').href;
 	
 	// Links
-	col.links.push(req.buildLink('fcts'));
+	var fctslinks = req.buildLink('fcts');
+	fctslinks.href += "?curso=" + res.locals.fct.curso + "&periodo=" + res.locals.fct.periodo;
+	col.links.push(fctslinks);
 	col.links.push(req.buildLink('fct'));
 	req.buildLink('visits');
 
