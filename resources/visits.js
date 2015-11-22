@@ -127,12 +127,13 @@ module.exports = function(app) {
 
 	// Comprobamos si se quieren crear visitas relacionadas
 	// La propiedad 'related' es una cadena con las ids de las FCTs relacionadas separadas por coma
-	if (visitdata.hasOwnProperty('related')) {
-	    if (visitdata.related !== "") {
-		list_fcts = visitdata.related.split(",");
-	    }
-	}
 	
+	list_fcts = data.filter(function(a) {
+	    return a.name == "related";
+	}).map(function (ob) {
+	    return ob.value;
+	});
+
 	// Añadimos la FCT actual
 	list_fcts.push(res.locals.fct._id);
 
@@ -366,10 +367,9 @@ module.exports = function(app) {
 
 	// Obtenemos FCTs con la misma empresa que la actual, del mismo usuario, para incluirlas en la template
 	var related = "";
-	Fct.findAsync({empresa: res.locals.fct.empresa, usuario: res.locals.user._id, _id: {'$ne': fct._id}}, '_id')
+	Fct.findAsync({empresa: res.locals.fct.empresa, usuario: res.locals.user._id, _id: {'$ne': fct._id}})
 	    .then(function(fcts) {
-		related = fcts.map(function (key) {return key._id;}).join();
-		col.template = Visit.visit_template(localidad, tipo, related, distancia);
+		col.template = Visit.visit_template(localidad, tipo, fcts, distancia);
 		
 		//Send
 		res.json({collection: col});

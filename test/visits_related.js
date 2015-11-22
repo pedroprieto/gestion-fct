@@ -147,13 +147,20 @@ describe('Crear una visita en una FCT', function () {
 		// Obtenemos FCTs relacionadas
 		var related_fcts = res.body.collection.template.data.filter(function( obj ) {
 		    return obj.name == 'related';
-		})[0];
+		});
 		should.exist(related_fcts);
+		related_fcts.should.have.a.lengthOf(1);
 		// Metemos una referencia a una FCT de otro usuario
 		// No debe ser tenida en cuenta a la hora de crear las visitas
-		related_fcts.value+= "," + fct4._id.toString();
+		var newrelated = {
+		    name: "related",
+		    value: fct4._id.toString(),
+		    prompt: "Otra FCT de otro usuario"
+		};
+
+		related_fcts.push(newrelated);		
 		// Asociamos ese campo al template de la visita
-		visit_test_template.template.data.push(related_fcts);
+		visit_test_template.template.data = visit_test_template.template.data.concat(related_fcts);
 		return request
 		// Petición POST al link de visitas para crear una visita
 		    .post(app.buildLink('visits',{user: user_test1.username, fct: f1._id}).href)

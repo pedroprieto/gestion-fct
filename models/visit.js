@@ -163,12 +163,14 @@ visitSchema.statics.visit_template = function (localidad, tipo, related, distanc
     }
 
     // Añadimos FCTs relacionadas en el campo 'related' de la plantilla
-    if (typeof related !== undefined) {
-	template.data.push({
-	    name : 'related',
-	    value : related,
-	    prompt : 'Crear una visita igual en las siguientes FCTs'
-	});
+    if ((typeof related !== 'undefined') && (related.length > 0)) {
+	for (var i in related) {
+	    template.data.push({
+		name : 'related',
+		value : related[i]._id,
+		prompt : related[i].empresa + "-" + related[i].alumno
+	    });
+	}
     }
 
     return template;
