@@ -58,7 +58,8 @@ describe('Comprobar la correcta generación de FM 34s', function () {
 	hora_salida: '09:00',
 	hora_regreso: '11:00',
 	localidad: 'localidad test 1',
-	impresion: 'texto impresión test 1'
+	impresion: 'texto impresión test 1',
+	presencial: true
     });
 
     var v2_same_date = new Visit({
@@ -69,7 +70,8 @@ describe('Comprobar la correcta generación de FM 34s', function () {
 	hora_salida: '09:00',
 	hora_regreso: '11:00',
 	localidad: 'localidad test 1',
-	impresion: 'texto impresión test 2'
+	impresion: 'texto impresión test 2',
+	presencial: true
     });
 
     var v3_other_hour = new Visit({
@@ -80,7 +82,8 @@ describe('Comprobar la correcta generación de FM 34s', function () {
 	hora_salida: '15:00',
 	hora_regreso: '17:00',
 	localidad: 'localidad test 3',
-	impresion: 'texto impresión test 3'
+	impresion: 'texto impresión test 3',
+	presencial: true
     });
 
     var v4_same_week = new Visit({
@@ -91,7 +94,8 @@ describe('Comprobar la correcta generación de FM 34s', function () {
 	hora_salida: '15:00',
 	hora_regreso: '17:00',
 	localidad: 'localidad test 4',
-	impresion: 'texto impresión test 4'
+	impresion: 'texto impresión test 4',
+	presencial: true
     });
 
     var v5_other_week = new Visit({
@@ -102,7 +106,8 @@ describe('Comprobar la correcta generación de FM 34s', function () {
 	hora_salida: '15:00',
 	hora_regreso: '17:00',
 	localidad: 'localidad test 5',
-	impresion: 'texto impresión test 5'
+	impresion: 'texto impresión test 5',
+	presencial: true
     });
 
     var v6_same_week = new Visit({
@@ -113,7 +118,8 @@ describe('Comprobar la correcta generación de FM 34s', function () {
 	hora_salida: '15:00',
 	hora_regreso: '17:00',
 	localidad: 'localidad test 6',
-	impresion: 'texto impresión test 6'
+	impresion: 'texto impresión test 6',
+	presencial: true
     });
 
     var usuario;

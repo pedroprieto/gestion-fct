@@ -45,7 +45,8 @@ describe('Crear una visita en una FCT', function () {
 		{name: "hora_salida", value: "11:00"},
 		{name: "hora_regreso", value: "12:00"},
 		{name: "localidad", value: "Localidad test"},
-		{name: "impresion", value: "Impresión de la visita test"}
+		{name: "impresion", value: "Impresión de la visita test"},
+		{name: "presencial", value: "true"}
 	    ]
 	}
     };
