@@ -522,6 +522,8 @@ define(["./process_inputs","./render_client"], function(processinput, renderClie
 	nodes = d.classes("value",form);
 	for(i=0,x=nodes.length;i<x;i++) {
 	    if(nodes[i].name && nodes[i].name!=='') {
+		if (nodes[i].type == 'checkbox' && !nodes[i].checked)
+		    continue;
 		data.push({name:nodes[i].name,value:nodes[i].value+""});
 	    }
 	}
