@@ -166,7 +166,7 @@ visitSchema.statics.visit_template = function (localidad, tipo, related, distanc
     if ((typeof related !== 'undefined') && (related.length > 0)) {
 	for (var i in related) {
 	    template.data.push({
-		name : 'related',
+		name : 'related-' + i,
 		value : related[i]._id,
 		prompt : related[i].empresa + "-" + related[i].alumno
 	    });

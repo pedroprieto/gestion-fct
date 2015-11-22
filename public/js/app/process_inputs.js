@@ -2,10 +2,16 @@ define(function() {
 
     return function processinput(args) {
 	var inp;
+	var name;
 	
 	inp = document.createElement("input");
+
+	name = args.name;
+	// Transform related-0, related-1,... into related
+	if (args.name.indexOf('related') > -1)
+	    name = 'related';
 	
-	switch(args.name) {
+	switch(name) {
 	case 'periodo':
 	case 'curso':
 	    inp = document.createElement("select");

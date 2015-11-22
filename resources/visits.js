@@ -129,7 +129,7 @@ module.exports = function(app) {
 	// La propiedad 'related' es una cadena con las ids de las FCTs relacionadas separadas por coma
 	
 	list_fcts = data.filter(function(a) {
-	    return a.name == "related";
+	    return a.name.indexOf('related') > -1;
 	}).map(function (ob) {
 	    return ob.value;
 	});

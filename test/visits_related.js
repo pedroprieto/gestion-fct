@@ -146,14 +146,14 @@ describe('Crear una visita en una FCT', function () {
 	    .then(function(res) {
 		// Obtenemos FCTs relacionadas
 		var related_fcts = res.body.collection.template.data.filter(function( obj ) {
-		    return obj.name == 'related';
+		    return obj.name.indexOf('related') > -1;
 		});
 		should.exist(related_fcts);
 		related_fcts.should.have.a.lengthOf(1);
 		// Metemos una referencia a una FCT de otro usuario
 		// No debe ser tenida en cuenta a la hora de crear las visitas
 		var newrelated = {
-		    name: "related",
+		    name: "related-1",
 		    value: fct4._id.toString(),
 		    prompt: "Otra FCT de otro usuario"
 		};
