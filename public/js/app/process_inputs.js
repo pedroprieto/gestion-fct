@@ -20,8 +20,14 @@ define(function() {
 		}
 	    }
 	    break;
+	case 'related':
+	    inp.type = "checkbox";
+	    inp.setAttribute("checked","checked");
+	    break;
 	case 'presencial':
 	    inp.type = "checkbox";
+	    if (args.value == 'true')
+		inp.setAttribute("checked","checked");
 	    break;
 	case 'impresion':
 	    inp = document.createElement("textarea");
