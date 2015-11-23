@@ -16,13 +16,20 @@ module.exports = function(app) {
 
 	// Collection href
 	col.href = req.buildLink('fcts').href;
-	
+
+	var c = req.query.curso || cps.getCursoActual();
+	var p = req.query.periodo || cps.getPeriodoActual();
 	
 	// Collection Links
+	var fctlink = req.buildLink('fcts');
+	fctlink.href += "?curso=" + c + "&periodo=" + p;
+	col.links.push(fctlink);
 	col.links.push(req.buildLink('import_fcts'));
 	col.links.push(req.buildLink('fm34s'));
-	col.links.push(req.buildLink('certs_alumno'));
-	col.links.push(req.buildLink('certs_instructor'));
+	var doclink = req.buildLink('documentacion');
+	doclink.href += "?curso=" + c + "&periodo=" + p;
+	col.links.push(doclink);
+	
 
 	// Items
 	col.items = fctlist.map(function(f) {
@@ -75,14 +82,14 @@ module.exports = function(app) {
 		    },
 		    {
 			name: "curso",
-			value: typeof req.query.curso!== 'undefined' ? req.query.curso : c_actual,
+			value: (typeof req.query.curso!== 'undefined' && req.query.curso !== "") ? req.query.curso : c_actual,
 			prompt: "Curso",
 			options: cps.getcursoslist()
 			//options: [{"value" : "1", "prompt" : "qui"}, {"value" : "2", "prompt" : "quo"}, {"value" : "2", "prompt" : "qua"}] 
 		    },
 		    {
 			name: "periodo",
-			value: typeof req.query.periodo!== 'undefined' ? req.query.periodo : p_actual,
+			value: (typeof req.query.periodo!== 'undefined' && req.query.periodo !== "") ? req.query.periodo : p_actual,
 			prompt: "Período",
 			options: cps.getperiodoslist()
 		    }

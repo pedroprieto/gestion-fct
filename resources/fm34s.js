@@ -56,6 +56,9 @@ module.exports = function(app) {
 
 		// Collection Links
 		col.links.push(req.buildLink('fcts'));
+		col.links.push(req.buildLink('import_fcts'));
+		col.links.push(req.buildLink('fm34s'));
+		col.links.push(req.buildLink('documentacion'));
 		
 		// Items
 		col.items = renderFm34Items(req, res, fm34s);

@@ -23,8 +23,7 @@ module.exports = function(app) {
 	col.links.push(req.buildLink('fcts'));
 	col.links.push(req.buildLink('import_fcts'));
 	col.links.push(req.buildLink('fm34s'));
-	col.links.push(req.buildLink('certs_alumno'));
-	col.links.push(req.buildLink('certs_instructor'));
+	col.links.push(req.buildLink('documentacion'));
 
 	// Items
 
