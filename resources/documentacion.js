@@ -16,6 +16,9 @@ module.exports = function(app) {
 
 	var c = req.query.curso || cps.getCursoActual();
 	var p = req.query.periodo || cps.getPeriodoActual();
+
+	// Collection title
+	col.title = "Documentación curso " + c + " período " + p;
 	
 	// Collection Links
 	var fctlink = req.buildLink('fcts');

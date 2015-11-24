@@ -54,6 +54,13 @@ module.exports = function(app) {
 		// Collection href
 		col.href = req.buildLink('fm34s').href;
 
+		// Collection title
+		if (ultimos_meses == 1) {
+		    col.title = "FM34 del último mes";
+		} else {
+		    col.title = "FM34s de los últimos " + ultimos_meses + " meses";
+		}
+
 		// Collection Links
 		col.links.push(req.buildLink('fcts'));
 		col.links.push(req.buildLink('import_fcts'));
@@ -144,6 +151,9 @@ module.exports = function(app) {
 
 	// Collection href
 	col.href = req.buildLink('fm34s').href;
+
+	// Collection title
+	col.title = "FM34";
 
 	// Collection Links
 	col.links.push(req.buildLink('fcts'));

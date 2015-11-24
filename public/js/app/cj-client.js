@@ -69,9 +69,9 @@ define(["./process_inputs","./render_client"], function(processinput, renderClie
 	
 	if(hasTitle(g.cj.collection)===true) {
 	    elm = d.find("title");
-	    elm.innerText = g.cj.collection.title;
+	    elm.textContent = g.cj.collection.title;
 	    elm = d.tags("title");
-	    elm[0].innerText = g.cj.collection.title;
+	    elm[0].textContent = g.cj.collection.title;
 	}
     }
     

@@ -19,6 +19,10 @@ module.exports = function(app) {
 
 	var c = req.query.curso || cps.getCursoActual();
 	var p = req.query.periodo || cps.getPeriodoActual();
+
+	// Collection title
+	col.title = "FCTs " + c + " período " + p;
+
 	
 	// Collection Links
 	var fctlink = req.buildLink('fcts');
@@ -177,7 +181,11 @@ module.exports = function(app) {
 	// Link lista FCTs
 	var fctslinks = req.buildLink('fcts');
 	fctslinks.href += "?curso=" + res.locals.fct.curso + "&periodo=" + res.locals.fct.periodo;
-	col.collection.links.unshift(fctslinks);
+	// Cambiamos el enlace de lista de FCTs porque en este caso no hay query.
+	col.collection.links[0] = fctslinks;
+
+	// Collection title
+	col.collection.title = "FCT " + fct.empresa + " - " + fct.alumno;
 	    
 	res.json(col);
 
@@ -205,6 +213,9 @@ module.exports = function(app) {
 
 		// Collection href
 		col.href = req.buildLink('fcts').href;
+
+		// Collection title
+		col.title = "Mensaje";
 				
 		// Collection Links
 		col.links.push(req.buildLink('fcts'));

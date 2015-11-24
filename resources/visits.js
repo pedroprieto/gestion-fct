@@ -16,7 +16,9 @@ module.exports = function(app) {
 
 	// Collection href
 	col.href = req.buildLink('visits').href;
-	
+
+	// Collection title
+	col.title = "Visitas FCT  " + res.locals.fct.empresa + " - " + res.locals.fct.alumno;
 	
 	// Collection Links
 	var fctslinks = req.buildLink('fcts');

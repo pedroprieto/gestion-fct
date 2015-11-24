@@ -17,6 +17,9 @@ module.exports = function(app) {
 
 	// Collection href
 	col.href = req.buildLink('import_fcts').href;
+
+	// Collection title
+	col.title = "Importar FCTs de SAO";
 	
 	
 	// Collection Links
