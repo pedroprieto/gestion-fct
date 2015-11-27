@@ -76,7 +76,7 @@ module.exports = function(app) {
 		    {
 			href: req.buildLink('fm34s').href,
 			rel: "search",
-			name: "search",
+			name: "searchfm34",
 			prompt: "Búsqueda de FM34s",
 			data: [
 			    {
