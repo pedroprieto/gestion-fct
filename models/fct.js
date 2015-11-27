@@ -145,7 +145,7 @@ fctSchema.statics.tx_cj = function (doc, ret, options) {
 
 // Función que devuelve una lista de FCTs filtradas por los parámetros de la query pasada como parámetro
 fctSchema.statics.findQuery = function (query, usuario, cb) {
-    // Parámetros de query: curso, periodo, search
+    // Parámetros de query: curso, periodo, datosfct
     // Curso y periodo: pueden indicarse varios separados por comas
 
     // Query
@@ -193,8 +193,8 @@ fctSchema.statics.findQuery = function (query, usuario, cb) {
     q.periodo.$in = periodos;
     
     // Búsqueda general
-    if (typeof query.search !== 'undefined') {
-	var re =  new RegExp(query.search, "i");
+    if (typeof query.datosfct !== 'undefined') {
+	var re =  new RegExp(query.datosfct, "i");
 	q.$or = [];
 	//q.$or.push({tutor: re});
 	//q.$or.push({ciclo: re});

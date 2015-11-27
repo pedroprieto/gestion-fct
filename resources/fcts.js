@@ -76,12 +76,12 @@ module.exports = function(app) {
 	    {
 		href: req.buildLink('fcts').href,
 		rel: "search",
-		name: "search",
+		name: "searchfct",
 		prompt: "Búsqueda de FCTs",
 		data: [
 		    {
-			name: "search",
-			value: req.query.search || "",
+			name: "datosfct",
+			value: req.query.datosfct || "",
 			prompt: "Búsqueda por texto"
 		    },
 		    {
