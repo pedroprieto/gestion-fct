@@ -120,7 +120,7 @@ app.use(function handleNotFound(req, res){
 app.use(error_handling.logErrors);
 app.use(error_handling.respondError);
 
-var ipaddress = process.env.OPENSHIFT_NODEJS_IP || "127.0.0.1";
+var ipaddress = process.env.OPENSHIFT_NODEJS_IP || "0.0.0.0";
 var server = app.listen(app.get('port'), ipaddress, function(){
     console.log('Express server listening on port ' + app.get('port'));
 });
