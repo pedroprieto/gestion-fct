@@ -38,14 +38,14 @@ define(["jquery", "materialize"], function() {
 	$("#queries form").addClass("collapsible-body");
 	$('.collapsible').collapsible();
 	$("#queries fieldset").addClass("row");
-	$("#queries div.search").addClass("offset-s1 col s5");
+	$("#queries div.datosfct, #queries div.mes").addClass("offset-s1 col s5");
 	$("#queries div.curso").addClass("col s3 input-field");
 	$("#queries div.periodo").addClass("col s2 input-field");
 	$("#queries .submit-query").addClass("col s2 right-align input-field");
 	$(".submit-query-button").html('<i class="material-icons">search</i>');
 
 	// Search query
-	$(".search .query_title").append('<i class="material-icons">search</i>');
+	$(".searchfct .query_title, .searchfm34 .query_title").append('<i class="material-icons">search</i>');
 
 	// Template
 	$(".submit-template-button").html('<i class="material-icons">done</i>');
