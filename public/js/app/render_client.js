@@ -15,8 +15,11 @@ define(["jquery", "materialize"], function() {
 	$("#local-nav-list a").addClass("btn waves-effect waves-light");
 	
 	// Items container
-	$("#items ul").addClass("collection");
-	$("#items ul li").addClass("collection-item");
+	$("#items ul").addClass("");
+	$("#items ul li").addClass("card  teal");
+	$("#items ul li .item-data").addClass("card-content white-text");
+	$("#items ul li .item-links").addClass("card-action");
+	$("#items ul li .item-actions").addClass(" right");
 
 	// Items container para collection "mensajes"
 	$("#items .mensajes").removeClass("collection");
@@ -38,17 +41,21 @@ define(["jquery", "materialize"], function() {
 	$("#queries form").addClass("collapsible-body");
 	$('.collapsible').collapsible();
 	$("#queries fieldset").addClass("row");
-	$("#queries div.datosfct, #queries div.mes").addClass("offset-s1 col s5");
-	$("#queries div.curso").addClass("col s3 input-field");
-	$("#queries div.periodo").addClass("col s2 input-field");
-	$("#queries .submit-query").addClass("col s2 right-align input-field");
-	$(".submit-query-button").html('<i class="material-icons">search</i>');
+	$("#queries div.datosfct, #queries div.mes").addClass("offset-s1 col s12 m5");
+	$("#queries div.curso").addClass("col s12 m3 input-field");
+	$("#queries div.periodo").addClass("col s12 m2 input-field");
+	$("#queries .submit-query").addClass("col s12 m2 input-field");
+	$(".submit-query-button").html('<i class="material-icons">search</i>').css("width","100%");
 
 	// Search query
 	$(".searchfct .query_title, .searchfm34 .query_title").append('<i class="material-icons">search</i>');
 
 	// Template
-	$(".submit-template-button").html('<i class="material-icons">done</i>');
+	$("#template div.curso").addClass("col s12 m5 input-field");
+	$("#template div.periodo").addClass("col s12 m5 input-field");
+	$("#template .submit-template").addClass("col s12 m2 input-field");
+	$(".submit-template-button").html('<i class="material-icons">done</i>').css("width","100%");;
+
 
 	// Edit
 	$(".submit-edit-button").html('<i class="material-icons">done</i>');
@@ -66,6 +73,16 @@ define(["jquery", "materialize"], function() {
 	// Form inputs
 	$("#template fieldset").addClass("row");
 	$("#template .input-field").addClass("col s12");
+
+	// Item links
+	//$(".collection-item .item-links a").addClass("btn waves-effect waves-light");
+
+	// Delete button
+	$(".item-delete").html('<i class="material-icons">delete</i>').addClass(" white-text");
+
+	// Edit button
+	// No funciona por tema herencia clicks
+	//$(".item-edit").html('<i class="material-icons">edit</i>');
     };
     
 });

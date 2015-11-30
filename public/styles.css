@@ -14,7 +14,7 @@ fieldset {
     text-align: right;
 }
 
-.collection li {
+/*.collection li {
     display: flex;
     
 }
@@ -32,7 +32,7 @@ fieldset {
 .collection .item-data {
     flex: 5 1 0;
     order: 1;
-}
+}*/
 
 .item-href {
     display: none;
