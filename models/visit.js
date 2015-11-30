@@ -72,15 +72,15 @@ visitSchema.pre('save', function (next) {
 visitSchema.statics.prompts = {};
 
 var es_ES = {
-    empresa: "Nombre de la empresa",
-    tipo: "Tipo de la visita",
-    distancia: "Distancia a la empresa en KM",
-    fecha: "Fecha de la visita",
-    hora_salida: "Hora de salida",
-    hora_regreso: "Hora de regreso",
+    empresa: "Empresa",
+    tipo: "Tipo",
+    distancia: "Distancia (km)",
+    fecha: "Fecha",
+    hora_salida: "Salida",
+    hora_regreso: "Regreso",
     localidad: "Localidad",
     presencial: "Presencial",
-    impresion: "Impresión general de la visita"
+    impresion: "Impresión"
 };
 
 visitSchema.statics.prompts.es_ES =  es_ES;
@@ -102,6 +102,9 @@ visitSchema.statics.tx_cj = function (doc, ret, options) {
     delete ret.semana;
     delete ret._fct;
     delete ret._usuario;
+
+    ret.fecha = moment(ret.fecha).format('YYYY-MM-DD');
+
 
     for(var p in ret) {
 

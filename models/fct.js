@@ -39,19 +39,19 @@ fctSchema = new Schema( {
 fctSchema.statics.prompts = {};
 
 var es_ES = {
-    tutor: "Tutor de la FCT",
-    ciclo: "Ciclo formativo",
-    empresa: "Nombre de la empresa",
-    dir_empresa: "Dirección de la empresa",
-    instructor: "Nombre del instructor",
-    nif_instructor: "NIF del instructor",
-    alumno: "Nombre del alumno",
-    nif_alumno: "NIF del alumno",
-    grupo: "Curso y grupo de clase",
-    periodo: "Año y período de la FCT",
-    fecha_inicio: "Fecha de inicio de la FCT",
-    fecha_fin: "Fecha de fin de la FCT",
-    horas: "Duración en horas de la FCT"
+    tutor: "Tutor",
+    ciclo: "Ciclo",
+    empresa: "Empresa",
+    dir_empresa: "Dirección",
+    instructor: "Instructor",
+    nif_instructor: "NIF instructor",
+    alumno: "Alumno",
+    nif_alumno: "NIF alumno",
+    grupo: "Curso y grupo",
+    periodo: "Año y período",
+    fecha_inicio: "Inicio",
+    fecha_fin: "Fin",
+    horas: "Horas"
 };
 
 // Propiedades virtuales
@@ -116,6 +116,9 @@ fctSchema.statics.tx_cj = function (doc, ret, options) {
     delete ret.__v;
     delete ret.usuario;
     delete ret.visitas;
+
+    ret.fecha_inicio = moment(ret.fecha_inicio).format('YYYY-MM-DD');
+    ret.fecha_fin = moment(ret.fecha_fin).format('YYYY-MM-DD');
 
     for(var p in ret) {
 
