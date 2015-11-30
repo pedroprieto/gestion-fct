@@ -28,6 +28,7 @@ module.exports = function(app) {
 	col.links.push(req.buildLink('fct'));
 	col.links.push(req.buildLink('visits'));
 	//col.links.push(req.buildLink('fm34s'));
+	col.links.push(req.buildLink('type_visitas'));
 
 	// Items
 	col.items = visitlist.map(function(v) {

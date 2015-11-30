@@ -30,6 +30,8 @@ module.exports = function(app) {
 
     // Collection types
     app.defineRoute('type_mensajes', '/api/alps/gestion_fct_profile#mensajes', 'type', 'Collection tipo mensajes');
+    app.defineRoute('type_visitas', '/api/alps/gestion_fct_profile#visitas', 'type', 'Collection tipo visitas');
+    app.defineRoute('type_fcts', '/api/alps/gestion_fct_profile#fcts', 'type', 'Collection tipo fcts');
 
     
     

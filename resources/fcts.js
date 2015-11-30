@@ -33,6 +33,7 @@ module.exports = function(app) {
 	var doclink = req.buildLink('documentacion');
 	doclink.href += "?curso=" + c + "&periodo=" + p;
 	col.links.push(doclink);
+	col.links.push(req.buildLink('type_fcts'));
 	
 
 	// Items
