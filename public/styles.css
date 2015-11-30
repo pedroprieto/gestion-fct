@@ -95,3 +95,7 @@ fieldset {
 .fm34s .item-actions {
     display: none;
 }
+
+#error .title {
+    font-weight: bold;
+}

@@ -101,6 +101,12 @@ define(["jquery", "materialize"], function() {
 	// Edit button
 	// No funciona por tema herencia clicks
 	$(".item-edit").html('<i class="material-icons">edit</i>');
+
+	// Error
+	$("#error").addClass("card red lighten-1 white-text");
+	$("#error .title").addClass("card-content card-title");
+	$("#error .message").addClass("card-content");
+	
     };
     
 });

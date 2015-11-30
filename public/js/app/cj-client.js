@@ -324,7 +324,7 @@ define(["./process_inputs","./render_client"], function(processinput, renderClie
 	    p = d.para({className:"title",text:obj.title});
 	    d.push(p,elm);
 
-	    p = d.para({className:"url",text:obj.url});
+	    p = d.para({className:"message",text:obj.message});
 	    d.push(p,elm);
 	}
     }
