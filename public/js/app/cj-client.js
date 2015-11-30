@@ -340,14 +340,14 @@ define(["./process_inputs","./render_client"], function(processinput, renderClie
 	var data, item, dv, tx;
 	
 	// Display edit form in the place of the item
-	elm = e.target.parentNode.parentNode;
+	elm = e.currentTarget.parentNode.parentNode;
 	// Hide item data
 	d.classes('item-actions',elm)[0].style.display = "none";
 	d.classes('item-data',elm)[0].style.display = "none";
 	d.classes('item-links',elm)[0].style.display = "none";
 	
 	// get data from selected item
-	item = cjItem(e.target.href);
+	item = cjItem(e.currentTarget.href);
 	if(item!==null) {
 	    form = d.node("form");
 	    form.action = item.href;
