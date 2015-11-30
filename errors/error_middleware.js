@@ -27,6 +27,8 @@ module.exports.respondError = function(err, req, res, next){
 
     var errcol = req.app.locals.errcj();
     errcol.href = req.protocol + '://' + req.get('host') + req.originalUrl;
+    errcol.links = [];
+    errcol.links.push({href: errcol.href, prompt: "Volver", rel: "template"});
     
     status = err.status || 500
     res.status(status)
