@@ -559,6 +559,11 @@ define(["./process_inputs","./render_client"], function(processinput, renderClie
     }
     // low-level HTTP stuff
     function req(url, method, body) {
+	// Disable submit buttons
+	var x = document.querySelectorAll("[type=submit]");
+	for (var i = 0; i < x.length; i++) {
+	    x[i].disabled = true;
+	}
 	var ajax = new XMLHttpRequest();
 	ajax.onreadystatechange = function(){rsp(ajax)};
 	ajax.open(method, url);
