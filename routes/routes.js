@@ -2,21 +2,21 @@
 
 module.exports = function(app) {
     app.defineRoute('home', '/api', 'home', 'Inicio');
-    app.defineRoute('visits', '/api/users/:user/fcts/items/:fct/visits', 'visits', 'Lista de visitas');
+    app.defineRoute('visits', '/api/users/:user/fcts/items/:fct/visits', 'visits', 'Visitas');
     app.defineRoute('visit', '/api/users/:user/fcts/items/:fct/visits/items/:visit', 'item', 'Visita');
     app.defineRoute('users', '/api/users');
     app.defineRoute('user', '/api/users/:user');
-    app.defineRoute('fm34s', '/api/users/:user/fm34s', 'fm34s collection', 'FM 34');
-    app.defineRoute('fm34sdocx', '/api/users/:user/fm34s/docx', 'document', 'FM34 en formato DOCX', 'attachment');
-    app.defineRoute('fm34', '/api/users/:user/fm34s/items/:fm34', 'fm34 item', 'FM 34');
-    app.defineRoute('fm34docx', '/api/users/:user/fm34s/items/:fm34/docx', 'fm34 item', 'FM 34 en formato DOCX', 'attachment');
-    app.defineRoute('fcts', '/api/users/:user/fcts', 'fcts', 'Lista de FCTs del usuario');
+    app.defineRoute('fm34s', '/api/users/:user/fm34s', 'fm34s collection', 'FM34s');
+    app.defineRoute('fm34sdocx', '/api/users/:user/fm34s/docx', 'document', 'FM34s DOCX', 'attachment');
+    app.defineRoute('fm34', '/api/users/:user/fm34s/items/:fm34', 'fm34 item', 'FM34');
+    app.defineRoute('fm34docx', '/api/users/:user/fm34s/items/:fm34/docx', 'fm34 item', 'FM34 DOCX', 'attachment');
+    app.defineRoute('fcts', '/api/users/:user/fcts', 'fcts', 'Lista de FCTs');
     app.defineRoute('documentacion', '/api/users/:user/documentacion', 'documentacion collection', 'Documentación');
-    app.defineRoute('certs_alumno', '/api/users/:user/fcts/certs_alumno', 'certs_alumno collection', 'Lista de certificados del alumno', 'attachment');
-    app.defineRoute('certs_instructor', '/api/users/:user/fcts/certs_instructor', 'certs_instructor collection', 'Lista de certificados del instructor', 'attachment');
-    app.defineRoute('fm18s', '/api/users/:user/fcts/fm18s', 'fm18 collection', 'Lista de FM 18', 'attachment');
-    app.defineRoute('cert_alumno', '/api/users/:user/fcts/items/:fct/cert_alumno', 'cert_alumno collection', 'Certificado del alumno', 'attachment');
-    app.defineRoute('cert_instructor', '/api/users/:user/fcts/items/:fct/cert_instructor', 'cert_instructor collection', 'Certificado del instructor', 'attachment');
+    app.defineRoute('certs_alumno', '/api/users/:user/fcts/certs_alumno', 'certs_alumno collection', 'Certificados de alumnos', 'attachment');
+    app.defineRoute('certs_instructor', '/api/users/:user/fcts/certs_instructor', 'certs_instructor collection', 'Certificados de instructores', 'attachment');
+    app.defineRoute('fm18s', '/api/users/:user/fcts/fm18s', 'fm18 collection', 'FM18s', 'attachment');
+    app.defineRoute('cert_alumno', '/api/users/:user/fcts/items/:fct/cert_alumno', 'cert_alumno collection', 'Cert. alumno', 'attachment');
+    app.defineRoute('cert_instructor', '/api/users/:user/fcts/items/:fct/cert_instructor', 'cert_instructor collection', 'Cert. instructor', 'attachment');
     app.defineRoute('fm18', '/api/users/:user/fcts/items/:fct/fm18', 'fm18 collection', 'FM18', 'attachment');
     app.defineRoute('fct', '/api/users/:user/fcts/items/:fct', 'item', 'FCT');
     app.defineRoute('login', '/api/login', 'url', 'Login');
