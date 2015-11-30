@@ -381,7 +381,7 @@ module.exports = function(app) {
 
 	// Obtenemos FCTs con la misma empresa que la actual, del mismo usuario, para incluirlas en la template
 	var related = "";
-	Fct.findAsync({empresa: res.locals.fct.empresa, usuario: res.locals.user._id, _id: {'$ne': fct._id}})
+	Fct.findAsync({empresa: res.locals.fct.empresa, usuario: res.locals.user._id, curso: res.locals.fct.curso, periodo: res.locals.fct.periodo, _id: {'$ne': fct._id}})
 	    .then(function(fcts) {
 		col.template = Visit.visit_template(localidad, tipo, fcts, distancia);
 		
