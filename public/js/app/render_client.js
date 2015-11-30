@@ -12,14 +12,20 @@ define(["jquery", "materialize"], function() {
 
 	// Local navs (template links)
 	$("#local-nav-list li").css("display", "inline-block");
-	$("#local-nav-list a").addClass("btn waves-effect waves-light");
+	$("#local-nav-list a").addClass("btn-flat teal-text");
 	
 	// Items container
-	$("#items ul").addClass("");
-	$("#items ul li").addClass("card  teal");
-	$("#items ul li .item-data").addClass("card-content white-text");
-	$("#items ul li .item-links").addClass("card-action");
-	$("#items ul li .item-actions").addClass(" right");
+	$("#items ul").addClass("collection");
+	$("#items ul li").addClass("collection-item");
+	$("#items ul li .item-data").addClass("row");
+	$("#items ul li .item-data-object").addClass("col s12");
+	//$("#items ul li .item-data-object .prompt").addClass("col s6");
+	    
+
+
+	$("#items ul li .item-links").addClass("row valign-wrapper");
+	$("#items ul li .item-actions").addClass("row right-align").css("margin-bottom", "0");
+	$("#items ul li .item-actions a").addClass("teal-text");
 
 	// Items container para collection "mensajes"
 	$("#items .mensajes").removeClass("collection");
@@ -37,7 +43,7 @@ define(["jquery", "materialize"], function() {
 
 	// Queries container
 	$("#queries ul").addClass("collapsible").attr("data-collapsible","accordion");
-	$(".query_title").addClass("collapsible-header");
+	$(".query_title").addClass("collapsible-header teal white-text");
 	$("#queries form").addClass("collapsible-body");
 	$('.collapsible').collapsible();
 	$("#queries fieldset").addClass("row");
@@ -54,11 +60,23 @@ define(["jquery", "materialize"], function() {
 	$("#template div.curso").addClass("col s12 m5 input-field");
 	$("#template div.periodo").addClass("col s12 m5 input-field");
 	$("#template .submit-template").addClass("col s12 m2 input-field");
-	$(".submit-template-button").html('<i class="material-icons">done</i>').css("width","100%");;
+	$(".submit-template-button").html('<i class="material-icons">done</i>').css("width","100%");
 
+	$("fieldset").addClass("row");
+	$("div.tipo").addClass("col s12 m3 input-field");
+	$("div.distancia").addClass("col s12 m3 input-field");
+	$("div.fecha").addClass("col s12 m3 input-field");
+	$("div.hora_salida").addClass("col s12 m3 input-field");
+	$("div.hora_regreso").addClass("col s12 m3 input-field");
+	$("div.localidad").addClass("col s12 m4 input-field");
+	$("div.impresion").addClass("col s12 input-field");
+	$("div.empresa").addClass("col s12 input-field");
+	$("div.presencial").addClass("col s12 input-field");
+	$(".submit-edit").addClass("row col s12 input-field");
 
 	// Edit
-	$(".submit-edit-button").html('<i class="material-icons">done</i>');
+	$(".submit-edit-button").html('<i class="material-icons">done</i>').addClass("col s6");	;
+	$(".submit-edit-cancel-button").html('<i class="material-icons">cancel</i>').addClass("col s6");	;
 
 	// General
 	$("button").addClass("btn waves-effect waves-light");
@@ -75,14 +93,14 @@ define(["jquery", "materialize"], function() {
 	$("#template .input-field").addClass("col s12");
 
 	// Item links
-	//$(".collection-item .item-links a").addClass("btn waves-effect waves-light");
+	$(".collection-item .item-links a").addClass("teal-text col");
 
 	// Delete button
-	$(".item-delete").html('<i class="material-icons">delete</i>').addClass(" white-text");
+	$(".item-delete").html('<i class="material-icons">delete</i>');
 
 	// Edit button
 	// No funciona por tema herencia clicks
-	//$(".item-edit").html('<i class="material-icons">edit</i>');
+	$(".item-edit").html('<i class="material-icons">edit</i>');
     };
     
 });

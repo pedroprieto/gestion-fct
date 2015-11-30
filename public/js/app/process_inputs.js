@@ -48,6 +48,7 @@ define(function() {
 	case 'hora_regreso':
 	    inp.type = "time";
 	    break;
+	case 'mes':
 	case 'distancia':
 	    inp.type = "number";
 	    break;

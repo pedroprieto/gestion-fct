@@ -11,7 +11,7 @@ fieldset {
 }
 
 .collection .item-links, .collection .item-actions {
-    text-align: right;
+    /*text-align: center;*/
 }
 
 /*.collection li {
@@ -38,14 +38,19 @@ fieldset {
     display: none;
 }
 
-.item-data .prompt {
+.collection .item-data .prompt {
+    font-weight: bold;
+    display: inline-block;
+    width: 7em;
+}
+
+/* Ocultar datos de los items*/
+.item-data-object.nif_alumno, .item-data-object.periodo, .item-data-object.curso, .item-data-object.instructor, .item-data-object.nif_instructor, .item-data-object.tutor, .item-data-object.grupo, .item-data-object.ciclo, .item-data-object.dir_empresa, .item-data-object.localidad, .item-data-object.distancia {
     display: none;
 }
 
-
-/* Ocultar datos de los items*/
-.item-data-object.nif_alumno, .item-data-object.horas, .item-data-object.fecha_fin, .item-data-object.fecha_inicio, .item-data-object.periodo, .item-data-object.curso, .item-data-object.instructor, .item-data-object.nif_instructor .item-data-object.tutor, .item-data-object.grupo, .item-data-object.ciclo, .item-data-object.localidad, .item-data-object.dir_empresa, .item-data-object.distancia {
-    display: none;
+.visitas .item-data-object.distancia, .visitas .item-data-object.localidad {
+    display: block;
 }
 
 /*.item-data-object.empresa, .item-data-object.alumno, .item-data-object.mensaje {
@@ -60,6 +65,11 @@ fieldset {
     display: block;
 }
 
+
+.visitas .empresa {
+    display: none;
+}
+
 #dump {
     display: none;
 }
@@ -68,4 +78,20 @@ fieldset {
     header, main, footer {
 	padding-left: 0;
     }
+}
+
+.visitas .item-data .impresion .prompt {
+    display: block;
+}
+
+@media only screen and (min-width : 601px) {
+    .visitas .item-data .distancia .prompt, .visitas .item-data .hora_salida .prompt, .visitas .item-data .hora_regreso .prompt, .visitas .item-data .tipo .prompt, .visitas .item-data .fecha .prompt, .visitas .item-data .localidad .prompt {
+	display: block;
+	width: auto;
+    }
+}
+
+
+.fm34s .item-actions {
+    display: none;
 }

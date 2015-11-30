@@ -367,7 +367,8 @@ define(["./process_inputs","./render_client"], function(processinput, renderClie
 		p = d.input({prompt:data.prompt,name:data.name,value:tx});
 		d.push(p,fs);
 	    }
-	    p = d.node("p");
+	    p = d.node("div");
+	    p.className = "submit-edit";
 	    inp = d.node("button");
 	    inp.className = "submit-edit-button";
 	    inp.type = "submit";

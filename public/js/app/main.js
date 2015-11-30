@@ -9,7 +9,7 @@ define(["app/cj-client", "jquery", "materialize"], function(cjclient) {
 
 	// Materialize sideNav
 	$("a.button-collapse").sideNav({
-            menuWidth: 300
+            menuWidth: 240
 	});
 	
 	
