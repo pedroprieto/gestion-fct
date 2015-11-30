@@ -33,7 +33,7 @@ describe('Crear una visita en una FCT', function () {
 	instructor: "instructor test ",
 	nif_instructor: "12345678k",
 	curso: "2014-2015",
-	periodo: "1",
+	periodo: "2",
 	grupo: "grupo test",
 	fecha_inicio: new Date(),
 	fecha_fin:new Date(),
