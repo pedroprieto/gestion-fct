@@ -553,7 +553,7 @@ define(["./process_inputs","./render_client"], function(processinput, renderClie
     }
     function httpDelete(e) {
 	if(confirm("¿Seguro que desea eliminar?")===true) {
-	    req(e.target.href, "delete", null);
+	    req(e.currentTarget.href, "delete", null);
 	}
 	return false;
     }
