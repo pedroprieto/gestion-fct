@@ -106,6 +106,26 @@ define(["jquery", "materialize"], function() {
 	$("#error").addClass("card red lighten-1 white-text");
 	$("#error .title").addClass("card-content card-title");
 	$("#error .message").addClass("card-content");
+
+	// Datepicker para Firefox y navegadores que no soporten input date
+	$("input[type=date]").each(function( index ) {
+	    var ef_type = $( this ).prop('type');
+	    if (ef_type === "text") {
+		$( this ).pickadate({
+		    format: 'yyyy-mm-dd',
+		    formatSubmit: 'yyyy-mm-dd',
+		    hiddenSuffix: 'oculto'
+		});
+	    }
+	});
+	$("input[type=time]").each(function( index ) {
+	    var ef_type = $( this ).prop('type');
+	    if (ef_type === "text") {
+		$( this ).pickatime({
+		    format: 'HH:i'
+		});
+	    }
+	});
 	
     };
     
