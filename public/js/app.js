@@ -2,9 +2,9 @@ requirejs.config({
     "baseUrl": "js/lib",
     "paths": {
 	"app": "../app",
-	"jquery": "https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min",
-	'hammerjs': 'https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.4/hammer.min',
-	"materialize": "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min",
+	"jquery": "jquery-1.11.3.min",
+	'hammerjs': 'hammer-2.0.4.min',
+	"materialize": "materialize-0.97.3.min",
 	"jquery-hammer": "jquery.hammer"
     },
     shim: {
