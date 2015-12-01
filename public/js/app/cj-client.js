@@ -510,7 +510,7 @@ define(["./process_inputs","./render_client"], function(processinput, renderClie
 		if(q++!==0) {
 		    query += "&";
 		}
-		query += nodes[i].name+"="+escape(nodes[i].value);
+		query += nodes[i].name+"="+encodeURI(nodes[i].value);
 	    }
 	}
 	req(query,"get",null);
