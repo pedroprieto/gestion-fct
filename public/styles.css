@@ -99,3 +99,7 @@ fieldset {
 #error .title {
     font-weight: bold;
 }
+
+form .tipo.input-field {
+    display: none;
+}

@@ -55,6 +55,9 @@ define(function() {
 	case 'fecha':
 	    inp.type = 'date';
 	    break;
+	case 'tipo':
+	    inp.type = 'hidden';
+	    break;
 	case 'empresa':
 	case 'tipo':
 	case 'localidad':
