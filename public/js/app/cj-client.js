@@ -364,7 +364,7 @@ define(["./process_inputs","./render_client"], function(processinput, renderClie
 	    for(var data of coll) {
 		dv = cjData(item, data.name);
 		tx=(dv!==null?dv.value+"":"");
-		p = d.input({prompt:data.prompt,name:data.name,value:tx});
+		p = d.input({prompt:data.prompt,name:data.name,value:tx,required:data.required,match:data.match});
 		d.push(p,fs);
 	    }
 	    p = d.node("div");

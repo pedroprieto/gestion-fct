@@ -67,6 +67,10 @@ define(function() {
 	inp.name = args.name||"";
 	inp.className = "value validate";
 	inp.value = args.value||"";
+	if (args.required === true)
+	    inp.setAttribute("required", "true");
+	if (typeof args.match !== 'undefined')
+	    inp.setAttribute("pattern", args.match);
 	
 	return inp;
     }
