@@ -156,12 +156,20 @@ visitSchema.statics.visit_template = function (localidad, tipo, related, distanc
 		}
 	    }
 	    if (p==='anyo' || p==='semana' || p==='empresa') continue;
-	    
-	    template.data.push({
+
+	    var el = {
 		name : p,
 		value: v,
 		prompt :  visitSchema.statics.prompts.es_ES[p]
-	    });
+	    };
+
+	    if (this.schema.paths[p].isRequired == true)
+		el.required = true;
+
+	    if (typeof this.schema.paths[p].options.match !== 'undefined')
+		el.match = this.schema.paths[p].options.match.toString().replace("/","").replace("/","");
+	    
+	    template.data.push(el);
 	}
     }
 
