@@ -54,6 +54,12 @@ define(["./process_inputs","./render_client"], function(processinput, renderClie
 
     }
 
+    // Hashtag
+    function hashtag(h) {
+	var url = location.protocol + '//' + location.host + location.pathname;
+	history.pushState(null, null,  url + "#" + h);
+    }
+
     // handle response dump
     function dump() {
 	var elm = d.find("dump");
@@ -494,6 +500,7 @@ define(["./process_inputs","./render_client"], function(processinput, renderClie
     
     // mid-level HTTP handlers
     function httpGet(e) {
+	hashtag(e.target.href);
 	req(e.target.href, "get", null);
 	return false;
     }
@@ -513,6 +520,7 @@ define(["./process_inputs","./render_client"], function(processinput, renderClie
 		query += nodes[i].name+"="+encodeURI(nodes[i].value);
 	    }
 	}
+	hashtag(query);
 	req(query,"get",null);
 	return false;
     }
@@ -531,6 +539,7 @@ define(["./process_inputs","./render_client"], function(processinput, renderClie
 		data.push({name:nodes[i].name,value:nodes[i].value+""});
 	    }
 	}
+	hashtag(form.action);
 	req(form.action,'post',JSON.stringify({template:{data:data}}));
 	return false;
     }
@@ -548,11 +557,13 @@ define(["./process_inputs","./render_client"], function(processinput, renderClie
 		data.push({name:nodes[i].name,value:nodes[i].value+""});
 	    }
 	}
+	hashtag(form.action);
 	req(form.action,'put',JSON.stringify({template:{data:data}}));
 	return false;
     }
     function httpDelete(e) {
 	if(confirm("¿Seguro que desea eliminar?")===true) {
+	    hashtag(e.currentTarget.href);
 	    req(e.currentTarget.href, "delete", null);
 	}
 	return false;
@@ -736,6 +747,6 @@ define(["./process_inputs","./render_client"], function(processinput, renderClie
     
     return that;
 				       }
-										     }
-				  });
+                                                                                    }
+                                 });
 
