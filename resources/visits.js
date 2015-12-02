@@ -11,7 +11,7 @@ module.exports = function(app) {
      * @param {array} visitlist
      * @return {Object} collection
      */
-    function renderCollectionVisits(req,res,visitlist) {
+    function renderCollectionVisits(req,res,visitlist,tipos_existentes) {
 	var col = res.app.locals.cj();
 
 	// Collection href
@@ -52,10 +52,6 @@ module.exports = function(app) {
 
 	// Links a templates para visitas específicas
 	var t1;
-	var tipos_existentes = '';
-	for (var i in visitlist) {
-	    tipos_existentes += visitlist[i].tipo;
-	}
 	
 	if (tipos_existentes.indexOf('inicial') === -1) {
 	    t1 = req.buildLink('template_visita', {tipo: 'inicial'});
@@ -92,7 +88,11 @@ module.exports = function(app) {
 
 	Visit.findAsync({ '_usuario': res.locals.user._id , '_fct': res.locals.fct._id}, null, { sort: {fecha: 1} })
 	    .then(function (visits) {
-		var col = renderCollectionVisits(req, res, visits);
+		var tipos_existentes='';
+		for (var i in visits) {
+		    tipos_existentes += visits[i].tipo;
+		}
+		var col = renderCollectionVisits(req, res, visits, tipos_existentes);
 		res.json(col);
 	    })
 	    .catch(next);
@@ -227,9 +227,17 @@ module.exports = function(app) {
 	var visits = [];
 	visits.push(visit);
 
-	var col = renderCollectionVisits(req, res, visits);
-	    
-	res.json(col);
+	Visit.findAsync({ '_usuario': res.locals.user._id , '_fct': res.locals.fct._id}, null, { sort: {fecha: 1} })
+	    .then(function (vs) {
+		var tipos_existentes='';
+		for (var i in vs) {
+		    tipos_existentes += vs[i].tipo;
+		}
+		var col = renderCollectionVisits(req, res, visits, tipos_existentes);
+		res.json(col);
+	    })
+	    .catch(next);
+
     });
 
     /**
