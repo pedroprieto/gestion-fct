@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang='es-ES'>
+<head>
+  <meta charset='utf-8'>
+  <title>Gestión FCT</title>
+  <!-- Compiled and minified CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/css/materialize.min.css">
+
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <link rel="stylesheet" href="./styles.css">
+
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+  <meta charset="UTF-8">
+</head>
+
+<body>
+    <script id='template2' type='text/ractive'>
+  <header>
+    <nav class="top-nav teal">
+      <div class="container">
+	<div class="nav-wrapper">
+	  <a href="#" class="button-collapse top-nav" data-activates="links"><i class="mdi-navigation-menu"></i></a>
+	  <a class="brand-logo">FCT IES Mare Nostrum</a>
+	</div>
+      </div>
+    <ul id="links" class="side-nav fixed">
+    {{#collection.links}}
+	    <li><a rel="{{rel}}" href="{{href}}">{{prompt}}</a></li>
+    {{/links}}
+      </ul>
+    </nav>
+      
+      
+  </header>
+  <main>
+      <div class="container">
+	<h4 id="title" class="">{{collection.title}}</h4>    
+	<div id="local-nav">
+	  <ul id="local-nav-list"></ul>
+	</div>
+	<div id="error"></div>
+	<div id="queries"></div>
+	<div id="template"></div>
+	<div id="items">
+	  {{#collection.items}}
+	  <p> item</p>
+	  {{#data}}
+	  <p>{{prompt}} {{name}}</p>
+	  {{/data}}
+	  {{#links}}
+	  <p>{{rel}} {{href}} {{prompt}}</p>
+	  {{/links}}
+	  {{/collection.items}}
+	</div>
+	<!--<div id="edit" class="display:none;"></div>-->
+	<div>
+	  <pre id="dump"></pre>
+	</div>
+      </div>
+  </main>
+
+
+  <!--
+       1. This is the element we'll render our Ractive to.
+  -->
+
+  <!--
+       2. You can load a template in many ways. For convenience, we'll include it in
+       a script tag so that we don't need to mess around with AJAX or multiline strings.
+       Note that we've set the type attribute to 'text/ractive' - though it can be
+       just about anything except 'text/javascript'
+  -->
+
+
+  </script>
+
+  <!--
+       3. You can always get the most recent stable version from the URL below.
+       If you want the newest features (unstable!), use the 'edge' version instead:
+
+           http://cdn.ractivejs.org/edge/ractive.min.js
+
+       If you need IE8 support, change 'ractive' to 'ractive-legacy'.
+  -->
+  <script src='http://cdn.ractivejs.org/latest/ractive.min.js'></script>
+
+  <!--
+       4. We've got an element in the DOM, we've created a template, and we've
+       loaded the library - now it's time to build our Hello World app.
+  -->
+  <script>
+
+  var helpers = Ractive.defaults.data;
+  helpers.localnav = function(links, relation){
+
+	  return links.filter(function (el) {
+		  return el.rel.indexOf(relation) > 1;
+	  });
+  }
+    
+    var ractive = new Ractive({
+      // The `el` option can be a node, an ID, or a CSS selector.
+      el: 'body',
+
+      // We could pass in a string, but for the sake of convenience
+      // we're passing the ID of the <script> tag above.
+      template: '#template2',
+
+      // Here, we're passing in some initial data
+      data: {"collection":{"version":"1.0","href":"http://10.10.1.60:3000/api/users/pedroprieto/fcts","links":[{"href":"http://10.10.1.60:3000/api/users/pedroprieto/fcts?curso=2015-2016&periodo=1","rel":"fcts","prompt":"Lista de FCTs"},{"href":"http://10.10.1.60:3000/api/users/pedroprieto/import_fcts","rel":"url","prompt":"Importar FCTs de SAO"},{"href":"http://10.10.1.60:3000/api/users/pedroprieto/fm34s","rel":"fm34s collection","prompt":"FM34s"},{"href":"http://10.10.1.60:3000/api/users/pedroprieto/documentacion?curso=2015-2016&periodo=1","rel":"documentacion collection","prompt":"Documentación"},{"href":"http://10.10.1.60:3000/api/alps/gestion_fct_profile#fcts","rel":"type","prompt":"Collection tipo fcts"},{"href":"http://10.10.1.60:3000/api/alps/gestion_fct_profile#mensajes","rel":"type","prompt":"Collection tipo mensajes"}],"items":[{"data":[{"name":"mensaje","prompt":"No hay FCTs en este período. Si desea importar, haga click aquí en el enlace de importar"}],"links":[{"href":"http://10.10.1.60:3000/api/users/pedroprieto/import_fcts","rel":"url","prompt":"Importar FCTs de SAO"}]}],"queries":[{"href":"http://10.10.1.60:3000/api/users/pedroprieto/fcts","rel":"search","name":"searchfct","prompt":"Búsqueda de FCTs","data":[{"name":"datosfct","value":"","prompt":"Búsqueda por texto"},{"name":"curso","value":"2015-2016","prompt":"Curso","options":[{"prompt":"2011-2012","value":"2011-2012"},{"prompt":"2012-2013","value":"2012-2013"},{"prompt":"2013-2014","value":"2013-2014"},{"prompt":"2014-2015","value":"2014-2015"},{"prompt":"2015-2016","value":"2015-2016"}]},{"name":"periodo","value":1,"prompt":"Período","options":[{"value":"1","prompt":"1"},{"value":"2","prompt":"2"},{"value":"1,2","prompt":"Todos"}]}]}],"template":{},"title":"FCTs 2015-2016 período 1"}}
+    });
+  </script>
+</body>
+</html>
