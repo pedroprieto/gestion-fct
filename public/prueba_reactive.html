@@ -17,9 +17,9 @@
 </head>
 
 <body>
-    <script id='template2' type='text/ractive'>
-  <header>
-    <nav class="top-nav teal">
+  <script id='template2' type='text/ractive'>
+    <header>
+      <nav class="top-nav teal">
       <div class="container">
 	<div class="nav-wrapper">
 	  <a href="#" class="button-collapse top-nav" data-activates="links"><i class="mdi-navigation-menu"></i></a>
@@ -27,9 +27,9 @@
 	</div>
       </div>
     <ul id="links" class="side-nav fixed">
-    {{#collection.links}}
-	    <li><a rel="{{rel}}" href="{{href}}">{{prompt}}</a></li>
-    {{/links}}
+    {{# localnav(collection.links, 'type')}}
+	    <li><a rel="{{rel}}" href="{{href}}" on-click="httpGet">{{prompt}}</a></li>
+    {{/ links}}
       </ul>
     </nav>
       
@@ -84,7 +84,8 @@
            http://cdn.ractivejs.org/edge/ractive.min.js
 
        If you need IE8 support, change 'ractive' to 'ractive-legacy'.
-  -->
+    -->
+  <script src="//cdnjs.cloudflare.com/ajax/libs/validate.js/0.9.0/validate.min.js"></script>
   <script src='http://cdn.ractivejs.org/latest/ractive.min.js'></script>
 
   <!--
@@ -97,7 +98,7 @@
   helpers.localnav = function(links, relation){
 
 	  return links.filter(function (el) {
-		  return el.rel.indexOf(relation) > 1;
+		  return el.rel.indexOf(relation) == -1;
 	  });
   }
     
@@ -110,8 +111,55 @@
       template: '#template2',
 
       // Here, we're passing in some initial data
-      data: {"collection":{"version":"1.0","href":"http://10.10.1.60:3000/api/users/pedroprieto/fcts","links":[{"href":"http://10.10.1.60:3000/api/users/pedroprieto/fcts?curso=2015-2016&periodo=1","rel":"fcts","prompt":"Lista de FCTs"},{"href":"http://10.10.1.60:3000/api/users/pedroprieto/import_fcts","rel":"url","prompt":"Importar FCTs de SAO"},{"href":"http://10.10.1.60:3000/api/users/pedroprieto/fm34s","rel":"fm34s collection","prompt":"FM34s"},{"href":"http://10.10.1.60:3000/api/users/pedroprieto/documentacion?curso=2015-2016&periodo=1","rel":"documentacion collection","prompt":"Documentación"},{"href":"http://10.10.1.60:3000/api/alps/gestion_fct_profile#fcts","rel":"type","prompt":"Collection tipo fcts"},{"href":"http://10.10.1.60:3000/api/alps/gestion_fct_profile#mensajes","rel":"type","prompt":"Collection tipo mensajes"}],"items":[{"data":[{"name":"mensaje","prompt":"No hay FCTs en este período. Si desea importar, haga click aquí en el enlace de importar"}],"links":[{"href":"http://10.10.1.60:3000/api/users/pedroprieto/import_fcts","rel":"url","prompt":"Importar FCTs de SAO"}]}],"queries":[{"href":"http://10.10.1.60:3000/api/users/pedroprieto/fcts","rel":"search","name":"searchfct","prompt":"Búsqueda de FCTs","data":[{"name":"datosfct","value":"","prompt":"Búsqueda por texto"},{"name":"curso","value":"2015-2016","prompt":"Curso","options":[{"prompt":"2011-2012","value":"2011-2012"},{"prompt":"2012-2013","value":"2012-2013"},{"prompt":"2013-2014","value":"2013-2014"},{"prompt":"2014-2015","value":"2014-2015"},{"prompt":"2015-2016","value":"2015-2016"}]},{"name":"periodo","value":1,"prompt":"Período","options":[{"value":"1","prompt":"1"},{"value":"2","prompt":"2"},{"value":"1,2","prompt":"Todos"}]}]}],"template":{},"title":"FCTs 2015-2016 período 1"}}
-    });
+      data: {"collection":{"version":"1.0","href":"http://localhost:3000/api/users/pedroprieto/fcts","links":[{"href":"http://localhost:3000/api/users/pedroprieto/fcts?curso=2015-2016&periodo=1","rel":"fcts","prompt":"Lista de FCTs"},{"href":"http://localhost:3000/api/users/pedroprieto/import_fcts","rel":"url","prompt":"Importar FCTs de SAO"},{"href":"http://localhost:3000/api/users/pedroprieto/fm34s","rel":"fm34s collection","prompt":"FM34s"},{"href":"http://localhost:3000/api/users/pedroprieto/documentacion?curso=2015-2016&periodo=1","rel":"documentacion collection","prompt":"Documentación"},{"href":"http://localhost:3000/api/alps/gestion_fct_profile#fcts","rel":"type","prompt":"Collection tipo fcts"},{"href":"http://localhost:3000/api/alps/gestion_fct_profile#mensajes","rel":"type","prompt":"Collection tipo mensajes"}],"items":[{"data":[{"name":"mensaje","prompt":"No hay FCTs en este período. Si desea importar, haga click aquí en el enlace de importar"}],"links":[{"href":"http://localhost:3000/api/users/pedroprieto/import_fcts","rel":"url","prompt":"Importar FCTs de SAO"}]}],"queries":[{"href":"http://localhost:3000/api/users/pedroprieto/fcts","rel":"search","name":"searchfct","prompt":"Búsqueda de FCTs","data":[{"name":"datosfct","value":"","prompt":"Búsqueda por texto"},{"name":"curso","value":"2015-2016","prompt":"Curso","options":[{"prompt":"2011-2012","value":"2011-2012"},{"prompt":"2012-2013","value":"2012-2013"},{"prompt":"2013-2014","value":"2013-2014"},{"prompt":"2014-2015","value":"2014-2015"},{"prompt":"2015-2016","value":"2015-2016"}]},{"name":"periodo","value":1,"prompt":"Período","options":[{"value":"1","prompt":"1"},{"value":"2","prompt":"2"},{"value":"1,2","prompt":"Todos"}]}]}],"template":{},"title":"FCTs 2015-2016 período 1"}}
+      });
+
+
+      var datav = JSON.parse('{"template":{"data":[{"name":"tipo","prompt":"Tipo","required":true},{"name":"distancia","prompt":"Distancia (km)","required":true},{"name":"fecha","value":"","prompt":"Fecha","required":true},{"name":"hora_salida","value":"23:12","prompt":"Salida","required":true,"match":"^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$"},{"name":"hora_regreso","value":"","prompt":"Regreso","required":true,"match":"^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$"},{"name":"localidad","prompt":"Localidad","required":true},{"name":"impresion","value":"","prompt":"Impresión","required":true},{"name":"presencial","value":"true","prompt":"Presencial"}]}}');
+      for (var i in datav.template.data) {
+      var x = datav.template.data[i];
+      console.log(x.name + " " + validate.single(x.value, {presence: x.required,  format: {pattern: x.match || ".*" } }));
+      }
+
+
+      ractive.on('httpGet', httpGet);
+      
+      function httpGet(e) {
+      console.log(e);
+      console.log(e.context);
+	req(e.context.href, "get", null);
+	return false;
+      }
+
+          // low-level HTTP stuff
+    function req(url, method, body) {
+	// Disable submit buttons
+	/*var x = document.querySelectorAll("[type=submit]");
+	for (var i = 0; i < x.length; i++) {
+	    x[i].disabled = true;
+	}*/
+	var ajax = new XMLHttpRequest();
+	ajax.onreadystatechange = function(){rsp(ajax)};
+	ajax.open(method, url);
+			        var ctype = "application/vnd.collection+json";
+			    ajax.setRequestHeader("accept",ctype);
+
+	if(body && body!==null) {
+	    ajax.setRequestHeader("content-type", ctype);
+	}
+	ajax.send(body);
+    }
+    function rsp(ajax) {
+			    if(ajax.readyState===4) {
+			    ractive.set('collection', JSON.parse(ajax.responseText).collection);
+	    //g.cj = JSON.parse(ajax.responseText);
+	    //parseCj();
+	}
+    }
+
+
+      
+      
   </script>
 </body>
 </html>
