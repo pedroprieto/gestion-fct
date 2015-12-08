@@ -118,8 +118,11 @@ module.exports = function(app) {
 
 	Fct.findQueryAsync(req.query, res.locals.user)
 	    .then(function(fcts) {
-		var col = renderCollectionFcts(req, res, fcts);
-		res.json(col);
+		res.locals.col = renderCollectionFcts(req, res, fcts);
+		next();
+		
+
+		//res.json(col);
 	    })
 	    .catch(next);
 

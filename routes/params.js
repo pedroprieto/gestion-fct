@@ -18,6 +18,7 @@ module.exports = function(app) {
 	User.findOneAsync({ 'username': username }).then(function(user) {
 
 	    if (!user) {
+		res.locals.notfound = true;
 		return next('route')
 	    }
 
@@ -42,6 +43,7 @@ module.exports = function(app) {
 	Fct.findOneAsync({ '_id': fctid, 'usuario': res.locals.user._id })
 	    .then(function(fct) {
 		if (!fct) {
+		    res.locals.notfound = true;
 		    return next('route');
 		}
 		
@@ -59,6 +61,7 @@ module.exports = function(app) {
 	    .then(function(visit) {
 
 		if (!visit) {
+		    res.locals.notfound = true;
 		    return next('route');
 		}
 		
@@ -74,6 +77,7 @@ module.exports = function(app) {
 	// Comprobamos si el parámetro es lunes
 	var start = moment(fm34id,"DD-MM-YYYY");
 	if (( start.isValid() == false ) || ( start.isoWeekday() !== 1)) {
+	    res.locals.notfound = true;
 	    return next('route');
 	} else {
 	    var end = moment(start);
@@ -83,6 +87,7 @@ module.exports = function(app) {
 		    // Returns array.
 		    fm34=fm34[0];
 		    if (!fm34) {
+			res.locals.notfound = true;
 			return next('route');
 		    }
 		    res.locals.fm34 = fm34;
@@ -102,6 +107,7 @@ module.exports = function(app) {
 	    next();
 	} else {
 	    // Not found
+	    res.locals.notfound = true;
 	    return next('route');
 	}	
     });

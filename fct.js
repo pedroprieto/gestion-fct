@@ -93,6 +93,34 @@ app.locals.lookupRoute = app.lookupRoute;
 // Resources
 require('./resources/index')(app);
 
+// API or HTML
+app.use(function htmlOrApi(req,res,next) {
+    if (res.locals.notfound === true)  // If not found
+	return next('route');
+
+    //return res.json(res.locals.col);
+    
+    res.format({
+	'text/html': function(){
+	    res.send('<p>hey</p>');
+	    // TODO
+	    // render HTML res.locals.col
+	    //res.json(res.locals.col);
+	},
+
+	'default': function(){
+	    console.log('yo');
+	    console.log(res.locals.col);
+	    return res.json(res.locals.col);
+	},
+
+	'defaultasdf': function() {
+	    // log the request and respond with 406
+	    res.status(406).send('Not Acceptable');
+	}
+    });
+});
+
 // Cliente de prueba
 var static_ops = {
     extensions: ['html'],
