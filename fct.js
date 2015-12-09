@@ -95,26 +95,22 @@ require('./resources/index')(app);
 
 // API or HTML
 app.use(function htmlOrApi(req,res,next) {
-    if (res.locals.notfound === true)  // If not found
+    if (typeof res.locals.col === 'undefined')  // If not found
 	return next('route');
 
     //return res.json(res.locals.col);
     
     res.format({
+	'application/vnd.collection+json': function(){
+	    return res.json(res.locals.col);
+	},
 	'text/html': function(){
 	    res.send('<p>hey</p>');
 	    // TODO
 	    // render HTML res.locals.col
 	    //res.json(res.locals.col);
 	},
-
-	'default': function(){
-	    console.log('yo');
-	    console.log(res.locals.col);
-	    return res.json(res.locals.col);
-	},
-
-	'defaultasdf': function() {
+	'default': function() {
 	    // log the request and respond with 406
 	    res.status(406).send('Not Acceptable');
 	}
