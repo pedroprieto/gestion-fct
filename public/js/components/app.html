@@ -1,0 +1,64 @@
+<link rel='ractive' href='./collection.html' name='c1'>
+
+<c1 on-prueba="httpGet" collection="{{collection}}"></c1>
+
+
+
+<script>
+
+
+component.exports = {
+  //el: '#app',
+  //template: '<component collection="{{collection}}" on-prueba="httpGet"/>',
+  /*data: function() {
+    req('/api/', 'get', null, this);
+    return {collection: {}};
+    
+  }*/
+  oninit: function() {
+    this.on( 'httpGet', function ( event ) {
+      req(event.context.href, "get", null,this);
+      return false;
+    });
+  }
+};
+
+
+
+/*
+function httpGet() {
+  alert('pinchado');
+  req(event.context.href, "get", null,this);
+  return false;
+}*/
+
+
+// low-level HTTP stuff
+function req(url, method, body, ins) {
+  // Disable submit buttons
+  /*var x = document.querySelectorAll("[type=submit]");
+     for (var i = 0; i < x.length; i++) {
+     x[i].disabled = true;
+     }*/
+  var ajax = new XMLHttpRequest();
+  ajax.onreadystatechange = function() {rsp(ajax,ins)};
+  ajax.open(method, url);
+  var ctype = "application/vnd.collection+json";
+  ajax.setRequestHeader("accept",ctype);
+
+  if(body && body!==null) {
+    ajax.setRequestHeader("content-type", ctype);
+  }
+  ajax.send(body);
+  return false;
+  
+  }
+
+function rsp(ajax, ins) {
+
+  if(ajax.readyState===4) {
+    ins.set({'collection': JSON.parse(ajax.responseText).collection});
+  }
+}
+
+</script>

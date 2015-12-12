@@ -7,6 +7,9 @@ var passport = require('passport');
 var BasicStrategy = require('passport-http').BasicStrategy;
 var authSaoFct = require('./auth/auth.js')(passport, BasicStrategy);
 var error_handling = require('./errors/error_middleware.js');
+var Ractive = require('ractive');
+Ractive.DEBUG = false;
+var Ractiveload = require( 'ractive-load' );
 
 // Timezone para UTC y que no haya problemas con fechas
 process.env.TZ = 'UTC';
@@ -105,10 +108,21 @@ app.use(function htmlOrApi(req,res,next) {
 	    return res.json(res.locals.col);
 	},
 	'text/html': function(){
-	    res.send('<p>hey</p>');
-	    // TODO
-	    // render HTML res.locals.col
-	    //res.json(res.locals.col);
+
+	    Ractiveload.baseUrl = 'public/js/components/';
+	    Ractiveload('root.html').then(function(c) {
+		//Ractive.components['component'] = c;
+
+		// var ractive = new Ractive({
+		var ractive = new c({
+		    /*el: '#app',
+		    template: '<component collection="{{collection}}"/>',*/
+		    data: res.locals.col
+		});
+
+		var renderedHTML = ractive.toHTML();
+		res.send(renderedHTML);
+	    }).catch( next );
 	},
 	'default': function() {
 	    // log the request and respond with 406

@@ -19,9 +19,12 @@
 	"bluebird": "2.9.x",
 	"moment": "2.10.x",
 	"osrm-client": ">= 0.0.1",
+	"ractive": ">=0.7.x",
+	"ractive-load": ">= 0.5.x",
 	"node-geocoder": ">= 0.0.1"
     },
     "devDependencies": {
+	"requirejs": "2.1.15",
 	"grunt": "^0.4.5",
 	"grunt-contrib-jshint": "^0.11.0",
 	"mocha": "^2.2.1",

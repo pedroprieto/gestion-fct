@@ -1,0 +1,79 @@
+
+<header>
+  <nav class="top-nav teal">
+    <div class="container">
+      <div class="nav-wrapper">
+	<a href="#" class="button-collapse top-nav" data-activates="links"><i class="mdi-navigation-menu"></i></a>
+	<a class="brand-logo">FCT IES Mare Nostrum</a>
+      </div>
+    </div>
+    <ul id="links" class="side-nav fixed">
+      {{# localnav(collection.links, 'type')}}
+      <li><a rel="{{rel}}" href="{{href}}" on-click="prueba">{{prompt}}</a></li>
+      {{/ links}}
+    </ul>
+  </nav>
+  
+  
+</header>
+<main>
+  <div class="container">
+    <h4 id="title" class="">{{collection.title}}</h4>    
+    <div id="local-nav">
+      <ul id="local-nav-list"></ul>
+    </div>
+    <div id="error"></div>
+    <div id="queries"></div>
+    <div id="template"></div>
+    <div id="items">
+      {{#collection.items}}
+      <p> item</p>
+      {{#data}}
+      <p>{{prompt}} {{name}}</p>
+      {{/data}}
+      {{#links}}
+      <p>{{rel}} {{href}} {{prompt}}</p>
+      {{/links}}
+      {{/collection.items}}
+    </div>
+    <!--<div id="edit" class="display:none;"></div>-->
+    <div>
+      <pre id="dump"></pre>
+    </div>
+  </div>
+</main>
+
+
+<script>
+
+function prueba(e) {
+  alert(e);
+  }
+
+var helpers = Ractive.defaults.data;
+helpers.localnav = function(links, relation){
+  return links.filter(function (el) {
+    return el.rel.indexOf(relation) == -1;
+  });
+}
+
+
+
+
+
+
+component.exports = {
+  oncomplete: function () {
+    
+  },
+
+
+
+  data: {
+    collection: 'prueba'
+  }
+
+};
+
+
+</script>
