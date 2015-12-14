@@ -1,3 +1,4 @@
+<link rel='ractive' href='./template.html' name='template'>
 
 <header>
   <nav class="top-nav teal">
@@ -24,7 +25,7 @@
     </div>
     <div id="error"></div>
     <div id="queries"></div>
-    <div id="template"></div>
+    <template action="{{collection.href}}" t="{{collection.template}}"/>
     <div id="items">
       {{#collection.items}}
       <p> item</p>
