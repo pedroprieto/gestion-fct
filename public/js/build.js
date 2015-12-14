@@ -1,6 +1,7 @@
 ({
     "baseUrl": "./lib",
     "paths": {
+	"requireLib": "require",
 	"app": "..",
 	"jquery": "jquery-1.11.3.min",
 	"ractive": "ractive.min",
@@ -17,5 +18,6 @@
     },
     stubModules: [ 'rvc' ],
     name: "../main",
+    include: "requireLib",
     out: "main-built.js"
 })
