@@ -91,7 +91,9 @@ module.exports = function(app) {
 
 		// Template		
 
-		res.json({collection: col});
+		//res.json({collection: col});
+		res.locals.col = {collection: col};
+		next();
 	    })
 	    .catch(next);
 	
@@ -168,7 +170,9 @@ module.exports = function(app) {
 
 	// Template
 	
-	res.json({collection: col});
+	//res.json({collection: col});
+	res.locals.col = {collection: col};
+	next();
 
     });
 

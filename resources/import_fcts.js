@@ -11,7 +11,7 @@ module.exports = function(app) {
     /**
      * GET
      */
-    app.get(app.lookupRoute('import_fcts'), function(req, res) {
+    app.get(app.lookupRoute('import_fcts'), function(req, res, next) {
 
 	var col = res.app.locals.cj();
 
@@ -55,7 +55,9 @@ module.exports = function(app) {
 	col.template.data = data;
 
 	// Return collection object
-	res.json({collection: col});
+	res.locals.col = {collection: col};
+	next();
+	//res.json({collection: col});
 
     });
 

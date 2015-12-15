@@ -93,7 +93,9 @@ module.exports = function(app) {
 		    tipos_existentes += visits[i].tipo;
 		}
 		var col = renderCollectionVisits(req, res, visits, tipos_existentes);
-		res.json(col);
+		//res.json(col);
+		res.locals.col = col;
+		next();
 	    })
 	    .catch(next);
 	
@@ -234,7 +236,9 @@ module.exports = function(app) {
 		    tipos_existentes += vs[i].tipo;
 		}
 		var col = renderCollectionVisits(req, res, visits, tipos_existentes);
-		res.json(col);
+		//res.json(col);
+		res.locals.col = col;
+		next();
 	    })
 	    .catch(next);
 
@@ -394,7 +398,10 @@ module.exports = function(app) {
 		col.template = Visit.visit_template(localidad, tipo, fcts, distancia);
 		
 		//Send
-		res.json({collection: col});
+		//res.json({collection: col});
+		res.locals.col = col;
+		next();
+		
 
 	    })
 	    .catch(next);

@@ -191,7 +191,9 @@ module.exports = function(app) {
 	// Collection title
 	col.collection.title = "FCT " + fct.empresa + " - " + fct.alumno;
 	    
-	res.json(col);
+	//res.json(col);
+	res.locals.col = col;
+	next();
 
     });
 
