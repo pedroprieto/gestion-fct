@@ -1,14 +1,55 @@
-<form class="add" method="post" action="{{action}}">
-  {{#t.data}}
+<link rel='ractive' href='./input-dynamic.html' name='inputdynamic'>
+
+
+<form class="add" method="post" action="{{collection.href}}">
+  {{#collection.template.data}}
     <div class="input-field {{name}}">
       <label for="{{name}}" class="data">{{prompt}}</label>
-      <input id="{{name}}" name="{{name}}" value="{{value}}">
+      <!-- <input id="{{name}}" name="{{ changename(name) }}" value="{{value}}" type="{{ processinput(name) }}">  -->
+      <inputdynamic data='{{.}}'/>
     </div>
-  {{/t.data}}
+  {{/}}
 
   <div class="submit-template">
     <button class="submit-template-button" type="submit">
   </div>
-
-  
 </form>
+
+<script>
+/*
+component.exports = {
+  oninit: function () {
+    
+      
+    },
+  data: function() {
+    return {
+      collection: {},
+      changename: function(name) {
+	// Transform related-0, related-1,... into related
+	if (name.indexOf('related') > -1) {
+	  return 'related';
+	} else {
+	  return name;
+	}
+	
+      },
+      processinput: function(datael) {
+	var res = "<c1>";
+	
+	switch(datael) {
+	  case 'periodo':
+	    res = "<c2>";
+	    break;
+	  default:
+	    break;
+	}
+
+	return res;
+      }
+    };
+  }  
+};
+
+*/
+</script>

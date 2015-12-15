@@ -38,7 +38,7 @@ require([ 'ractive', 'rvc!ui/app' ], function ( Ractive, mainpage ) {
     //ractiveload().then(function(c) {
     console.log('Iniciando');
     //console.log(Ractive.components);
-    Ractive.components['c1'] = mainpage;
+    //Ractive.components['c1'] = mainpage;
 
     var ractive = new Ractive({
 	el: '#app',
@@ -48,6 +48,9 @@ require([ 'ractive', 'rvc!ui/app' ], function ( Ractive, mainpage ) {
 	    // Cambiar a URL actual
 	    req(window.location.href , 'get', null, this);
 	    return {collection: {}};
+	},
+	components: {
+	    c1: mainpage
 	}
     });
 

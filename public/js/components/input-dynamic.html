@@ -1,0 +1,67 @@
+<link rel='ractive' href='./input-date.html' name='input-date'>
+<link rel='ractive' href='./input-select.html' name='input-select'>
+<link rel='ractive' href='./input-checkbox.html' name='input-checkbox'>
+<link rel='ractive' href='./input-hidden.html' name='input-hidden'>
+<link rel='ractive' href='./input-number.html' name='input-number'>
+<link rel='ractive' href='./input-text.html' name='input-text'>
+<link rel='ractive' href='./input-textarea.html' name='input-textarea'>
+<link rel='ractive' href='./input-time.html' name='input-time'>
+
+<inp args="{{ data }}"/>
+
+<script>
+component.exports = {
+  // En oninit ya se ha parseado la template.
+  // En onconstruct todavía no existe this.components
+  onconfig: function () {
+    this.components.inp = function() {
+
+      switch(this.get('data.name')) {
+	case 'periodo':
+	case 'curso':
+	  res = 'input-select';
+	  break;
+	case 'related':
+	  // TODO: cambiar nombres de campos a 'related'
+	  //TODO: ver checked
+	  res = 'input-checkbox';
+	  break;
+	case 'presencial':
+	  // TODO: ver checked
+	  res = 'input-checkbox';
+	  break;
+	case 'impresion':
+	  res = 'input-textarea';
+	  break;
+	case 'hora_salida':
+	case 'hora_regreso':
+	  res = 'input-time';
+	  break;
+	case 'mes':
+	case 'distancia':
+	  res = 'input-number';
+	  break;
+	case 'fecha':
+	  res = 'input-date';
+	  break;
+	case 'tipo':
+	  res = 'input-hidden';
+	  break;
+	default:
+	  res = 'input-text';
+	  break;
+      };
+      return res;
+    };
+    
+  }
+  // TODO: es necesario?
+  /*,
+  oninit: function(){
+    this.observe('data', function(data){
+      alert('observe');
+      this.reset(this.get());
+    }, { init: false} );
+  }*/
+} 
+</script>
