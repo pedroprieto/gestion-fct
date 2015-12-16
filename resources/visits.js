@@ -399,7 +399,7 @@ module.exports = function(app) {
 		
 		//Send
 		//res.json({collection: col});
-		res.locals.col = col;
+		res.locals.col = {collection: col};
 		next();
 		
 
