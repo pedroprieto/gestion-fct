@@ -1,4 +1,5 @@
-<link rel='ractive' href='./template.html' name='template'>
+<link rel='ractive' href='./collection-template.html' name='template'>
+<link rel='ractive' href='./collection-queries.html' name='queries'>
 
 <header>
   <nav class="top-nav teal">
@@ -10,7 +11,7 @@
     </div>
     <ul id="links" class="side-nav fixed">
       {{# localnav(collection.links, 'type')}}
-      <li><a rel="{{rel}}" href="{{href}}" on-click="prueba">{{prompt}}</a></li>
+      <li><a rel="{{rel}}" href="{{href}}" on-click="followLink">{{prompt}}</a></li>
       {{/ links}}
     </ul>
   </nav>
@@ -24,7 +25,7 @@
       <ul id="local-nav-list"></ul>
     </div>
     <div id="error"></div>
-    <div id="queries"></div>
+    <queries collection="{{collection}}"/>
     <template collection="{{collection}}"/>
     <div id="items">
       {{#collection.items}}
@@ -47,10 +48,6 @@
 
 <script>
 
-function prueba(e) {
-  alert(e);
-  }
-
 var helpers = Ractive.defaults.data;
 helpers.localnav = function(links, relation){
   return links.filter(function (el) {
@@ -66,14 +63,7 @@ helpers.localnav = function(links, relation){
 component.exports = {
   oncomplete: function () {
     
-  },
-
-
-
-  data: {
-    collection: 'prueba'
   }
-
 };
 
 
