@@ -1,0 +1,28 @@
+
+<div id="items">
+  <ul>
+    {{#collection.items}}
+      <li>
+	<div class="item-actions">
+	  
+	</div>
+
+	<div class="item-data">
+	  {{#data}}
+	    <p>{{prompt}} - {{value}}</p>
+	  {{/data}}
+	</div>
+
+	<div class="item-links">
+	  {{#links}}
+	    <a href="{{ href }}" res="{{ rel }}" on-click="followLink"> {{prompt}}</a>
+	  {{/links}}
+	</div>
+      </li>
+    {{/collection.items}}
+  </ul>
+</div>
+<!--<div id="edit" class="display:none;"></div>-->
+
+
+

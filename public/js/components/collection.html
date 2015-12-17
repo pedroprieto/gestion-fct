@@ -1,5 +1,6 @@
 <link rel='ractive' href='./collection-template.html' name='template'>
 <link rel='ractive' href='./collection-queries.html' name='queries'>
+<link rel='ractive' href='./collection-items.html' name='items'>
 
 <header>
   <nav class="top-nav teal">
@@ -27,18 +28,7 @@
     <div id="error"></div>
     <queries collection="{{collection}}"/>
     <template collection="{{collection}}"/>
-    <div id="items">
-      {{#collection.items}}
-      <p> item</p>
-      {{#data}}
-      <p>{{prompt}} {{name}}</p>
-      {{/data}}
-      {{#links}}
-      <p>{{rel}} {{href}} {{prompt}}</p>
-      {{/links}}
-      {{/collection.items}}
-    </div>
-    <!--<div id="edit" class="display:none;"></div>-->
+    <items collection="{{collection}}"/>    
     <div>
       <pre id="dump"></pre>
     </div>
