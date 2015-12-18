@@ -1,10 +1,13 @@
+<link rel='ractive' href='./collection-edit-template.html' name='cjedit'>
 
 <div id="items">
   <ul>
     {{#collection.items}}
       <li>
 	<div class="item-actions">
-	  
+	  <a class="item-href" rel="{{ rel }}" href="{{ href }}" on-click="followLink">Ver</a>
+	  <button class="item-edit" rel="edit" on-click="showEditForm" >Editar</button>
+	  <a class="item-delete" href="{{ href }}" on-click="httpDelete">Borrar</a>
 	</div>
 
 	<div class="item-data">
@@ -18,11 +21,68 @@
 	    <a href="{{ href }}" res="{{ rel }}" on-click="followLink"> {{prompt}}</a>
 	  {{/links}}
 	</div>
+
       </li>
     {{/collection.items}}
   </ul>
 </div>
-<!--<div id="edit" class="display:none;"></div>-->
+
+
+<script>
+component.exports = {
+  oninit: function() {
+    this.on( 'httpDelete', function ( event ) {
+      var url = event.context.href;
+      
+      ins = this;
+
+      // Ajax call and update collection
+      fetch(url, {
+	method: 'delete',
+	credentials: 'same-origin',
+	headers: {
+	  'Accept': 'application/vnd.collection+json'
+	}
+      })
+	.then(function(response) {
+	  return response.text()
+	}).then(function(text) {
+	  ins.set({'collection': JSON.parse(text).collection});
+	}).catch(function(ex) {
+	  console.log('parsing failed', ex)
+	});
+
+      return false;
+
+    });
+    
+    this.on( 'showEditForm', function ( event ) {
+
+      var el = event.node.parentNode.parentNode;
+      var item_href = event.context.href;
+      var template = this.get('collection');
+      console.log(template);
+
+      event.node.disabled = true;
+
+      var ef = new this.components.cjedit({
+	el: el,
+	append: true,
+	data: {
+	  item_href: item_href,
+	  editbutton: event.node
+	}
+      });
+
+      return false;
+
+    });
+
+  }
+};
+
+
+</script>
 
 
 

@@ -1,0 +1,72 @@
+<link rel='ractive' href='./input-dynamic.html' name='inputdynamic'>
+
+<!--
+     Data:
+     template
+     item_href
+   -->
+
+<form class="edit" method="put" action="{{ item_href }}" on-submit="httpPut">
+  {{#template.data}}
+    <div class="input-field {{name}}">
+      <label for="{{name}}" class="data">{{prompt}}</label>
+      <inputdynamic data='{{.}}'/>
+    </div>
+  {{/}}
+
+  <div class="submit-edit">
+    <button class="submit-edit-button" type="submit"/>
+    <button class="submit-cancel-button" type="button" on-click="cancelEdit"/>
+  </div>
+</form>
+
+
+<script>
+
+// Only load if we are in browser
+if (typeof window !== 'undefined') {
+  require('fetch');
+}
+
+component.exports = {
+  oninit: function() {
+    this.on( 'httpPut', function ( event ) {
+      var url = this.get('item_href');
+      var template = {template: this.get('template')};
+      
+      ins = this;
+
+      // Ajax call and update collection
+      fetch(url, {
+	method: 'put',
+	credentials: 'same-origin',
+	headers: {
+	  'Accept': 'application/vnd.collection+json',
+	  'Content-Type': 'application/vnd.collection+json'	  
+	},
+	body: JSON.stringify(template)
+      })
+	.then(function(response) {
+	  return response.text()
+	}).then(function(text) {
+	  ins.set({'collection': JSON.parse(text).collection});
+	}).catch(function(ex) {
+	  console.log('parsing failed', ex)
+	});
+
+      return false;
+
+    });
+    
+    this.on( 'cancelEdit', function(event) {
+      var editbutton = this.get('editbutton');
+      editbutton.disabled = false;
+      this.teardown();
+      return false;
+    });
+    
+  }
+};
+
+
+</script>
