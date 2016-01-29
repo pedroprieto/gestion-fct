@@ -39,40 +39,7 @@ if (typeof window !== 'undefined') {
 
 component.exports = {
   oninit: function() {
-    this.on( 'httpQuery', function ( event ) {
-      var query = event.context.href + "/?";
-      var q = 0;
-      for (var i in event.context.data) {
-	var o = event.context.data[i];
-	if (o.name && o.name!=='') {
-	  if(q++!==0) {
-	    query += "&";
-	  }
-	  query += o.name+"="+encodeURI(o.value);
-	}
-      }
-      
-      ins = this;
 
-      // Ajax call and update collection
-      fetch(query, {
-	credentials: 'same-origin',
-	headers: {
-	  'Accept': 'application/vnd.collection+json'
-	}
-      })
-	.then(function(response) {
-	  return response.text()
-	}).then(function(text) {
-	  ins.set({'collection': JSON.parse(text).collection});
-	}).catch(function(ex) {
-	  console.log('parsing failed', ex)
-	});
-
-      return false;
-	
-
-    });
     
   }
 };

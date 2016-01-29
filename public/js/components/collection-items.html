@@ -3,11 +3,14 @@
 <div id="items">
   <ul>
     {{#collection.items}}
-      <li>
+    <li>
+  
 	<div class="item-actions">
 	  <a class="item-href" rel="{{ rel }}" href="{{ href }}" on-click="followLink">Ver</a>
-	  <button class="item-edit" rel="edit" on-click="showEditForm" >Editar</button>
-	  <a class="item-delete" href="{{ href }}" on-click="httpDelete">Borrar</a>
+	  {{#if collection.template}}
+	    <button class="item-edit" rel="edit" on-click="showEditForm" disabled="{{showedit}}" >Editar</button>
+	  {{/if}}
+	  <button class="item-delete" on-click="httpDelete">Borrar</button>
 	</div>
 
 	<div class="item-data">
@@ -18,64 +21,67 @@
 
 	<div class="item-links">
 	  {{#links}}
-	    <a href="{{ href }}" res="{{ rel }}" on-click="followLink"> {{prompt}}</a>
+	    <p><a href="{{ href }}" res="{{ rel }}" on-click="followLink"> {{prompt}}</a></p>
 	  {{/links}}
 	</div>
+
+	{{#if showedit }}<cjedit item_href="{{href}}" template="{{editTemplate}}" showedit="{{showedit}}" collection="{{collection}}"></cjedit>{{/if}}
 
       </li>
     {{/collection.items}}
   </ul>
+
+
 </div>
 
 
 <script>
 component.exports = {
   oninit: function() {
-    this.on( 'httpDelete', function ( event ) {
-      var url = event.context.href;
+
+    function cjData(item,name) {
+      var coll, rtn;
       
-      ins = this;
-
-      // Ajax call and update collection
-      fetch(url, {
-	method: 'delete',
-	credentials: 'same-origin',
-	headers: {
-	  'Accept': 'application/vnd.collection+json'
+      rtn = null;
+      coll = item.data;
+      for(var data of coll) {
+	if(data.name === name) {
+	  rtn = data;
+	  break;
 	}
-      })
-	.then(function(response) {
-	  return response.text()
-	}).then(function(text) {
-	  ins.set({'collection': JSON.parse(text).collection});
-	}).catch(function(ex) {
-	  console.log('parsing failed', ex)
-	});
+      }
+      return rtn;
+    };
 
+    this.on( 'showEditForm', function (event) {
+      // Creamos item.showedit
+      var showedit = true;
+      var it = event.context;
+      it.showedit = true;
+
+      // Creamos item.editTemplate
+      var template = this.get('collection.template');
+      var item_data = event.context.data;
+      var filled_template = {};
+      filled_template.data = [];
+
+      for (i of template.data) {
+	i_d = cjData(event.context, i.name);
+	var t_item = {};
+	t_item.name = i.name;
+	t_item.value = i_d.value || "";
+	t_item.prompt = i.prompt;
+	filled_template.data.push(t_item);
+      }
+
+      it.editTemplate = filled_template;
+
+      // Actualizamos objeto item
+      this.set(event.keypath, it);
+
+
+      
       return false;
-
-    });
-    
-    this.on( 'showEditForm', function ( event ) {
-
-      var el = event.node.parentNode.parentNode;
-      var item_href = event.context.href;
-      var template = this.get('collection');
-      console.log(template);
-
-      event.node.disabled = true;
-
-      var ef = new this.components.cjedit({
-	el: el,
-	append: true,
-	data: {
-	  item_href: item_href,
-	  editbutton: event.node
-	}
-      });
-
-      return false;
-
     });
 
   }

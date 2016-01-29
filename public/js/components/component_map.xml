@@ -1,0 +1,53 @@
+<collection>
+  collection.title
+  collection.links[rel=type]
+  collection.links[rel=profile]
+
+  <collection-error/>
+
+  <queries>
+    <queryA/>
+    ...
+    <queryDefault/>
+  </queries>
+
+  <navigation>
+    <primaryNav>
+      collection.links[rel=primarynav]
+    </primaryNav>
+    <secNav>
+      collection.links[rel=secnav]
+    </secNav>
+    ...
+  </navigation>
+
+  <attachments>
+    collection.links[rek=embedded]
+  </attachments>
+
+  <col_actions>
+    collection.template
+    collection.links[rel=template]
+
+    Both call <templateform/>
+    
+  </col_actions>
+
+  <items>
+    <item>
+      item.links[rel=type]
+      item.data
+      <item_actions>
+	delete
+	edit calls <editform/>
+	collection.template, item.links[rel=template] call <templateform/> 
+      </item_actions>
+
+      <item_nav>
+	item.links
+      </item_nav>
+    </item>
+
+  </items>
+  
+</collection>

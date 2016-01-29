@@ -30,6 +30,11 @@ if (typeof window !== 'undefined') {
 
 component.exports = {
   oninit: function() {
+    this.on('cancelEdit', function(event) {
+      this.set('showedit', false);
+      return false;
+    });
+
     this.on( 'httpPut', function ( event ) {
       var url = this.get('item_href');
       var template = {template: this.get('template')};
@@ -49,20 +54,14 @@ component.exports = {
 	.then(function(response) {
 	  return response.text()
 	}).then(function(text) {
-	  ins.set({'collection': JSON.parse(text).collection});
+	  ins.fire( 'nc', JSON.parse(text).collection );
+	  ins.set('showedit', false);
 	}).catch(function(ex) {
 	  console.log('parsing failed', ex)
 	});
 
       return false;
 
-    });
-    
-    this.on( 'cancelEdit', function(event) {
-      var editbutton = this.get('editbutton');
-      editbutton.disabled = false;
-      this.teardown();
-      return false;
     });
     
   }

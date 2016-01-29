@@ -1,0 +1,16 @@
+<link rel='ractive' href='./collection-template.html' name='template'>
+
+<div id="col-actions">
+
+  <ul>
+    {{#collection.templateLinks }}
+      <li><a rel="{{rel}}" href="{{href}}" on-click="followLink">{{prompt}}</a></li>
+      <!-- <button on-click="followLink">{{prompt}}</button> -->
+    {{/}}
+  </ul>
+
+  {{^collection.templateLinks}}
+    <template collection="{{collection}}"/>
+  {{/}}
+  
+</div>

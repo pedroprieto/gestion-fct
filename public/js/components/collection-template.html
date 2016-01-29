@@ -1,20 +1,21 @@
 <link rel='ractive' href='./input-dynamic.html' name='inputdynamic'>
 
 
-<form class="add" method="post" action="{{collection.href}}" on-submit="httpPost">
-  {{#collection.template.data}}
-    <div class="input-field {{name}}">
-      <label for="{{name}}" class="data">{{prompt}}</label>
-      <!-- <input id="{{name}}" name="{{ changename(name) }}" value="{{value}}" type="{{ processinput(name) }}">  -->
-      <inputdynamic data='{{.}}'/>
-    </div>
-  {{/}}
+{{#if collection.template}}
+  <form class="add" method="post" action="{{collection.href}}" on-submit="httpPost">
+    {{#collection.template.data}}
+      <div class="input-field {{name}}">
+	<label for="{{name}}" class="data">{{prompt}}</label>
+	<!-- <input id="{{name}}" name="{{ changename(name) }}" value="{{value}}" type="{{ processinput(name) }}">  -->
+	<inputdynamic data='{{.}}'/>
+      </div>
+      {{/}}
 
-  <div class="submit-template">
-    <button class="submit-template-button" type="submit">
-  </div>
-</form>
-
+      <div class="submit-template">
+	<button class="submit-template-button" type="submit">
+      </div>
+  </form>
+{{/if}}
 
 <script>
 
