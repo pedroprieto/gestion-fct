@@ -9,6 +9,7 @@ requirejs.config({
 	'datepickertime': 'picker.time',
 	'datepicker_es': 'pickadate_es_ES',
 	"materialize": "materialize-0.97.3.min",
+	"validate": "validate.min",
 	"jquery-hammer": "jquery.hammer"
     },
     shim: {
