@@ -16,6 +16,18 @@ if (typeof window !== 'undefined') {
 // Fuente: http://jsfiddle.net/7ok2hsL1/5/
 component.exports = {
   oninit: function () {
+    // Validation
+    this.observe('data.value', function(newValue, oldValue, keypath) {
+      console.log('observing');
+      console.log(newValue);
+      console.log(keypath);
+      console.log(this.get('data.required'));
+      console.log(this.get('data'));
+    });
+
+
+
+    
     this.on( 'validate', function ( event ) {
       var valor_campo = this.get('data.value');
       var v = validate.single(valor_campo, {presence: true});
