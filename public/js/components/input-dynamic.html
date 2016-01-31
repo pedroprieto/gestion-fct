@@ -7,19 +7,18 @@
 <link rel='ractive' href='./input-textarea.html' name='input-textarea'>
 <link rel='ractive' href='./input-time.html' name='input-time'>
 
-<inp args="{{ data }}" isvalid="{{isvalid}}" ispristine="{{ispristine}}"/>
-{{#if !isvalid && !ispristine}} <span>Mensaje de validación </span> {{/if}}
+<inp args="{{ data }}"/>
 
 <style>
 .pristine {
 
 }
 
-.invalid {
+input:invalid, textarea:invalid {
 	border-color: red;
 }
 
-.valid {
+input:valid, textarea:valid {
 	border-color: green;
 }
 </style>
@@ -30,24 +29,6 @@ if (typeof window !== 'undefined') {
 }
 // Fuente: http://jsfiddle.net/7ok2hsL1/5/
 component.exports = {
-  oninit: function () {
-    this.set('isvalid', true);
-    this.set('ispristine', true);
-    // Validation
-    this.observe('data.value', function(newValue, oldValue, keypath) {
-      this.set('ispristine', false);
-      var v = validate.single(newValue, {
-	presence: this.get('data.required'),
-	format: this.get('data.match')
-      });
-
-      if (v) {
-	this.set('isvalid', false);
-      } else {
-	this.set('isvalid', true);
-      }
-    }, {init: false});
-  },
   // En oninit ya se ha parseado la template.
   // En onconstruct todavía no existe this.components
   onconfig: function () {
