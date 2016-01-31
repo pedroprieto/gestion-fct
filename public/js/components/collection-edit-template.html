@@ -8,8 +8,7 @@
 
 <form class="edit" method="put" action="{{ item_href }}" on-submit="httpPut">
   {{#template.data}}
-    <div class="input-field {{name}}">
-      <label for="{{name}}" class="data">{{prompt}}</label>
+    <div class="form-group {{name}}">
       <inputdynamic data='{{.}}'/>
     </div>
   {{/}}

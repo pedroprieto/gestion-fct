@@ -1,3 +1,4 @@
-<textarea id="{{ args.name }}" name="{{ args.name }}" value="{{ args.value }}" pattern="{{ args.match }}" {{#if args.required}}required{{/if}}></textarea>
+<label for="{{args.name}}" class="data">{{args.prompt}}</label>
+<textarea class="{{classes}}" id="{{ args.name }}" name="{{ args.name }}" value="{{ args.value }}" pattern="{{ args.match }}" {{#if args.required}}required{{/if}}></textarea>
 
 

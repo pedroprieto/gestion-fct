@@ -1,4 +1,5 @@
-<select id="{{ args.name }}" name="{{ args.name }}" value="{{ args.value }}">
+<label for="{{args.name}}" class="data">{{args.prompt}}</label>
+<select class="{{classes}}" id="{{ args.name }}" name="{{ args.name }}" value="{{ args.value }}">
   {{#args.options}}
     <option value="{{ value }}">
       {{ prompt }}    
