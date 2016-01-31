@@ -1,1 +1,1 @@
-<input id="{{ args.name }}" name="{{ args.name }}" value="{{ args.value }}" type="number">
+<input class="{{ !ispristine ? (isvalid ? 'valid' : 'invalid') : 'pristine' }}" id="{{ args.name }}" name="{{ args.name }}" value="{{ args.value }}" type="number">

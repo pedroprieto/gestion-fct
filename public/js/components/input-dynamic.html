@@ -7,7 +7,22 @@
 <link rel='ractive' href='./input-textarea.html' name='input-textarea'>
 <link rel='ractive' href='./input-time.html' name='input-time'>
 
-<inp args="{{ data }}"/>
+<inp args="{{ data }}" isvalid="{{isvalid}}" ispristine="{{ispristine}}"/>
+{{#if !isvalid && !ispristine}} <span>Mensaje de validación </span> {{/if}}
+
+<style>
+.pristine {
+
+}
+
+.invalid {
+	border-color: red;
+}
+
+.valid {
+	border-color: green;
+}
+</style>
 
 <script>
 if (typeof window !== 'undefined') {
@@ -16,24 +31,22 @@ if (typeof window !== 'undefined') {
 // Fuente: http://jsfiddle.net/7ok2hsL1/5/
 component.exports = {
   oninit: function () {
+    this.set('isvalid', true);
+    this.set('ispristine', true);
     // Validation
     this.observe('data.value', function(newValue, oldValue, keypath) {
-      console.log('observing');
-      console.log(newValue);
-      console.log(keypath);
-      console.log(this.get('data.required'));
-      console.log(this.get('data'));
-    });
+      this.set('ispristine', false);
+      var v = validate.single(newValue, {
+	presence: this.get('data.required'),
+	format: this.get('data.match')
+      });
 
-
-
-    
-    this.on( 'validate', function ( event ) {
-      var valor_campo = this.get('data.value');
-      var v = validate.single(valor_campo, {presence: true});
-      console.log(v);
-      return false;
-    });
+      if (v) {
+	this.set('isvalid', false);
+      } else {
+	this.set('isvalid', true);
+      }
+    }, {init: false});
   },
   // En oninit ya se ha parseado la template.
   // En onconstruct todavía no existe this.components
