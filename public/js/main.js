@@ -14,6 +14,7 @@ require.config({
 	'datepicker_es': 'pickadate_es_ES',
 	"materialize": "materialize-0.97.3.min",
 	"validate": "validate.min",
+	"fetch": "fetch",
 	"jquery-hammer": "jquery.hammer"
     },
     shim: {
