@@ -34,6 +34,10 @@ component.exports = {
     });
       
     this.on( '*.httpDelete', function ( event ) {
+
+      if(confirm("¿Seguro que desea eliminar?")===false)
+	return false;
+      
       var url = event.context.href;
       
       ins = this;
