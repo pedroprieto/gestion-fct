@@ -1,27 +1,27 @@
 <link rel='ractive' href='./collection-edit-template.html' name='cjedit'>
 
 <div id="items">
-  <ul>
+  <ul class="list-group">
     {{#collection.items}}
-    <li>
-  
+      <li class="list-group-item">
+	
 	<div class="item-actions">
-	  <a class="item-href" rel="{{ rel }}" href="{{ href }}" on-click="followLink">Ver</a>
+	  <button type="button" class="item-href btn button-default btn-xs" rel="{{ rel }}" href="{{ href }}" on-click="followLink">Ver</button>
 	  {{#if collection.template}}
-	    <button class="item-edit" rel="edit" on-click="showEditForm" disabled="{{showedit}}" >Editar</button>
+	    <button type="button" class="item-edit btn button-default btn-xs" rel="edit" on-click="showEditForm" disabled="{{showedit}}" >Editar</button>
 	  {{/if}}
-	  <button class="item-delete" on-click="httpDelete">Borrar</button>
+	  <button type="button" class="item-delete btn button-default btn-xs" on-click="httpDelete">Borrar</button>
 	</div>
 
 	<div class="item-data">
 	  {{#data}}
-	    <p>{{prompt}} - {{value}}</p>
+	    <p><u>{{prompt}}</u> <br> {{value}}</p>
 	  {{/data}}
 	</div>
 
-	<div class="item-links">
+	<div class="item-links btn-group ">
 	  {{#links}}
-	    <p><a href="{{ href }}" res="{{ rel }}" on-click="followLink"> {{prompt}}</a></p>
+	    <button type="button" class="btn btn-primary" rel="{{ rel }}" on-click="followLink"> {{prompt}}</button>
 	  {{/links}}
 	</div>
 
@@ -31,9 +31,20 @@
     {{/collection.items}}
   </ul>
 
-
 </div>
 
+<style>
+.item-data {
+	display: flex;
+	flex-flow: row wrap;
+	
+}
+
+.item-data p {
+	flex: 1 auto;
+	margin: 5px;
+}
+</style>
 
 <script>
 component.exports = {

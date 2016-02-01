@@ -1,16 +1,17 @@
 <link rel='ractive' href='./collection-template.html' name='template'>
 
-<div id="col-actions">
+{{#if collection.templateLinks}}
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <div id="col-actions" class="btn-group">
+	{{#collection.templateLinks }}
+	  <button type="button" class="btn btn-default" rel="{{rel}}" on-click="followLink">{{prompt}}</button>
+	{{/collection.templateLinks}}
+      </div>
+    </div>
+  </div>
+{{/if}}
 
-  <ul>
-    {{#collection.templateLinks }}
-      <li><a rel="{{rel}}" href="{{href}}" on-click="followLink">{{prompt}}</a></li>
-      <!-- <button on-click="followLink">{{prompt}}</button> -->
-    {{/}}
-  </ul>
-
-  {{^collection.templateLinks}}
-    <template collection="{{collection}}"/>
-  {{/}}
-  
-</div>
+{{^collection.templateLinks}}
+  <template collection="{{collection}}"/>
+{{/collection.templateLinks}}

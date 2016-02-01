@@ -1,48 +1,19 @@
 <link rel='ractive' href='./input-dynamic.html' name='inputdynamic'>
 
-<ul>
-{{ #collection.queries }}
-  <li class="{{ name }}">
-    <div class="{{ title }}">
-      {{ prompt  }}      
+{{#collection.queries }}
+  <div class="panel panel-default {{ name }}">
+    <div class="panel-heading">
+      <h2 class="panel-title">{{ prompt }}</h2>
     </div>
-    <form action="{{ href }}" class="{{ rel }}" method="get" on-submit="httpQuery">
-      <fieldset>
-	<legend>
-	  {{ prompt }}
-	</legend>
-	{{ #data }}
-	<div class="input-field {{name}}">
-	  <label for="{{name}}" class="data">{{prompt}}</label>
-	  <inputdynamic data='{{.}}'/>
-	</div>
-	{{ / }}
-	<div class="submit-query">
-	  <button type="submit" class="submit-query-button">Buscar</button>
-	</div>
-      </fieldset>      
-    </form>
-    
-    
-  </li>
-{{  / }}
-
-</ul>
-
-
-<script>
-
-// Only load if we are in browser
-if (typeof window !== 'undefined') {
-  require('fetch');
-}
-
-component.exports = {
-  oninit: function() {
-
-    
-  }
-};
-
-
-</script>
+    <div class="panel-body">
+      <form action="{{ href }}" class="{{ rel }}" method="get" on-submit="httpQuery">
+	{{#data}}
+	  <div class="form-group {{name}}">
+	    <inputdynamic data='{{.}}'/>
+	  </div>
+	{{/data}}
+	<button type="submit" class="btn btn-primary">Buscar</button>
+      </form>
+    </div>
+  </div>  
+{{/collection.queries}}

@@ -6,13 +6,15 @@
 
 <col-navigation collection="{{col_processed}}"/>
 <main>
-  <div class="container">
-    <h1 id="title" class="">{{col_processed.title}}</h1>
-    <col-error collection="{{col_processed}}"/>
-    <col-queries collection="{{col_processed}}"/>
-    <col-actions collection="{{col_processed}}"/>
-    <col-items collection="{{col_processed}}"/>    
+
+  <div class="page-header">
+    <h1 id="title" class="">{{col_processed.title || "Gestión de FCT"}}</h1>
   </div>
+
+  <col-error collection="{{col_processed}}"/>
+  <col-queries collection="{{col_processed}}"/>
+  <col-actions collection="{{col_processed}}"/>
+  <col-items collection="{{col_processed}}"/>    
 </main>
 
 
