@@ -110,6 +110,7 @@ app.use(function htmlOrApi(req,res,next) {
 	'text/html': function(){
 
 	    Ractiveload.baseUrl = 'public/js/components/';
+	    Ractiveload.modules.fetch = 'public/js/lib/fetch';
 	    Ractiveload('root.html').then(function(c) {
 		//Ractive.components['component'] = c;
 
