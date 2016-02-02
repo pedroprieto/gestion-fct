@@ -12,7 +12,6 @@ before_script:
 before_deploy:
   ./install.sh
 deploy:
-  skip_cleanup: true
   provider: openshift
   user: pedpral@gmail.com
   password:
