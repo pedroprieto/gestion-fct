@@ -55,7 +55,8 @@ component.exports = {
       
       rtn = null;
       coll = item.data;
-      for(var data of coll) {
+      for(var k in coll) {
+	var data = coll[k];
 	if(data.name === name) {
 	  rtn = data;
 	  break;
@@ -76,7 +77,8 @@ component.exports = {
       var filled_template = {};
       filled_template.data = [];
 
-      for (i of template.data) {
+      for(var k in template.data) {
+	i = template.data[k];
 	i_d = cjData(event.context, i.name);
 	var t_item = {};
 	t_item.name = i.name;
