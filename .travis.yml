@@ -10,8 +10,13 @@ before_install:
 before_script:
 - until nc -z localhost 27017; do echo Waiting for MongoDB; sleep 1; done
 script:
-  - npm test
-  - ./install.sh
+- npm test
+- ./install.sh
+after_success:
+- git config --global user.email "travis@localhost.localdomain"
+- git config --global user.name "Travis CI"
+- git add --all
+- git commit -am "Travis change"
 deploy:
   provider: openshift
   user: pedpral@gmail.com
@@ -19,6 +24,4 @@ deploy:
     secure: T4Aqzxdf0OAZs+DrDT75FztoDAV4Eo7xr3ylEys1riC4K166JWbXmrt0+cT7Mkg9Qodvq+cixJOhdTEPQMooQKTZI1aJSJyjIP4cZfy0d7pm+44cmoNeiVcmL+jvxYZnPmQy4Mtcx02ZaKyO6LTuFotHWmH9/Fm4opXorB23L44=
   app: gestionfct
   domain: pedroprieto
-  on:
-    repo: pedroprieto/gestion-fct
   skip_cleanup: true
