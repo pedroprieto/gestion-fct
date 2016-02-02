@@ -6,11 +6,15 @@
       <li class="list-group-item">
 	
 	<div class="item-actions">
-	  <button type="button" class="item-href btn button-default btn-xs" rel="{{ rel }}" href="{{ href }}" on-click="followLink">Ver</button>
+	  {{#if href}}
+	    <button type="button" class="item-href btn button-default btn-xs" rel="{{ rel }}" href="{{ href }}" on-click="followLink">Ver</button>
+	  {{/if}}
 	  {{#if collection.template}}
 	    <button type="button" class="item-edit btn button-default btn-xs" rel="edit" on-click="showEditForm" disabled="{{showedit}}" >Editar</button>
 	  {{/if}}
-	  <button type="button" class="item-delete btn button-default btn-xs" on-click="httpDelete">Borrar</button>
+	  {{#if href}}
+	    <button type="button" class="item-delete btn button-default btn-xs" on-click="httpDelete">Borrar</button>
+	  {{/if}}
 	</div>
 
 	<div class="item-data">
