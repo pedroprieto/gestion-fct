@@ -6,7 +6,7 @@ addons:
   apt:
     sources:
       - mongodb-upstart
-      - mongodb-3.0-precise
+      - mongodb-3.2-precise
     packages:
       - mongodb-org-server
       - mongodb-org-shell
@@ -18,8 +18,11 @@ script:
 after_success:
 - git config --global user.email "travis@localhost.localdomain"
 - git config --global user.name "Travis CI"
+- git status
 - git add --all
 - git commit -am "Travis change"
+- git status
+- ls -l public/js
 deploy:
   provider: openshift
   user: pedpral@gmail.com
