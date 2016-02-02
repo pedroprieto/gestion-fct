@@ -180,7 +180,8 @@ component.exports = {
 	if(c.links) {
 	  
 	  coll = c.links;
-	  for(var link of coll) {
+	  for(var k in coll) {
+	    var link = coll[k];
 
 	    if(isHeaderLink(link)===true) {
 	      cp.headerLinks.push(link);
