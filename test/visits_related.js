@@ -10,7 +10,7 @@ var Promise = require("bluebird");
 var contenttype ='application/vnd.collection+json';
 
 
-describe('Crear una visita en una FCT', function () {
+describe('Visitas relacionadas', function () {
 
     var user_test1 = new User({
 	username: 'test',
