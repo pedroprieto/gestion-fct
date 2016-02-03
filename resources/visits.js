@@ -137,12 +137,14 @@ module.exports = function(app) {
 
 
 	// Comprobamos si se quieren crear visitas relacionadas
-	// La propiedad 'related' es una cadena con las ids de las FCTs relacionadas separadas por coma
+	// Las propiedades 'related-ID' indican, con valor booleano, si se quiere crear
+	// una visita en la FCT con identificador ID relacionada
 	
 	list_fcts = data.filter(function(a) {
-	    return a.name.indexOf('related') > -1;
+	    return ((a.name.indexOf('related') > -1) && (a.value === true) );
 	}).map(function (ob) {
-	    return ob.value;
+	    // Obtenemos el ID, que es la substring que empieza después de related- (carácter número 8)
+	    return ob.name.substr(8);
 	});
 
 	// Añadimos la FCT actual

@@ -153,12 +153,12 @@ describe('Visitas relacionadas', function () {
 		// Metemos una referencia a una FCT de otro usuario
 		// No debe ser tenida en cuenta a la hora de crear las visitas
 		var newrelated = {
-		    name: "related-1",
-		    value: fct4._id.toString(),
+		    name: "related-" + fct4._id.toString(),
+		    value: true,
 		    prompt: "Otra FCT de otro usuario"
 		};
 
-		related_fcts.push(newrelated);		
+		related_fcts.push(newrelated);
 		// Asociamos ese campo al template de la visita
 		visit_test_template.template.data = visit_test_template.template.data.concat(related_fcts);
 		return request

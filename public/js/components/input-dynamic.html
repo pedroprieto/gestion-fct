@@ -33,8 +33,13 @@ component.exports = {
   // En onconstruct todavía no existe this.components
   onconfig: function () {
     this.components.inp = function() {
+      var val = this.get('data.name');
 
-      switch(this.get('data.name')) {
+      // Transform related-0, related-1,... into related
+      if (val.indexOf('related') > -1)
+	val = 'related';
+
+      switch(val) {
 	case 'periodo':
 	case 'curso':
 	  res = 'input-select';
