@@ -1,2 +1,17 @@
-<div id="error"></div>
-
+{{#if collection.error}}
+  <div id="error" class="panel panel-danger">
+    <div class="panel-heading">
+      <h2 class="panel-title">{{ collection.error.title }}</h2>
+    </div>
+    <div class="panel-body">
+      <p class="error-message">
+	{{ collection.error.message }}
+      </p>
+      {{#if collection.error.code}}
+	<pre class="error-code">
+{{ collection.error.code }}
+	</pre>
+      {{/if}}
+    </div>
+  </div>
+{{/if}}
