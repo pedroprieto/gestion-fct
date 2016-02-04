@@ -159,6 +159,7 @@ component.exports = {
 	
 	var c = this.get('collection');
 
+	cp.title = c.title;
 	cp.version = c.version;
 	cp.href = c.href;
 	cp.links = c.links;
@@ -217,14 +218,10 @@ component.exports = {
 	    
 	  }
 	}
-	console.log(cp);
 	return cp;
       },
       set: function (col_processed) {
-	console.log('ey');
 	this.set('collection', col_processed);
-	console.log(this.get('collection'));
-	console.log(this.get('col_processed'));
       }
     }
   }
