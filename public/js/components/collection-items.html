@@ -19,7 +19,7 @@
 
 	<div class="item-data">
 	  {{#data}}
-	    <p class="{{ name }}"><u>{{prompt}}</u> <br> {{value}}</p>
+	    <p class="{{ name }}"><u>{{prompt}}</u> <br> {{ (name.indexOf('fecha') > -1) ? format_date(value) : value}}</p>
 	  {{/data}}
 	</div>
 
@@ -85,7 +85,15 @@
 </style>
 
 <script>
+
+var moment = require('moment');
+
 component.exports = {
+  data: {
+    format_date: function(date) {
+      return moment(date).format('DD/MM/YYYY');
+    }
+  },
   oninit: function() {
 
     function cjData(item,name) {

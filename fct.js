@@ -110,9 +110,12 @@ app.use(function htmlOrApi(req,res,next) {
 	'text/html': function(){
 
 	    Ractiveload.baseUrl = 'public/js/components/';
-	    Ractiveload.modules.fetch = 'public/js/lib/fetch';
-	    Ractiveload.modules.pikaday = 'public/js/lib/pikaday';
-	    Ractiveload.modules.moment = 'public/js/lib/moment';
+	    // TODO: Para corregir: Cargar modules desde Node
+	    // Éste es un mero hack para que funcione en servidor
+	    // Funciona porque Ractive no llama a estas funciones al renderizar
+	    // Sí que llama a 'moment', pero ésta se carga en la aplicación en otros lugares.
+	    Ractiveload.modules.fetch = './public/js/lib/fetch';
+	    Ractiveload.modules.pikaday = './public/js/lib/pikaday';
 	    Ractiveload('root.html').then(function(c) {
 		//Ractive.components['component'] = c;
 
