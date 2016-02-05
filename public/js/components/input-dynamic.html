@@ -77,14 +77,16 @@ component.exports = {
       return res;
     };
     
-  }
-  // TODO: es necesario?
-  /*,
+  },
+  // Necesario para refrescar los componentes
   oninit: function(){
-    this.observe('data', function(data){
-      alert('observe');
-      this.reset(this.get());
+    this.observe('data.name', function(name){
+      if (typeof name == 'undefined') {
+	this.teardown();
+      } else {
+	this.reset();
+      }
     }, { init: false} );
-  }*/
+  }
 } 
 </script>
