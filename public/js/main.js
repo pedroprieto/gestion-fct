@@ -19,6 +19,7 @@ require([ 'ractive', 'rvc!ui/app' ], function ( Ractive, mainpage ) {
     console.log('Iniciando');
     //console.log(Ractive.components);
     //Ractive.components['c1'] = mainpage;
+    Ractive.DEBUG = false;
 
     var ractive = new Ractive({
 	el: '#app',
