@@ -111,6 +111,8 @@ app.use(function htmlOrApi(req,res,next) {
 
 	    Ractiveload.baseUrl = 'public/js/components/';
 	    Ractiveload.modules.fetch = 'public/js/lib/fetch';
+	    Ractiveload.modules.pikaday = 'public/js/lib/pikaday';
+	    Ractiveload.modules.moment = 'public/js/lib/moment';
 	    Ractiveload('root.html').then(function(c) {
 		//Ractive.components['component'] = c;
 

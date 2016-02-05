@@ -1,5 +1,5 @@
 <label for="{{args.name}}" class="data hidden-xs">{{args.prompt}}</label>
-<input placeholder="{{args.prompt}}" class="{{classes}}" id="{{ args.name }}" name="{{ args.name }}" value="{{ args.value }}" type="date" pattern="{{ args.match }}" {{#if args.required}}required{{/if}}>
+<input decorator="datepicker:args.value" placeholder="{{args.prompt}}" class="{{classes}}" id="{{ args.name }}" name="{{ args.name }}" value="{{ args.value }}" type="date" pattern="{{ args.match }}" {{#if args.required}}required{{/if}}>
 
 
 <script>
@@ -8,4 +8,51 @@
    Para crear un decorator de fecha:
    http://stackoverflow.com/questions/23265269/how-do-i-access-an-object-in-a-decorator-in-ractivejs
  */
+
+var moment = require('moment');
+var Pikaday = require('pikaday');
+
+var pikadayDecorator = function (node, keypath) {
+
+  if (node.type === 'date') {
+    return {
+      teardown: function () {
+      }
+    };
+  }
+
+  var ractive = this;
+
+  var picker = new Pikaday({
+    field: node,
+    firstDay: 1,
+    format: 'YYYY-MM-DD',
+    onSelect: function (date) {
+      var isodate = moment(date).format('YYYY-MM-DD');
+      ractive.set(keypath, isodate);
+    },
+    i18n: {
+      previousMonth : 'Mes anterior',
+      nextMonth     : 'Siguiente mes',
+      months        : ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
+      weekdays      : ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'],
+      weekdaysShort : ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb']
+    }
+  });
+  
+  
+  return {
+    teardown: function () {
+      // Teardown goes here
+      picker.destroy();
+    }
+  };
+};
+
+component.exports = {
+  decorators: {
+    datepicker: pikadayDecorator
+  }
+}
+
 </script>
