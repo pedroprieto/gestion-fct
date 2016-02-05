@@ -43,6 +43,8 @@ var es_ES = {
     ciclo: "Ciclo",
     empresa: "Empresa",
     dir_empresa: "Dirección",
+    localidad: "Localidad",
+    distancia: "Distancia",
     instructor: "Instructor",
     nif_instructor: "NIF instructor",
     alumno: "Alumno",
