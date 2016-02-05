@@ -19,7 +19,7 @@
 
 	<div class="item-data">
 	  {{#data}}
-	    <p class="{{ name }}"><u>{{prompt}}</u> <br> {{ (name.indexOf('fecha') > -1) ? format_date(value) : value}}</p>
+	    <p class="{{ name }}"><u>{{prompt}}</u> <br> {{ render_value(name, value) }}</p>
 	  {{/data}}
 	</div>
 
@@ -100,10 +100,30 @@
 
 var moment = require('moment');
 
+var format_date = function(date) {
+  return moment(date).format('DD/MM/YYYY');
+}
+
 component.exports = {
   data: {
-    format_date: function(date) {
-      return moment(date).format('DD/MM/YYYY');
+    render_value: function(name, value) {
+      var res = value;
+
+      switch (name) {
+	case 'fecha_inicio':
+	case 'fecha_fin':
+	case 'fecha':
+	  res = format_date(value);
+	  break;
+	case 'presencial':
+	  res = value ? 'Sí' : 'No';
+	  break;
+	default:
+	  res = value;
+      }
+      
+      return res;
+
     }
   },
   oninit: function() {
