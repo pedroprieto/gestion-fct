@@ -21,6 +21,7 @@
 	"osrm-client": ">= 0.0.1",
 	"ractive": ">=0.7.x",
 	"ractive-load": ">= 0.5.x",
+	"winston": "^2.1.1",
 	"node-geocoder": ">= 0.0.1"
     },
     "devDependencies": {

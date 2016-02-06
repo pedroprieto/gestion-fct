@@ -1,7 +1,18 @@
 // Fuente: https://github.com/jeduan/express4-mongoose-bluebird
 
 // TODO: mejorar el tema de mensajes, etc.
+var winston = require('winston');
 
+var logger = new (winston.Logger)({
+    transports: [
+	new (winston.transports.Console)(),
+	new (winston.transports.File)({
+	    filename: 'errors.log',
+	    handleExceptions: true,
+	    humanReadableUnhandledException: true
+	})
+    ]
+});
 
 module.exports.logErrors = function(err, req, res, next){
     if (err.status === 404) {
@@ -10,8 +21,9 @@ module.exports.logErrors = function(err, req, res, next){
     if (err.logError === false) {
 	return next(err)
     }
-    console.error(err.stack)
-    next(err)
+    logger.log('error', err.stack);
+    //console.error(err.stack)
+    next(err);
 };
 
 module.exports.respondError = function(err, req, res, next){
