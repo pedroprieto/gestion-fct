@@ -123,7 +123,9 @@ module.exports = function(app) {
 	// Template
 
 	// Return collection object
-	res.json({collection: col});
+	//res.json({collection: col});
+	res.locals.col = {collection: col};
+	next();
 
 
     });

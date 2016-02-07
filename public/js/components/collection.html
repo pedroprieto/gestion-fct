@@ -31,8 +31,6 @@ component.exports = {
     if (typeof window !== 'undefined')
       window.onpopstate = function(event) {
 	// Ajax call and update collection
-	console.log(document.location);
-	console.log(event);
 	fetch(document.location.href, {
 	  credentials: 'same-origin',
 	  headers: {
@@ -114,6 +112,13 @@ component.exports = {
     });*/
     
     this.on( '*.followLink', function ( event ) {
+      // Si el enlace tiene el atributo render y vale 'attachment'
+      // Se abre el enlace normalmente
+      if (event.context.render && event.context.render.indexOf('attachment') > -1) {
+	document.location.href = event.context.href;
+	return false;
+      }
+
       var url = event.context.href;
 
 

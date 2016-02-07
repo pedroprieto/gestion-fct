@@ -79,6 +79,11 @@ app.all('*',passport.authenticate('basic', { session: false }), function(req,res
 // Default content type for all routes but /client
 app.use(/^(?!\/client)(.+)$/, function(req, res, next) {
     res.type(contentType);
+    // Cabecera Vary: Accept para que funcione correctamente la caché de navegadores.
+    // Si se accede vía JSON al recurso y luego se accede a una url externa, al volver el navegador intenta cargar la versión JSON
+    // otra vez en lugar de la HTML.
+    // Así se soluciona (aunque sin ella en Firefox también iba. Parece que express mete la cabecera Vary por defecto.
+    res.vary('Accept' );
     next();
 });
 
