@@ -76,6 +76,19 @@ module.exports = function(app) {
 	item.links.push(d1);
 	col.items.push(item);
 
+	item = {};
+	item.data = [];
+	d = {};
+	d.name = "etiquetas";
+	d.prompt = "Generar etiquetas";
+	d.value = "Generar etiquetas del curso " + c + " período " + p + ".";
+	item.data.push(d);
+	item.links = [];
+	d1 = req.buildLink('etiquetas');
+	d1.href += "?curso=" + c + "&periodo=" + p;
+	item.links.push(d1);
+	col.items.push(item);
+
 
 
 	// Queries

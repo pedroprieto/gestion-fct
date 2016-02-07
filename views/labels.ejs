@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang='es-ES'>
+  <head>
+    <meta charset="utf-8">
+    <title>Etiquetas FCT</title>
+    <style>
+    @page  
+    { 
+      size: auto;   /* auto is the initial value */ 
+      /* this affects the margin in the printer settings */ 
+      margin: 0;  
+    } 
+
+    body {
+      /* A4: 210 × 297*/
+      width: 210mm;
+      margin: 0;
+      padding: 0;
+      font: 8pt sans-serif;
+    }
+
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+    }
+    
+    .etiqueta{
+      box-sizing: border-box;
+      flex: 0 1 auto;
+      width: 52.4mm; /*4 etiquetas a lo ancho */
+      height: 29.7mm; /* 10 etiquetas a lo alto */
+      padding: 1mm;
+      margin: 0cm; /* Sin márgenes */
+      text-align: left;
+      overflow: hidden;
+      outline: 1px dotted; /* outline doesn't occupy space like border does */
+      display: flex;
+      justify-content: center;
+      line-height: 1.5em;
+    }
+    
+    .etiqueta_content {
+      align-self: center;
+    }
+
+    .titulo {
+      display: inline-block;
+      width: 5em;
+      text-decoration: underline;
+    }
+
+    .valor {
+      display: inline-block;
+      width: 12em;
+      vertical-align: middle;
+
+    }
+
+    .ciclo {
+      font: 7pt sans-serif;
+    }
+    
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <% for(var i=0; i<fcts.length; i++) {%>
+	<div class="etiqueta">
+	  <div class="etiqueta_content">
+	    <span class="titulo">Alumno:</span> <span class="valor"><%= fcts[i].alumno %><br></span>
+	    <span class="titulo">Empresa:</span> <span class="valor"><%= fcts[i].empresa %><br></span>
+	    <span class="titulo">Tutor:</span> <span class="valor"><%= fcts[i].tutor %><br></span>
+	    <span class="titulo">Ciclo:</span> <span class="valor ciclo"><%= fcts[i].ciclo %></span>
+	  </div>
+	</div>
+      <% } %>
+    </div>
+  </body>
+</html>
+
+
+

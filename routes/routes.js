@@ -15,6 +15,8 @@ module.exports = function(app) {
     app.defineRoute('certs_alumno', '/api/users/:user/fcts/certs_alumno', 'certs_alumno collection', 'Certificados de alumnos', 'attachment');
     app.defineRoute('certs_instructor', '/api/users/:user/fcts/certs_instructor', 'certs_instructor collection', 'Certificados de instructores', 'attachment');
     app.defineRoute('fm18s', '/api/users/:user/fcts/fm18s', 'fm18 collection', 'FM18s', 'attachment');
+    app.defineRoute('etiquetas', '/api/users/:user/fcts/labels', 'labels attachment', 'Etiquetas', 'attachment');
+    app.defineRoute('etiqueta', '/api/users/:user/fcts/items/:fct/label', 'labels attachment', 'Etiqueta', 'attachment');
     app.defineRoute('cert_alumno', '/api/users/:user/fcts/items/:fct/cert_alumno', 'cert_alumno collection', 'Cert. alumno', 'attachment');
     app.defineRoute('cert_instructor', '/api/users/:user/fcts/items/:fct/cert_instructor', 'cert_instructor collection', 'Cert. instructor', 'attachment');
     app.defineRoute('fm18', '/api/users/:user/fcts/items/:fct/fm18', 'fm18 collection', 'FM18', 'attachment');

@@ -50,6 +50,7 @@ module.exports = function(app) {
 	    item.links.push(req.buildLink('cert_alumno', {fct: f._id.toString()}));
 	    item.links.push(req.buildLink('cert_instructor', {fct: f._id.toString()}));
 	    item.links.push(req.buildLink('fm18', {fct: f._id.toString()}));
+	    item.links.push(req.buildLink('etiqueta', {fct: f._id.toString()}));
 	    
 	    return item;
 	});
