@@ -59,13 +59,37 @@
     .ciclo {
       font: 7pt sans-serif;
     }
+
+    .etiqueta.vacia {
+      display: none;
+    }
+
+    #control {
+      font: 12pt sans-serif;
+      margin: 2em;
+      padding: 1em;
+      border: 1px dotted red;
+    }
+
+    @media print {
+      #control {
+	display: none;
+      }
+    }
     
     </style>
   </head>
   <body>
+    <div id="control">
+      <h1>Impresión de etiquetas FCT</h1>
+      Empezar en etiqueta número: <input value="0" onchange="cambia_offset(this.value)" onkeyup="cambia_offset(this.value)" type="number" id="num_offset" min="0" max="20">
+    </div>
     <div class="container">
+      <% for(var i=0; i<39; i++) {%>
+	<div class="etiqueta vacia"></div>
+      <% } %>
       <% for(var i=0; i<fcts.length; i++) {%>
-	<div class="etiqueta">
+	<div class="etiqueta rellena">
 	  <div class="etiqueta_content">
 	    <span class="titulo">Alumno:</span> <span class="valor"><%= fcts[i].alumno %><br></span>
 	    <span class="titulo">Empresa:</span> <span class="valor"><%= fcts[i].empresa %><br></span>
@@ -75,6 +99,21 @@
 	</div>
       <% } %>
     </div>
+
+    <script>
+    function cambia_offset(val) {
+      var v = val%20;
+      var vacias = document.querySelectorAll(".vacia");
+      
+      for (i=0; i<39; i++) {
+	if (i<v) {
+	  vacias[i].style.display = 'block';
+	} else {
+	  vacias[i].style.display = 'none';
+	}
+      }
+    }
+    </script>
   </body>
 </html>
 
