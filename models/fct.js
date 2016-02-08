@@ -150,73 +150,81 @@ fctSchema.statics.tx_cj = function (doc, ret, options) {
 
 // Función que devuelve una lista de FCTs filtradas por los parámetros de la query pasada como parámetro
 fctSchema.statics.findQuery = function (query, usuario, cb) {
-    // Parámetros de query: curso, periodo, datosfct
+    // Parámetros de query: curso, periodo, datosfct,ids
     // Curso y periodo: pueden indicarse varios separados por comas
 
     // Query
     var q = {};
     q.usuario = usuario._id;
 
-
-    // Crear vectores con cursos y períodos para búsqueda
-    var cursos = [];
-    var periodos = [];
-
-    // Si no existe parámetro curso, por defecto se indican todos los cursos
-    if ((typeof query.curso === 'undefined') || (query.curso === "")) {
-	if ((typeof query.periodo === 'undefined') || (query.periodo === "")) {
-	    // Si no existe curso ni período, se indica el actual
-	    cursos.push(cps.getCursoActual());
-	    periodos.push(cps.getPeriodoActual());
-	} else {
-	    cursos = cps.getcursoslist();
-	    periodos = query.periodo.split(',');
-	}
+    // Búsqueda por id. Si existe el parámetro, se ignora todo lo demás
+    // Lista de ids separados por comas
+    if (typeof query.fctsid !== 'undefined') {
+	var ids = query.fctsid.split(',');
+	q._id = {};
+	q._id.$in = ids;
     } else {
-	cursos = query.curso.split(',');
-	if ((typeof query.periodo === 'undefined') || (query.periodo === "")) {
-	    periodos = cps.getperiodoslist();
+	// Crear vectores con cursos y períodos para búsqueda
+	var cursos = [];
+	var periodos = [];
+
+	// Si no existe parámetro curso, por defecto se indican todos los cursos
+	if ((typeof query.curso === 'undefined') || (query.curso === "")) {
+	    if ((typeof query.periodo === 'undefined') || (query.periodo === "")) {
+		// Si no existe curso ni período, se indica el actual
+		cursos.push(cps.getCursoActual());
+		periodos.push(cps.getPeriodoActual());
+	    } else {
+		cursos = cps.getcursoslist();
+		periodos = query.periodo.split(',');
+	    }
 	} else {
-	    periodos = query.periodo.split(',');
+	    cursos = query.curso.split(',');
+	    if ((typeof query.periodo === 'undefined') || (query.periodo === "")) {
+		periodos = cps.getperiodoslist();
+	    } else {
+		periodos = query.periodo.split(',');
+	    }
+
+	}
+
+	// Convertir periodos a número y eliminar los no números
+	var periodos = periodos
+	    .map(function (n) {
+		return parseInt(n); 
+	    })
+	    .filter(function( x ) {
+		return !isNaN(x);
+	    });
+
+	q.curso = {};
+	q.curso.$in = cursos;
+	
+	q.periodo = {};
+	q.periodo.$in = periodos;
+	
+	// Búsqueda general
+	if (typeof query.datosfct !== 'undefined') {
+	    var re =  new RegExp(query.datosfct, "i");
+	    q.$or = [];
+	    //q.$or.push({tutor: re});
+	    //q.$or.push({ciclo: re});
+	    q.$or.push({empresa: re});
+	    q.$or.push({dir_empresa: re});
+	    q.$or.push({instructor: re});
+	    q.$or.push({nif_instructor: re});
+	    q.$or.push({alumno: re});
+	    q.$or.push({nif_alumno: re});
+	    //q.$or.push({grupo: re});
+	    //q.$or.push({curso: re});
+	    //q.$or.push({periodo: re});
+	    //q.$or.push({fecha_inicio: re});
+	    //q.$or.push({fecha_fin: re});
+	    //q.$or.push({horas: re});
 	}
 
     }
 
-    // Convertir periodos a número y eliminar los no números
-    var periodos = periodos
-	.map(function (n) {
-	    return parseInt(n); 
-	})
-	.filter(function( x ) {
-	    return !isNaN(x);
-	});
-
-    q.curso = {};
-    q.curso.$in = cursos;
-    
-    q.periodo = {};
-    q.periodo.$in = periodos;
-    
-    // Búsqueda general
-    if (typeof query.datosfct !== 'undefined') {
-	var re =  new RegExp(query.datosfct, "i");
-	q.$or = [];
-	//q.$or.push({tutor: re});
-	//q.$or.push({ciclo: re});
-	q.$or.push({empresa: re});
-	q.$or.push({dir_empresa: re});
-	q.$or.push({instructor: re});
-	q.$or.push({nif_instructor: re});
-	q.$or.push({alumno: re});
-	q.$or.push({nif_alumno: re});
-	//q.$or.push({grupo: re});
-	//q.$or.push({curso: re});
-	//q.$or.push({periodo: re});
-	//q.$or.push({fecha_inicio: re});
-	//q.$or.push({fecha_fin: re});
-	//q.$or.push({horas: re});
-    }
-    
     return this.find(q, null, { sort: {empresa: 1} }, cb);
 
 };
