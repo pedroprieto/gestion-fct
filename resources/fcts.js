@@ -111,6 +111,7 @@ module.exports = function(app) {
 		rel: "search searchids",
 		name: "search_certs_alumno_ids",
 		prompt: "Certs. alumno",
+		render: "attachment",
 		data: [
 		    {
 			name: "fctsid",
@@ -126,6 +127,7 @@ module.exports = function(app) {
 		rel: "search searchids",
 		name: "search_certs_instructor_ids",
 		prompt: "Certs. instructor",
+		render: "attachment",
 		data: [
 		    {
 			name: "fctsid",
@@ -141,6 +143,7 @@ module.exports = function(app) {
 		rel: "search searchids",
 		name: "search_fm18s_ids",
 		prompt: "FM18",
+		render: "attachment",
 		data: [
 		    {
 			name: "fctsid",
@@ -156,6 +159,7 @@ module.exports = function(app) {
 		rel: "search searchids",
 		name: "search_etiquetas_ids",
 		prompt: "Etiquetas",
+		render: "attachment",
 		data: [
 		    {
 			name: "fctsid",
