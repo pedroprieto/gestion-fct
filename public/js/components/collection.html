@@ -115,7 +115,8 @@ component.exports = {
       // Si el enlace tiene el atributo render y vale 'attachment'
       // Se abre el enlace normalmente
       if (event.context.render && event.context.render.indexOf('attachment') > -1) {
-	document.location.href = event.context.href;
+	//document.location.href = event.context.href;
+	window.open(event.context.href, '_blank');
 	return false;
       }
 
@@ -154,6 +155,14 @@ component.exports = {
 	  query += o.name+"="+encodeURI(o.value);
 	}
       }
+
+      // Si la query tiene el atributo render y vale 'attachment'
+      // Se abre el enlace normalmente
+      if (event.context.render && event.context.render.indexOf('attachment') > -1) {
+	//document.location.href = query;
+	window.open(query, '_blank');
+	return false;
+      }
       
 
       // Ajax call and update collection
@@ -191,7 +200,6 @@ component.exports = {
 	cp.href = c.href;
 	cp.links = c.links;
 	cp.items = c.items;
-	cp.queries = c.queries;
 	cp.template = c.template;
 	cp.error = c.error;
 
@@ -203,6 +211,10 @@ component.exports = {
 	cp.embeddedLinks = [];
 	cp.attachedLinks = [];
 	cp.templateLinks = [];
+
+	// Added property for queries searchids
+	cp.queries = [];
+	cp.searchid_queries = [];
 
 	// Process and filter Links by rel attribute
 	if(c.links) {
@@ -245,6 +257,24 @@ component.exports = {
 	    
 	  }
 	}
+
+	// Process and filter Queries by rel attribute
+	if(c.queries) {
+	  
+	  coll = c.queries;
+	  for(var k in coll) {
+
+	    var query = coll[k];
+
+	    // Search by id. We will render this queries as checkboxes with buttons
+	    if(isSearchId(query)===true) {
+	      cp.searchid_queries.push(query);
+	    } else {
+	      cp.queries.push(query);
+	    }
+	  }
+	}
+	
 	return cp;
       },
       set: function (col_processed) {
@@ -301,6 +331,13 @@ function isReadOnly(item) {
 function isImage(link) {
   var rtn = false;
   if(link.render && (link.render==="image" || link.render==="embed")) {
+    rtn = true;
+  }
+  return rtn;
+}
+function isSearchId(query) {
+  var rtn = false;
+  if(query.rel && (query.rel.indexOf('searchids') > -1)) {
     rtn = true;
   }
   return rtn;

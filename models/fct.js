@@ -113,7 +113,9 @@ fctSchema.statics.tx_cj = function (doc, ret, options) {
     item.data = [];
     item.links = [];
 
-    // Elimino campo _id, __v y usuario
+    // Elimino campo __v y usuario
+    // Dejo campo _id para queries de búsqueda por id
+    ret.id = ret._id;
     delete ret._id;
     delete ret.__v;
     delete ret.usuario;
