@@ -104,6 +104,23 @@ module.exports = function(app) {
 	    }
 	);
 
+	// Query de búsqueda por id
+	col.queries.push(
+	    {
+		href: req.buildLink('fcts').href,
+		rel: "search searchids",
+		name: "searchfctids",
+		prompt: "Búsqueda de FCTs por id",
+		data: [
+		    {
+			name: "fctsid",
+			value: "",
+			prompt: "Búsqueda por ids separados por comas"
+		    }
+		]
+	    }
+	);
+
 	// Template
 
 	// Return collection object
