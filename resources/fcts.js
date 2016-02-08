@@ -104,13 +104,58 @@ module.exports = function(app) {
 	    }
 	);
 
-	// Query de búsqueda por id
+	// Queries de búsquedas por id
 	col.queries.push(
 	    {
-		href: req.buildLink('fcts').href,
+		href: req.buildLink('certs_alumno').href,
 		rel: "search searchids",
-		name: "searchfctids",
-		prompt: "Búsqueda de FCTs por id",
+		name: "search_certs_alumno_ids",
+		prompt: "Certs. alumno",
+		data: [
+		    {
+			name: "fctsid",
+			value: "",
+			prompt: "Búsqueda por ids separados por comas"
+		    }
+		]
+	    }
+	);
+	col.queries.push(
+	    {
+		href: req.buildLink('certs_instructor').href,
+		rel: "search searchids",
+		name: "search_certs_instructor_ids",
+		prompt: "Certs. instructor",
+		data: [
+		    {
+			name: "fctsid",
+			value: "",
+			prompt: "Búsqueda por ids separados por comas"
+		    }
+		]
+	    }
+	);
+	col.queries.push(
+	    {
+		href: req.buildLink('fm18s').href,
+		rel: "search searchids",
+		name: "search_fm18s_ids",
+		prompt: "FM18",
+		data: [
+		    {
+			name: "fctsid",
+			value: "",
+			prompt: "Búsqueda por ids separados por comas"
+		    }
+		]
+	    }
+	);
+	col.queries.push(
+	    {
+		href: req.buildLink('etiquetas').href,
+		rel: "search searchids",
+		name: "search_etiquetas_ids",
+		prompt: "Etiquetas",
 		data: [
 		    {
 			name: "fctsid",
