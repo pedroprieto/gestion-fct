@@ -35,3 +35,4 @@ deploy:
     domain: marenostrum
     on: production
     skip_cleanup: true
+    deployment_branch: production
