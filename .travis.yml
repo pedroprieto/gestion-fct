@@ -19,10 +19,19 @@ after_success:
 - git add --all
 - git commit -am "Travis change"
 deploy:
-  provider: openshift
-  user: pedpral@gmail.com
-  password:
-    secure: T4Aqzxdf0OAZs+DrDT75FztoDAV4Eo7xr3ylEys1riC4K166JWbXmrt0+cT7Mkg9Qodvq+cixJOhdTEPQMooQKTZI1aJSJyjIP4cZfy0d7pm+44cmoNeiVcmL+jvxYZnPmQy4Mtcx02ZaKyO6LTuFotHWmH9/Fm4opXorB23L44=
-  app: gestionfct
-  domain: pedroprieto
-  skip_cleanup: true
+  - provider: openshift
+    user: pedpral@gmail.com
+    password:
+      secure: T4Aqzxdf0OAZs+DrDT75FztoDAV4Eo7xr3ylEys1riC4K166JWbXmrt0+cT7Mkg9Qodvq+cixJOhdTEPQMooQKTZI1aJSJyjIP4cZfy0d7pm+44cmoNeiVcmL+jvxYZnPmQy4Mtcx02ZaKyO6LTuFotHWmH9/Fm4opXorB23L44=
+    app: gestionfct
+    domain: pedroprieto
+    on: master
+    skip_cleanup: true
+  - provider: openshift
+    user: tics@iesmarenostrum.com
+    password:
+      secure: TTeOF0XD86Pxu5Hds5zipxyubtAxRG53ZX8MX/4MRf8esWg0qNfnu5gFMQBzNym5YtFrfLHOZ+DLNEv99Wov4WfCJcFJm9upfFwJqhdObqwGKDxhTvp/VINRrEZuks4Rf9wK21mV4IXYr3jbzvjNgEjUGxdYggRjsFH8UyexwHw=
+    app: gestionfct
+    domain: marenostrum
+    on: production
+    skip_cleanup: true
