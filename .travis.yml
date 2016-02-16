@@ -15,7 +15,7 @@ script:
 after_success:
 - git config --global user.email "travis@localhost.localdomain"
 - git config --global user.name "Travis CI"
-- git checkout -b master
+- git checkout $TRAVIS_BRANCH
 - git add --all
 - git commit -am "Travis change"
 deploy:
@@ -35,3 +35,4 @@ deploy:
     domain: marenostrum
     on: production
     skip_cleanup: true
+    deployment_branch: production
