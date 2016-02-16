@@ -36,3 +36,4 @@ deploy:
     on: production
     skip_cleanup: true
     deployment_branch: production
+    edge: true
