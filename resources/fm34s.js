@@ -106,7 +106,19 @@ module.exports = function(app) {
      */
     app.get(app.lookupRoute('fm34sdocx'), function(req, res, next) {
 
-	Visit.genfm34Async(res.locals.user._id)
+	var tutor;
+	var ciclo;
+	
+	// Busco la última FCT para sacar los campos de 'tutor' y 'ciclo' para el documento FM34
+	Fct.find({'usuario': res.locals.user._id}).sort({_id:-1}).limit(1).execAsync()
+	    .then(function(fcts) {
+		if (fcts.length === 0) {
+		    return next('route');
+		}
+		tutor = fcts[0].tutor;
+		ciclo = fcts[0].ciclo;
+		return Visit.genfm34Async(res.locals.user._id);
+	    })
 	    .then(function (fm34s) {
 		var f;
 
@@ -116,7 +128,9 @@ module.exports = function(app) {
 		    var isoweek = moment().isoWeek(f._id.semana).isoWeekYear(f._id.anyo);
 		    f.semanaDe = isoweek.startOf('isoWeek').format("DD/MM/YYYY");
 		    f.semanaAl = isoweek.endOf('isoWeek').format("DD/MM/YYYY");
-		};
+		    f.tutor = tutor;
+		    f.ciclo = ciclo;
+		}
 
 		//set the templateVariables
 		var doc = {
