@@ -22,8 +22,7 @@ beforeEach(function (done) {
     process.env.NODE_ENV = 'test';
 
     function clearDB() {
-	db.db.dropDatabase();
-	return done();
+	db.db.dropDatabase(done);
     }
 
     function reconnect() {
@@ -53,6 +52,5 @@ beforeEach(function (done) {
 });
 
 afterEach(function (done) {
-    db.close();
-    return done();
+    db.close(done);
 });
