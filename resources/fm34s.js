@@ -1,8 +1,9 @@
 var Visit = require('../models/visit');
+var Fct = require('../models/fct');
 var moment = require('moment');
 var gendoc = require('../aux/generate_doc');
 
-var fm34docfile = 'prueba';
+var fm34docfile = 'fm34';
 
 
 module.exports = function(app) {
@@ -185,21 +186,30 @@ module.exports = function(app) {
 	var isoweek = moment().isoWeek(fm34._id.semana).isoWeekYear(fm34._id.anyo);
 	fm34.semanaDe = isoweek.startOf('isoWeek').format("DD/MM/YYYY");
 	fm34.semanaAl = isoweek.endOf('isoWeek').format("DD/MM/YYYY");
+
 	var fm34s = [];
-	fm34s.push(fm34);
-	//set the templateVariables
-	var doc = {
-	    fm34s: fm34s
-	};
-
-	gendoc(doc, fm34docfile).then(function(buf) {
-
-	    var filename = res.locals.user.username + "_fm34_" + ".docx";
-	    res.type('application/vnd.openxmlformats-officedocument.wordprocessingml.document');
-	    res.set({"Content-Disposition":"attachment; filename=\"" + filename +  "\""});
-	    res.send(buf);
-
-	})
+	
+	// Busco la última FCT para sacar los campos de 'tutor' y 'ciclo' para el documento FM34
+	Fct.find({'usuario': res.locals.user._id}).sort({_id:-1}).limit(1).execAsync()
+	    .then(function(fcts) {
+		if (fcts.length === 0) {
+		    return next('route');
+		}
+		fm34.tutor = fcts[0].tutor;
+		fm34.ciclo = fcts[0].ciclo;
+		fm34s.push(fm34);
+		//set the templateVariables
+		var doc = {
+		    fm34s: fm34s
+		};
+		return gendoc(doc, fm34docfile);
+	    })
+	    .then(function(buf) {
+		var filename = res.locals.user.username + "_fm34_" + ".docx";
+		res.type('application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+		res.set({"Content-Disposition":"attachment; filename=\"" + filename +  "\""});
+		res.send(buf);
+	    })
 	    .catch(next);
 
     });
