@@ -1,20 +1,20 @@
 <!DOCTYPE html>
-<html lang='es-ES'>
+<html lang='es-ES' mozNoMarginBoxes>
   <head>
     <meta charset="utf-8">
     <title>Etiquetas FCT</title>
     <style>
     @page  
     { 
-      size: auto;   /* auto is the initial value */ 
-      /* this affects the margin in the printer settings */ 
-      margin: 0;  
+      size: A4;   /* auto is the initial value */ 
+      /* this affects the margin in the printer settings */
+      margin: 5mm;
     } 
 
     body {
       /* A4: 210 × 297*/
       width: 210mm;
-      margin: 0;
+      height: 297mm;
       padding: 0;
       font: 8pt sans-serif;
     }
@@ -22,8 +22,10 @@
     .container {
       display: flex;
       flex-wrap: wrap;
+      margin: 0;
+      padding: 0;
     }
-    
+
     .etiqueta{
       box-sizing: border-box;
       flex: 0 1 auto;
@@ -82,7 +84,7 @@
   <body>
     <div id="control">
       <h1>Impresión de etiquetas FCT</h1>
-      Empezar en etiqueta número: <input value="0" onchange="cambia_offset(this.value)" onkeyup="cambia_offset(this.value)" type="number" id="num_offset" min="0" max="20">
+      Empezar en etiqueta número: <input value="0" onchange="cambia_offset(this.value)" onkeyup="cambia_offset(this.value)" type="number" id="num_offset" min="0" max="40">
     </div>
     <div class="container">
       <% for(var i=0; i<39; i++) {%>
@@ -102,7 +104,7 @@
 
     <script>
     function cambia_offset(val) {
-      var v = val%20;
+      var v = val%40;
       var vacias = document.querySelectorAll(".vacia");
       
       for (i=0; i<39; i++) {
