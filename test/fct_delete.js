@@ -11,9 +11,11 @@ var app = require('../fct.js').app;
 
 describe('Comprobar el borrado de FCT y sus visitas asociadas.', function () {
 
+    var password = 'testuser1';
+    
     var user_test1 = new User({
 	username: 'testuser1',
-	password: 'testuser1'
+	password: password
     });
     
     var fct1 = new Fct({
@@ -81,7 +83,7 @@ describe('Comprobar el borrado de FCT y sus visitas asociadas.', function () {
 		return request
 		// Delete FCT
 		    .delete(app.buildLink('fct',{user: user_test1.username, fct: f1._id}).href)
-		    .set("Authorization", "basic " + new Buffer(user_test1.username + ':' + user_test1.password).toString("base64"))
+		    .set("Authorization", "basic " + new Buffer(user_test1.username + ':' + password).toString("base64"))
 		    .expect(200);
 	    })
 	    .then(function(r) {

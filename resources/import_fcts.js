@@ -81,7 +81,7 @@ module.exports = function(app) {
 	// TODO: poner ruta absoluta
 	errcol.href = req.protocol + '://' + req.get('host') + req.originalUrl;
 	
-	auth_sao(req.user.username,req.user.password)
+	auth_sao(req.user.username,req.user.plainpassword)
 	    .then(function(sao_conn_data) {
 		if (sao_conn_data === false) {
 		    var err = new Error();

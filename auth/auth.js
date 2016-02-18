@@ -13,39 +13,58 @@ module.exports = function(passport, BasicStrategy) {
     passport.use(new BasicStrategy(function(username, password, done) {
 	User.findOneAsync({ username: username })
 	    .then(function (user) {
-		usuario = user;
-		// Si no existe el usuario o el password es incorrecto, buscamos en SAO
-		if (!user || (user.password != password) ) {
+		if (!user) {
+		    // Si no existe el usuario
 		    auth_sao(username,password)
 		    	.then(function(res) {
-			    // Buscamos en SAO
-			    console.log("Conectado con SAO.");
 			    if (res) {
 				// Acceso a SAO correcto
-				if (usuario) {
-				    // El usuario existía pero la contraseña era incorrecta
-				    usuario.password = password;
-				} else {
-				    // El usuario no existía
-				    usuario = new User();
-				    usuario.username = username;
-				    usuario.password = password;			    
-				}
+				var usuario = new User();
+				usuario.username = username;
+				usuario.password = password;
 				usuario.saveAsync()
 				    .then(function(user) {
 					user=user[0];
+					// Para importación de FCT (conexión a SAO)
+					user.plainpassword = password;
 					return done(null,user);
-				    })
-				    .catch(done);
+				    });
 			    } else {
 				// Acceso a SAO incorrecto
 				return done(null,false);
 			    }
-			})
-			.catch(done)
+			});
 		} else {
-		    // Existe usuario y la contraseña coincide
-		    return done(null, user);
+		    // El usuario existe. Comprobamos password.
+		    user.comparePasswordAsync(password)
+			.then(function(result) {
+			    if (result) {
+				// Los passwords coinciden
+				// Para importación de FCT (conexión a SAO)
+				user.plainpassword = password;
+				return done(null, user);
+			    } else {
+				// Los passwords no coinciden
+				// Conectamos a SAO a ver si autentica
+				auth_sao(username,password)
+		    		    .then(function(res) {
+					if (res) {
+					    // Acceso a SAO correcto
+					    user.password = password;
+					    user.saveAsync()
+						.then(function(user) {
+						    user=user[0];
+						    // Para importación de FCT (conexión a SAO)
+						    user.plainpassword = password;
+						    return done(null,user);
+						});
+					} else {
+					    // Acceso a SAO incorrecto
+					    return done(null,false);
+					}
+				    });
+			    }
+			});
 		}
 	    })
 	    .catch(done);

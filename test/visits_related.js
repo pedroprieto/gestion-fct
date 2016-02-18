@@ -12,9 +12,11 @@ var contenttype ='application/vnd.collection+json';
 
 describe('Visitas relacionadas', function () {
 
+    var password1 = 'test';
+    
     var user_test1 = new User({
 	username: 'test',
-	password: 'test'
+	password: password1
     });
 
     var user_test2 = new User({
@@ -139,7 +141,7 @@ describe('Visitas relacionadas', function () {
 		// Primero obtenemos template para crear visitas en FCT 1
 		return request
 		    .get(app.buildLink('template_visita',{user: user_test1.username, fct: f1._id, tipo: 'inicial'}).href)
-		    .set("Authorization", "basic " + new Buffer(user_test1.username + ':' + user_test1.password).toString("base64"))
+		    .set("Authorization", "basic " + new Buffer(user_test1.username + ':' + password1).toString("base64"))
 		    .set('Content-Type', contenttype)
 		    .expect(200);
 	    })
@@ -164,7 +166,7 @@ describe('Visitas relacionadas', function () {
 		return request
 		// Petición POST al link de visitas para crear una visita
 		    .post(app.buildLink('visits',{user: user_test1.username, fct: f1._id}).href)
-		    .set("Authorization", "basic " + new Buffer(user_test1.username + ':' + user_test1.password).toString("base64"))
+		    .set("Authorization", "basic " + new Buffer(user_test1.username + ':' + password1).toString("base64"))
 		    .set('Content-Type', contenttype)
 		    .send(JSON.stringify(visit_test_template))
 		    .expect(201);
