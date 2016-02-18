@@ -1,7 +1,7 @@
 {
   "name": "appfct",
   "description": "Aplicación FCT",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
   "main": "fct.js",
   "dependencies": {
