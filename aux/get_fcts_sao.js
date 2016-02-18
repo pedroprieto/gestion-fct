@@ -11,6 +11,11 @@ module.exports = Promise.promisify(function(data, curso, periodo, callback) {
     // 1 Sept-Dic
     // 2 Abril-Junio
     // 3 Otros
+
+    // Cambio el parámetro periodo, que viene para "todos" como "1,2", por -1
+    if (periodo == "1,2")
+	periodo = -1;
+    
     var options = {
 	url: 'https://fct.edu.gva.es/inc/ajax/fcts/rellenar_fct.php?prof=' + data.idSAO +  '&curso=' + curso + '&periodo=' + periodo,
 	method: 'GET',
