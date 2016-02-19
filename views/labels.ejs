@@ -85,6 +85,7 @@
     <div id="control">
       <h1>Impresión de etiquetas FCT</h1>
       Empezar en etiqueta número: <input value="0" onchange="cambia_offset(this.value)" onkeyup="cambia_offset(this.value)" type="number" id="num_offset" min="0" max="40">
+      <button id="imprimir" onclick="imprimir()">Imprimir</button>
     </div>
     <div class="container">
       <% for(var i=0; i<39; i++) {%>
@@ -114,6 +115,9 @@
 	  vacias[i].style.display = 'none';
 	}
       }
+    }
+    function imprimir() {
+      window.print();
     }
     </script>
   </body>
