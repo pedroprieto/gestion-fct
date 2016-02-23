@@ -8,7 +8,7 @@
     { 
       size: A4;   /* auto is the initial value */ 
       /* this affects the margin in the printer settings */
-      margin: 5mm;
+      margin: 0;
     } 
 
     body {
@@ -16,7 +16,9 @@
       width: 210mm;
       height: 297mm;
       padding: 0;
-      font: 8pt sans-serif;
+      font: 8.5pt sans-serif;
+      margin: 0;
+      margin-left: 2mm;
     }
 
     .container {
@@ -29,8 +31,8 @@
     .etiqueta{
       box-sizing: border-box;
       flex: 0 1 auto;
-      width: 52.4mm; /*4 etiquetas a lo ancho */
-      height: 29.7mm; /* 10 etiquetas a lo alto */
+      width: 69.9mm; /*3 etiquetas a lo ancho */
+      height: 37mm; /* 8 etiquetas a lo alto */
       padding: 1mm;
       margin: 0cm; /* Sin márgenes */
       text-align: left;
@@ -38,7 +40,7 @@
       outline: 1px dotted; /* outline doesn't occupy space like border does */
       display: flex;
       justify-content: center;
-      line-height: 1.5em;
+      line-height: 1.8em;
     }
     
     .etiqueta_content {
@@ -53,13 +55,13 @@
 
     .valor {
       display: inline-block;
-      width: 12em;
+      width: 16em;
       vertical-align: middle;
 
     }
 
     .ciclo {
-      font: 7pt sans-serif;
+      font: 8pt sans-serif;
     }
 
     .etiqueta.vacia {
@@ -84,19 +86,19 @@
   <body>
     <div id="control">
       <h1>Impresión de etiquetas FCT</h1>
-      Empezar en etiqueta número: <input value="0" onchange="cambia_offset(this.value)" onkeyup="cambia_offset(this.value)" type="number" id="num_offset" min="0" max="40">
+      Empezar en etiqueta número: <input value="0" onchange="cambia_offset(this.value)" onkeyup="cambia_offset(this.value)" type="number" id="num_offset" min="0" max="24">
       <button id="imprimir" onclick="imprimir()">Imprimir</button>
     </div>
     <div class="container">
-      <% for(var i=0; i<39; i++) {%>
+      <% for(var i=0; i<24; i++) {%>
 	<div class="etiqueta vacia"></div>
       <% } %>
       <% for(var i=0; i<fcts.length; i++) {%>
 	<div class="etiqueta rellena">
 	  <div class="etiqueta_content">
-	    <span class="titulo">Alumno:</span> <span class="valor"><%= fcts[i].alumno %><br></span>
-	    <span class="titulo">Empresa:</span> <span class="valor"><%= fcts[i].empresa %><br></span>
-	    <span class="titulo">Tutor:</span> <span class="valor"><%= fcts[i].tutor %><br></span>
+	    <span class="titulo">Alumno:</span> <span class="valor"><%= fcts[i].alumno %></span><br>
+	    <span class="titulo">Empresa:</span> <span class="valor"><%= fcts[i].empresa %></span><br>
+	    <span class="titulo">Tutor:</span> <span class="valor"><%= fcts[i].tutor %></span><br>
 	    <span class="titulo">Ciclo:</span> <span class="valor ciclo"><%= fcts[i].ciclo %></span>
 	  </div>
 	</div>
@@ -105,10 +107,10 @@
 
     <script>
     function cambia_offset(val) {
-      var v = val%40;
+      var v = val%24;
       var vacias = document.querySelectorAll(".vacia");
       
-      for (i=0; i<39; i++) {
+      for (i=0; i<24; i++) {
 	if (i<v) {
 	  vacias[i].style.display = 'block';
 	} else {
