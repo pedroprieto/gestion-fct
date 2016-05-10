@@ -20,6 +20,7 @@
     "osrm-client": ">= 0.0.1",
     "passport": "x",
     "passport-http": "x",
+    "prompt": "^1.0.0",
     "ractive": ">=0.7.x",
     "ractive-load": ">= 0.5.x",
     "request": "^2.55.0",
