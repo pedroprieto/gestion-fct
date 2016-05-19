@@ -148,10 +148,10 @@ visitSchema.statics.visit_template = function (localidad, tipo, related, distanc
 		if (typeof distancia !== undefined) v = distancia;
 	    }
 	    if (p === 'presencial') {
-		v='true';
+		v=true;
 		if (typeof tipo !== undefined) {
 		    if (tipo === 'otra') {
-			v='false';
+			v=false;
 		    }
 		}
 	    }
