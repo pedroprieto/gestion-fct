@@ -395,8 +395,24 @@ module.exports = function(app) {
 
 	// Obtenemos FCTs con la misma empresa que la actual, del mismo usuario, para incluirlas en la template
 	var related = "";
-	Fct.findAsync({empresa: res.locals.fct.empresa, usuario: res.locals.user._id, curso: res.locals.fct.curso, periodo: res.locals.fct.periodo, _id: {'$ne': fct._id}})
+	    Fct.find({empresa: res.locals.fct.empresa, usuario: res.locals.user._id, curso: res.locals.fct.curso, periodo: res.locals.fct.periodo, _id: {'$ne': fct._id}}).populate('visitas').execAsync()
 	    .then(function(fcts) {
+        if (tipo !== 'otra' ) {
+          
+          // Quitamos la fct relacionada si ya tiene una visita de tipo distinto de 'otra' que coincida con el tipo de visita que estemos creando
+          fcts = fcts.filter(function(fct){
+            var keep = true;
+            for (var i=0; i < fct.visitas.length; i++) {
+              if (fct.visitas[i].tipo === tipo) {
+                keep = false;
+                break;
+              }
+            }
+
+            return keep;
+          })
+        
+        }
 		col.template = Visit.visit_template(localidad, tipo, fcts, distancia);
 		
 		//Send
