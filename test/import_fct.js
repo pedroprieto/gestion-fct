@@ -15,8 +15,8 @@ describe('Importar FCTs del sistema SAO', function () {
     it('Debe crear las fcts del usuario correspondiente (último período activo en SAO) al hacer una petición POST a /import_fcts', function (done) {
 	this.timeout(40000);
 	var request = req('');
-	var curso = "2014-2015";
-	var periodo = 2;
+	var curso = "2016-2017";
+	var periodo = 1;
 	var data = {
 	    template: {
 		data: [

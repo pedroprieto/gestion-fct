@@ -33,7 +33,11 @@ module.exports = Promise.promisify(function(username, password, callback) {
 	    var sessionCookie2 = response.headers['set-cookie'][1];
 	    sessionCookie2 = sessionCookie2.split(';');
 	    sessionCookie2 = sessionCookie2[0];
-	    sessionCookie = sessionCookie + ';' + sessionCookie2;
+	    var sessionCookie3 = response.headers['set-cookie'][2];
+	    sessionCookie3 = sessionCookie3.split(';');
+	    sessionCookie3 = sessionCookie3[0];
+	
+	    sessionCookie = sessionCookie + ';' + sessionCookie2 + ';' + sessionCookie3;
 	    var idSAO = 0;
 
 	    var $ = cheerio.load(body);
