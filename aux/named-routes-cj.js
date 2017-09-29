@@ -147,7 +147,7 @@ exports.extend = function (app) {
 	    // Absolute URL
 	    var full_url = URL.parse(url);
 	    full_url.host = req.headers['host'];
-	    full_url.protocol = req.protocol;
+	    full_url.protocol = app.get('protocol');
 	    
 	    link.href = URL.format(full_url);
 	    link.rel = route.rel;
