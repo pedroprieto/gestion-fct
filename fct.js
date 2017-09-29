@@ -36,23 +36,6 @@ app.set('host', process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1');
 app.set('protocol', process.env.NODE_ENV!='test'? 'https' : 'http');
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
-// Proxy OpenShift
-app.set('trust proxy', true);
-// Redirect to https in OpenShift
-app.use(function (req, res, next) {
-
-    if ( req.headers['x-forwarded-proto'] === 'http' ) { 
-
-        var tmp = 'https://' + req.headers.host + req.originalUrl;
-        res.redirect(tmp);
-
-    } else {
-
-        return next();
-
-    }
-
-});
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json({strict: false, type: contentType}));
