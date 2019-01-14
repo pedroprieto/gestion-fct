@@ -15,7 +15,7 @@ module.exports = function(app) {
 	    var item =  Visit.genfm34_cj(f);
 
 	    // Item href
-	    var isoweek = moment().isoWeek(f._id.semana).isoWeekYear(f._id.anyo);
+    var isoweek = moment().isoWeekYear(f._id.anyo).isoWeek(f._id.semana);
 	    var princ = isoweek.startOf('isoWeek').format("DD-MM-YYYY");
 	    item.href = req.buildLink('fm34', {fm34: princ}).href;
 
@@ -125,7 +125,8 @@ module.exports = function(app) {
 		for (var i = 0; i<fm34s.length; i++) {
 		    f=fm34s[i];
 		    //var isoweek = moment(f._id.anyo + "-W0" + f._id.semana, moment.ISO_8601);
-		    var isoweek = moment().isoWeek(f._id.semana).isoWeekYear(f._id.anyo);
+
+      var isoweek = moment().isoWeekYear(f._id.anyo).isoWeek(f._id.semana);
 		    f.semanaDe = isoweek.startOf('isoWeek').format("DD/MM/YYYY");
 		    f.semanaAl = isoweek.endOf('isoWeek').format("DD/MM/YYYY");
 		    f.tutor = tutor;
@@ -197,7 +198,7 @@ module.exports = function(app) {
     app.get(app.lookupRoute('fm34docx'), function(req, res, next) {
 
 	var fm34 = res.locals.fm34;
-	var isoweek = moment().isoWeek(fm34._id.semana).isoWeekYear(fm34._id.anyo);
+      var isoweek = moment().isoWeekYear(fm34._id.anyo).isoWeek(fm34._id.semana);
 	fm34.semanaDe = isoweek.startOf('isoWeek').format("DD/MM/YYYY");
 	fm34.semanaAl = isoweek.endOf('isoWeek').format("DD/MM/YYYY");
 
