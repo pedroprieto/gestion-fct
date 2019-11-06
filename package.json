@@ -5,7 +5,7 @@
   "private": true,
   "main": "fct.js",
   "dependencies": {
-    "bcrypt": "^0.8.5",
+    "bcrypt": "^3.0.6",
     "bluebird": "2.9.x",
     "body-parser": "1.x",
     "cheerio": "^0.19.0",
