@@ -15,7 +15,7 @@
     "express": "4.x",
     "express-partials": ">= 0.3.0",
     "moment": "2.10.x",
-    "mongoose": "4.0.x",
+    "mongoose": "5.7.x",
     "node-geocoder": ">= 0.0.1",
     "osrm-client": ">= 0.0.1",
     "passport": "x",
