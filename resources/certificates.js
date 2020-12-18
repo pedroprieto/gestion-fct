@@ -16,6 +16,7 @@ module.exports = function(app) {
     app.get([app.lookupRoute('certs_alumno') , app.lookupRoute('certs_instructor'), app.lookupRoute('fm18s')], function(req, res, next) {
 
 	var docfile;
+  var generation_date = moment().format("LL");
 
 	if (req.path.indexOf('certs_alumno') > -1) {
 	    docfile = alumno_doc_file;
@@ -31,7 +32,8 @@ module.exports = function(app) {
 	Fct.findQuery(req.query, res.locals.user).populate('visitas').execAsync()
 	    .then(function(fcts) {
 		var doc= {
-		    certs: JSON.parse(JSON.stringify(fcts))
+		    certs: JSON.parse(JSON.stringify(fcts)),
+        generation_date: generation_date
 		};
 
 		return gendoc(doc, docfile);
@@ -56,6 +58,7 @@ module.exports = function(app) {
 	var fct = res.locals.fct;
 	var filename;
 
+  var generation_date = moment().format("LL");
 
 	if (req.path.indexOf('cert_alumno') > -1) {
 	    docfile = alumno_doc_file;
@@ -76,7 +79,8 @@ module.exports = function(app) {
 		var fcts = [];
 		fcts.push(fct);
 		var doc= {
-		    certs: JSON.parse(JSON.stringify(fcts))
+		    certs: JSON.parse(JSON.stringify(fcts)),
+        generation_date: generation_date
 		};
 		
 		return gendoc(doc, docfile);
