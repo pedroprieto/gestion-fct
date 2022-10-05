@@ -40,7 +40,7 @@ module.exports.respondError = function(err, req, res, next){
     var errcol = req.app.locals.errcj();
     errcol.href = req.protocol + '://' + req.get('host') + req.originalUrl;
     errcol.links = [];
-    errcol.links.push(req.buildLink('fcts'));
+    errcol.links.push(req.buildLink('fcts', {user: req.user.username}));
     
     status = err.status || 500
     res.status(status)
