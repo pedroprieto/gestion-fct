@@ -14,7 +14,7 @@ module.exports = Promise.promisify(function(username, password, callback) {
     };
     
     var options = {
-	url: 'https://fct.edu.gva.es/index.php?op=2&subop=0', // para poder acceder al id del usuario, que aparece en esta página
+	url: 'https://foremp.edu.gva.es/index.php?op=2&subop=0', // para poder acceder al id del usuario, que aparece en esta página
 	method: 'POST',
 	form: post_data,
 	headers: {
