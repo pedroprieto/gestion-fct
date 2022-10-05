@@ -17,7 +17,7 @@ module.exports = Promise.promisify(function(data, curso, periodo, callback) {
 	periodo = -1;
     
     var options = {
-	url: 'https://fct.edu.gva.es/inc/ajax/fcts/rellenar_fct.php?prof=' + data.idSAO +  '&curso=' + curso + '&periodo=' + periodo,
+	url: 'https://foremp.edu.gva.es/inc/ajax/fcts/rellenar_fct.php?prof=' + data.idSAO +  '&curso=' + curso + '&periodo=' + periodo,
 	method: 'GET',
 	headers: {
 	    'Cookie': data.cookiesSAO

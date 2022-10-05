@@ -7,7 +7,7 @@ var Promise = require('bluebird');
 module.exports = Promise.promisify(function(data, idFCT, callback) {
 
     var options = { 
-	url: 'https://fct.edu.gva.es/index.php?accion=10&idFct=' + idFCT,
+	url: 'https://foremp.edu.gva.es/index.php?accion=10&idFct=' + idFCT,
 	method: 'GET',
 	headers: {
 	    'Cookie': data.cookiesSAO
