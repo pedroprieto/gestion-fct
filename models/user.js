@@ -1,5 +1,5 @@
 var Promise = require("bluebird");
-var bcrypt = require('bcrypt');
+var bcrypt = require('bcryptjs');
 var SALT_WORK_FACTOR = 10;
 var mongoose = require('mongoose')
 ,Schema = mongoose.Schema
