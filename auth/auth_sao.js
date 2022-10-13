@@ -17,6 +17,7 @@ module.exports = Promise.promisify(function(username, password, callback) {
 	url: 'https://foremp.edu.gva.es/index.php?op=2&subop=0', // para poder acceder al id del usuario, que aparece en esta página
 	method: 'POST',
 	form: post_data,
+        timeout: 2000,
 	headers: {
 	    'Content-Type': 'application/x-www-form-urlencoded',
 	    'Content-Length': post_data.length
@@ -38,15 +39,16 @@ module.exports = Promise.promisify(function(username, password, callback) {
 	    // sessionCookie3 = sessionCookie3[0];
 	
 	    //sessionCookie = sessionCookie + ';' + sessionCookie2 + ';' + sessionCookie3;
-	    sessionCookie = sessionCookie + ';' + sessionCookie2 + ';';
+	    sessionCookie = sessionCookie + ';' + sessionCookie2;
 	    var idSAO = 0;
+            var cheHeader = response.headers['Che'];
 
 	    var $ = cheerio.load(body);
 	    if ($("input[name='logout']").length) {
 		// Éxito
 		// Almacenamos el id del usuario conectado
 		idSAO = $("#usuarioActual").val();
-		return callback(null, {nombre: username, idSAO: idSAO, cookiesSAO: sessionCookie});
+		return callback(null, {nombre: username, idSAO: idSAO, cookiesSAO: sessionCookie, cheHeader: cheHeader});
 	    } else {
 		var err = new Error('Autenticación SAO incorrecta');
 		return callback(null, false);
