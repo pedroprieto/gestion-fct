@@ -26,18 +26,19 @@ module.exports.getcursoslist =  function() {
 
 module.exports.getperiodoslist =  function() {
     //return [1,2];
+    // Cambian a 5, 6 y -1 (todos)
     var ps = [];
     
     var c1 = {};
-    c1.value = "1";
+    c1.value = "5";
     c1.prompt = "1";
 
     var c2 = {};
-    c2.value = "2";
+    c2.value = "6";
     c2.prompt = "2";
 
     var todos = {};
-    todos.value = "1,2";
+    todos.value = "-1";
     todos.prompt = "Todos";
 
     ps.push(c1);
@@ -66,8 +67,8 @@ module.exports.getPeriodoActual = function() {
     var mes_actual = now.month();
     
     if (mes_actual >= 7) {
-	return 1;
+	return 5;
     } else {
-	return 2;
+	return 6;
     }
 }
