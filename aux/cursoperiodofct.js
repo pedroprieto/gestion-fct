@@ -31,11 +31,11 @@ module.exports.getperiodoslist =  function() {
     
     var c1 = {};
     c1.value = "5";
-    c1.prompt = "1";
+    c1.prompt = "Ordinario";
 
     var c2 = {};
     c2.value = "6";
-    c2.prompt = "2";
+    c2.prompt = "Extraordinario";
 
     var todos = {};
     todos.value = "-1";
@@ -67,8 +67,8 @@ module.exports.getPeriodoActual = function() {
     var mes_actual = now.month();
     
     if (mes_actual >= 7) {
-	return 5;
-    } else {
 	return 6;
+    } else {
+	return 5;
     }
 }
