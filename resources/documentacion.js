@@ -42,7 +42,7 @@ module.exports = function(app) {
 	d = {};
 	d.name = "certs_alumno";
 	d.prompt = "Generar certificados del alumno";
-	d.value = "Generar certificados del alumno del curso " + c + " período " + p + ".";
+	d.value = "Generar certificados del alumno del curso " + c + " período " + cps.getNombrePeriodo(p) + ".";
 	item.data.push(d);
 	item.links = [];
 	d1 = req.buildLink('certs_alumno');
@@ -55,7 +55,7 @@ module.exports = function(app) {
 	d = {};
 	d.name = "certs_instructor";
 	d.prompt = "Generar certificados del instructor";
-	d.value = "Generar certificados del instructor del curso " + c + " período " + p + ".";
+	d.value = "Generar certificados del instructor del curso " + c + " período " + cps.getNombrePeriodo(p) + ".";
 	item.data.push(d);
 	item.links = [];
 	d1 = req.buildLink('certs_instructor');
@@ -68,7 +68,7 @@ module.exports = function(app) {
 	d = {};
 	d.name = "fm18s";
 	d.prompt = "Generar FM18s";
-	d.value = "Generar FM18s del curso " + c + " período " + p + ".";
+	d.value = "Generar FM18s del curso " + c + " período " + cps.getNombrePeriodo(p) + ".";
 	item.data.push(d);
 	item.links = [];
 	d1 = req.buildLink('fm18s');
@@ -81,7 +81,7 @@ module.exports = function(app) {
 	d = {};
 	d.name = "etiquetas";
 	d.prompt = "Generar etiquetas";
-	d.value = "Generar etiquetas del curso " + c + " período " + p + ".";
+	d.value = "Generar etiquetas del curso " + c + " período " + cps.getNombrePeriodo(p) + ".";
 	item.data.push(d);
 	item.links = [];
 	d1 = req.buildLink('etiquetas');
