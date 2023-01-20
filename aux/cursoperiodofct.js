@@ -24,7 +24,7 @@ module.exports.getcursoslist =  function() {
     return cps;
 }
 
-module.exports.getperiodoslist =  function() {
+function getperiodoslist() {
     //return [1,2];
     // Cambian a 5, 6 y -1 (todos)
     var ps = [];
@@ -49,6 +49,8 @@ module.exports.getperiodoslist =  function() {
     
 }
 
+module.exports.getperiodoslist = getperiodoslist;
+
 module.exports.getCursoActual = function() {
     var now = moment();
     var curso_final = now.year();
@@ -71,4 +73,11 @@ module.exports.getPeriodoActual = function() {
     } else {
 	return 5;
     }
+}
+
+module.exports.getNombrePeriodo = function(codigo) {
+    return getperiodoslist().filter(function(el) {
+        return el.value == codigo;
+    })[0].prompt;
+
 }

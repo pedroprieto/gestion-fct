@@ -191,13 +191,26 @@ fctSchema.statics.findQuery = function (query, usuario, cb) {
 	}
 
 	// Convertir periodos a número y eliminar los no números
+        // Apaño para transformar período -1 en 5,6
+        var perMenosUnoFound = false;
 	var periodos = periodos
 	    .map(function (n) {
 		return parseInt(n); 
 	    })
 	    .filter(function( x ) {
 		return !isNaN(x);
-	    });
+	    }).filter(function(x) {
+                if (x == -1) {
+                    perMenosUnoFound = true;
+                    return false;
+                } else {
+                    return true;
+                }
+            });
+        if (perMenosUnoFound) {
+            periodos.push(5);
+            periodos.push(6);
+        }
 
 	q.curso = {};
 	q.curso.$in = cursos;

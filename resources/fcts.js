@@ -21,7 +21,7 @@ module.exports = function(app) {
 	var p = req.query.periodo || cps.getPeriodoActual();
 
 	// Collection title
-	col.title = "FCTs " + c + " período " + p;
+	col.title = "FCTs " + c + " período " + cps.getNombrePeriodo(p);
 
 	
 	// Collection Links
