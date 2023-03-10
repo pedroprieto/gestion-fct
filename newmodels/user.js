@@ -1,6 +1,6 @@
 var bcrypt = require('bcryptjs');
 var SALT_WORK_FACTOR = 10;
-const db = require("./db/db");
+const db = require("../db/db");
 
 async function getUser(username) {
     let loadedUser = await db.getUser(username);
@@ -20,7 +20,6 @@ User.prototype.updatePass = function(plainPassword) {
     // generate a salt
     var salt = bcrypt.genSaltSync(SALT_WORK_FACTOR);
     var hash = bcrypt.hashSync(plainPassword, salt);
-    console.log(hash);
     this.password = hash;
 }
 
@@ -33,7 +32,6 @@ User.prototype.save = async function() {
 }
 
 module.exports = {
-    setDB,
     User,
     getUser
 }

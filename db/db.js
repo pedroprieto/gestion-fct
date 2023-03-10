@@ -11,7 +11,7 @@ module.exports = {
         return users.find(user => user.name == username);
     },
     async saveUser(user) {
-        let foundUser = users.find(user => user.name == username);
+        let foundUser = users.find(u => u.name == user.name);
         if (foundUser) {
             foundUser.name = user.name;
             foundUser.password = user.password;
