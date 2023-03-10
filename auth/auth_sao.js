@@ -1,63 +1,53 @@
 // Función para realizar la conexión al sistema SAO
-
-var querystring = require('querystring');
-var request = require('request');
+var axios = require('axios');
 var cheerio = require('cheerio');
-var Promise = require('bluebird');
 
-module.exports = Promise.promisify(function(username, password, callback) {
-
+module.exports = function (username, password) {
     var post_data = {
-	'login': 'Entrar',
-	'usuario' : username,
-	'password': password
+        'login': 'Entrar',
+        'usuario': username,
+        'password': password
     };
-    
+
     var options = {
-	url: 'https://foremp.edu.gva.es/index.php?op=2&subop=0', // para poder acceder al id del usuario, que aparece en esta página
-	method: 'POST',
-	form: post_data,
+        url: 'https://foremp.edu.gva.es/index.php?op=2&subop=0', // para poder acceder al id del usuario, que aparece en esta página
+        method: 'POST',
+        data: new URLSearchParams(post_data),
         timeout: 2000,
-	headers: {
-	    'Content-Type': 'application/x-www-form-urlencoded',
-	    'Content-Length': post_data.length
-	}
+        headers: {
+            'Cookie': '',
+            'Cache-Control': 'no-cache',
+            'Pragma': 'no-cache',
+            'Expires': '0',
+            'Content-Type': 'application/x-www-form-urlencoded',
+            // 'Content-Length': post_data.length
+        }
     };
 
-    function retorno(error, response, body) {
-	if (!error && response.statusCode == 200) {
+    return axios(options).then(response => {
+        if (response.statusText == 'OK') {
+            let sessionCookiesArray = [];
+            for (let cookie of response.headers['set-cookie']) {
+                sessionCookiesArray.push(cookie.split(';')[0]);
+            }
+            let sessionCookies = sessionCookiesArray.join(';');
 
-//	    response.setEncoding('utf8');
-	    var sessionCookie = response.headers['set-cookie'][0];
-	    sessionCookie = sessionCookie.split(';');
-	    sessionCookie = sessionCookie[0];
-	    var sessionCookie2 = response.headers['set-cookie'][1];
-	    sessionCookie2 = sessionCookie2.split(';');
-	    sessionCookie2 = sessionCookie2[0];
-	    // var sessionCookie3 = response.headers['set-cookie'][2];
-	    // sessionCookie3 = sessionCookie3.split(';');
-	    // sessionCookie3 = sessionCookie3[0];
-	
-	    //sessionCookie = sessionCookie + ';' + sessionCookie2 + ';' + sessionCookie3;
-	    sessionCookie = sessionCookie + ';' + sessionCookie2;
-	    var idSAO = 0;
-            var cheHeader = response.headers['Che'];
+            var idSAO = 0;
+            var cheHeader = response.headers['che'];
 
-	    var $ = cheerio.load(body);
-	    if ($("input[name='logout']").length) {
-		// Éxito
-		// Almacenamos el id del usuario conectado
-		idSAO = $("#usuarioActual").val();
-		return callback(null, {nombre: username, idSAO: idSAO, cookiesSAO: sessionCookie, cheHeader: cheHeader});
-	    } else {
-		var err = new Error('Autenticación SAO incorrecta');
-		return callback(null, false);
-	    }
-	} else {
-	    return callback(new Error("Error en la comunicación con SAO"));
-	}
-    };
-    
-    request.post(options, retorno);
+            // Comprobar que aparece logout
+            var $ = cheerio.load(response.data);
+            if ($("input[name='logout']").length) {
+                // Éxito
+                // Almacenamos el id del usuario conectado
+                idSAO = $("#usuarioActual").val();
+                return { nombre: username, idSAO: idSAO, cookiesSAO: sessionCookies, cheHeader: cheHeader };
+            } else {
+                throw new Error("Autenticación SAO incorrecta");
+            }
+        } else {
+            throw new Error("Usuario no encontrado");
+        }
+    });
 
-});
+}
