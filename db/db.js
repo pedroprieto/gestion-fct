@@ -30,7 +30,7 @@ module.exports = {
     },
     async getFCTSByUsuarioCursoPeriodo(userName, curso, periodos) {
         return fcts.filter(fct => {
-            return (fct.usuario == userName) && (fct.curso == curso) && (fct.periodo in periodos);
+            return (fct.usuario == userName) && (fct.curso == curso) && (periodos.includes(fct.periodo));
         });
 
     },
