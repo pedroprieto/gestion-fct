@@ -17,7 +17,6 @@ module.exports = function(router) {
         
         // FCTs
         let fcts = await FCT.getFCTSByUsuarioCursoPeriodo(ctx.state.user.name, c, p); 
-        console.log(fcts);
         
         
         // Links
@@ -25,7 +24,7 @@ module.exports = function(router) {
             ctx.buildLink('fcts', 'Listado de FCTs', {}, {curso: c, periodo: p}),
             ctx.buildLink('import_fcts', 'Importar FCTs'),
             ctx.buildLink('fm34s', 'FM34s'),
-            ctx.buildLink('documentacion', 'Documentación'),
+            ctx.buildLink('documentacion', 'Documentación', {}, {curso: c, periodo: p}),
         ]
         
 	col.items = fcts.map( f=> {
@@ -35,9 +34,9 @@ module.exports = function(router) {
             
             item.links = [
                 ctx.buildLink('visitas', 'Visitas', {fct: f.id}),
-                ctx.buildLink('cert_alumno', 'Certificado de alumno', {fct: f.id}),
-                ctx.buildLink('cert_instructor', 'Certificado de instructor', {fct: f.id}),
-                ctx.buildLink('fm18', 'FM 18', {fct: f.id}),
+                ctx.buildLink('doc_fct', 'Certificado de alumno', {fct: f.id, doc_name: 'cert_alumno'}),
+                ctx.buildLink('doc_fct', 'Certificado de instructor', {fct: f.id, doc_name: 'cert_instructor'}),
+                ctx.buildLink('doc_fct', 'FM 18', {fct: f.id, doc_name: 'fm18'}),
                 ctx.buildLink('etiqueta', 'Etiqueta', {fct: f.id}),
             ];
             

@@ -80,6 +80,8 @@ app.use(async (ctx, next) => {
 require('./newroutes/root')(router);
 require('./newroutes/fcts')(router);
 require('./newroutes/import_fcts')(router);
+require('./newroutes/documentacion')(router);
+require('./newroutes/certificados')(router);
 
 
 app
