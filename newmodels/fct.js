@@ -3,9 +3,9 @@ const db = require("../db/db");
 let FCT = {};
 
 async function getFCTSByUsuarioCursoPeriodo(userName, curso, periodo) {
-    let periodos = periodo;
+    let periodos = [periodo];
     if (periodo == -1) {
-        periodos = [1, 2, 3, 4, 5, 6]
+        periodos = ['1', '2', '3', '4', '5', '6']
     };
     let fctlist = await db.getFCTSByUsuarioCursoPeriodo(userName, curso, periodos);
     return fctlist.map(fct => {
@@ -19,6 +19,12 @@ let createFCT = function (FCTdata, userName) {
     return d;
 };
 
+let getFCTById = async function(id) {
+    let fctData = await db.getFCTById(id);
+    let fct = Object.create(FCT);
+    return Object.assign(fct, fctData);
+}
+
 FCT.save = async function () {
     await db.saveFCT(this);
 }
@@ -28,11 +34,11 @@ FCT.delete = async function () {
 }
 
 FCT.showFechaInicio = function () {
-    return new Date(this.fecha_inicio).toLocaleDateString();
+    return new Date(this.fecha_inicio).toLocaleDateString('es');
 }
 
 FCT.showFechaFin = function () {
-    return new Date(this.fecha_fin).toLocaleDateString();
+    return new Date(this.fecha_fin).toLocaleDateString('es');
 }
 
 FCT.dataToCJ = function () {
@@ -49,5 +55,6 @@ FCT.dataToCJ = function () {
 
 module.exports = {
     createFCT,
+    getFCTById,
     getFCTSByUsuarioCursoPeriodo,
 }

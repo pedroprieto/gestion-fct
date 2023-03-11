@@ -50,4 +50,7 @@ module.exports = {
     async deleteFCT(fct) {
         fcts = fcts.filter(f => f.id != fct.id);
     },
+    async getFCTById(id) {
+        return fcts.find(fct => fct.id == id);
+    },
 }

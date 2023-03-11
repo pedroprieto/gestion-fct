@@ -117,7 +117,7 @@ module.exports = function(router) {
 		col.items.push(item);
 
                 ctx.status = 201;
-                ctx.set('location', router.url("fcts", ctx.params));
+                ctx.set('location', router.url("fcts", ctx.params, {query: {curso: data.curso, periodo: data.periodo}}));
                 return next();
                 
 	    })
