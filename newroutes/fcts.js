@@ -37,7 +37,7 @@ module.exports = function(router) {
                 ctx.buildLink('doc_fct', 'Certificado de alumno', {fct: f.id, doc_name: 'cert_alumno'}),
                 ctx.buildLink('doc_fct', 'Certificado de instructor', {fct: f.id, doc_name: 'cert_instructor'}),
                 ctx.buildLink('doc_fct', 'FM 18', {fct: f.id, doc_name: 'fm18'}),
-                ctx.buildLink('etiqueta', 'Etiqueta', {fct: f.id}),
+                ctx.buildLink('doc_fct', 'Etiqueta', {fct: f.id, doc_name: 'etiqueta'}),
             ];
             
             return item;

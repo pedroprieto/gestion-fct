@@ -16,6 +16,12 @@ module.exports = function(router) {
 
         let fcts = await FCT.getFCTSByUsuarioCursoPeriodo(ctx.state.user.name, c, p);
         
+        // Etiquetas
+        if (ctx.params.doc_name == 'etiqueta') {
+            await ctx.render("labels", {fcts});
+            return next();
+        }
+
 	var doc= {
 	    certs: JSON.parse(JSON.stringify(fcts, function(key, value) {
                 if (key == 'fecha_inicio') {
@@ -45,6 +51,12 @@ module.exports = function(router) {
         let fcts = [];
         let fct = await FCT.getFCTById(ctx.params.fct);
         fcts.push(fct);
+
+        // Etiquetas
+        if (ctx.params.doc_name == 'etiqueta') {
+            await ctx.render("labels", {fcts});
+            return next();
+        }
         
 	var doc= {
 	    certs: JSON.parse(JSON.stringify(fcts, function(key, value) {

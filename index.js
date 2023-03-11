@@ -2,8 +2,10 @@ const Koa = require('koa');
 var Router = require('koa-router');
 const { koaBody } = require('koa-body');
 const passport = require('koa-passport')
-var auth = require("./auth/auth.js");
+require("./auth/auth.js");
 const CJUtils = require('./aux/CJUtils.js');
+const render = require("@koa/ejs");
+const path = require("path");
 
 
 // Timezone para UTC y que no haya problemas con fechas
@@ -11,9 +13,15 @@ process.env.TZ = 'UTC';
 
 const app = new Koa();
 app.use(koaBody());
+render(app, {
+    layout: false,
+    root: path.join(__dirname, "views"),
+    cache: false,
+});
 app.use(passport.initialize());
 
 var router = new Router();
+
 
 
 app.use(passport.authenticate('basic', { session: false }), function (ctx, next) {
@@ -21,7 +29,7 @@ app.use(passport.authenticate('basic', { session: false }), function (ctx, next)
 });
 
 // buildLink CJ
-app.context.buildLink = function(routeName, prompt, params={}, query, rel='collection') {
+app.context.buildLink = function (routeName, prompt, params = {}, query, rel = 'collection') {
     return CJUtils.buildLink(prompt, rel, this.router.url(routeName, Object.assign(this.params, params), { query: query }));
 }
 

@@ -20,7 +20,7 @@ module.exports = function(router) {
             ctx.buildLink('fcts', 'Listado de FCTs', {}, {curso: c, periodo: p}),
             ctx.buildLink('import_fcts', 'Importar FCTs'),
             ctx.buildLink('fm34s', 'FM34s'),
-            ctx.buildLink('documentacion', 'Documentación'),
+            ctx.buildLink('documentacion', 'Documentación', {}, {curso: c, periodo: p}),
         ]
         
         col.items = [];
@@ -35,7 +35,6 @@ module.exports = function(router) {
 	item.links = [];
 
         d1 = ctx.buildLink('docs_fct', 'Certificados de alumnado', {doc_name: 'cert_alumno' }, {curso: c, periodo: p}),
-	d1.href += "?curso=" + c + "&periodo=" + p;
 	item.links.push(d1);
 	col.items.push(item);
 
@@ -48,7 +47,6 @@ module.exports = function(router) {
 	item.data.push(d);
 	item.links = [];
         d1 = ctx.buildLink('docs_fct', 'Certificados de instructor', {doc_name: 'cert_instructor'}, {curso: c, periodo: p}),
-	d1.href += "?curso=" + c + "&periodo=" + p;
 	item.links.push(d1);
 	col.items.push(item);
 
@@ -61,7 +59,6 @@ module.exports = function(router) {
 	item.data.push(d);
 	item.links = [];
         d1 = ctx.buildLink('docs_fct', 'FM18s', {doc_name: 'fm18'}, {curso: c, periodo: p}),
-	d1.href += "?curso=" + c + "&periodo=" + p;
 	item.links.push(d1);
 	col.items.push(item);
 
@@ -73,8 +70,7 @@ module.exports = function(router) {
 	d.value = "Generar etiquetas del curso " + c + " período " + cps.getNombrePeriodo(p) + ".";
 	item.data.push(d);
 	item.links = [];
-        d1 = ctx.buildLink('etiquetas', 'Etiquetas', {}, {curso: c, periodo: p}),
-	d1.href += "?curso=" + c + "&periodo=" + p;
+        d1 = ctx.buildLink('docs_fct', 'Etiquetas', {doc_name: 'etiqueta'}, {curso: c, periodo: p}),
 	item.links.push(d1);
 	col.items.push(item);
         
