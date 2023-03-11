@@ -1,6 +1,5 @@
 var cps = require('../aux/cursoperiodofct');
 const CJUtils = require('../aux/CJUtils.js');
-const FCT = require("../newmodels/fct");
 
 module.exports = function(router) {
     router.get('documentacion', '/api/users/:user/documentacion', async (ctx, next) => {

@@ -1,5 +1,4 @@
 var cps = require('../aux/cursoperiodofct');
-const CJUtils = require('../aux/CJUtils.js');
 const FCT = require("../newmodels/fct");
 var gendoc = require('../aux/generate_doc');
 
