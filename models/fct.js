@@ -208,6 +208,8 @@ fctSchema.statics.findQuery = function (query, usuario, cb) {
                 }
             });
         if (perMenosUnoFound) {
+            periodos.push(1);
+            periodos.push(2);
             periodos.push(5);
             periodos.push(6);
         }

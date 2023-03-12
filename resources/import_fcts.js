@@ -97,9 +97,11 @@ module.exports = function(app) {
 	    })
 	    .then(function(lista_fcts) {
 		var promises_fct = [];
+		var delay = 0; var delayIncrement = 400;
 		lista_fcts.forEach(function(key) {
 		    // Para cada FCT de la lista obtenemos sus datos
-		    promises_fct.push(detallesFCT(sao_conn, key[0]));
+                    delay += delayIncrement;
+                    promises_fct.push(new Promise(resolve => setTimeout(resolve, delay)).then(() => detallesFCT(sao_conn, key[0])));
 		});
 		return Promise.all(promises_fct);
 	    })
