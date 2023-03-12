@@ -64,29 +64,30 @@ app.use(async (ctx, next) => {
     try {
         await next();
     } catch (err) {
-        console.log(err);
         ctx.status = err.status || 500;
         // Show info if error is not 500
-        if (err.expose) {
+        // if (err.expose) {
+        if (true) {
             if (!(ctx.body && ctx.body.collection)) {
                 ctx.body = {};
                 ctx.body.collection = {};
                 ctx.body.collection.version = "1.0";
             }
             var err_col = {};
-            err_col.title = ctx.i18n.__("Error");
-            err_col.code = err.status;
-            err_col.message = ctx.i18n.__(err.message);
+            err_col.title = err.message;
+            err_col.code = ctx.status;
+            err_col.message = err.message;
 
             ctx.body.collection.error = err_col;
         }
-        ctx.app.emit('error', err, ctx);
+        // ctx.app.emit('error', err, ctx);
     }
 });
 
 // Resources
 require('./newroutes/root')(router);
 require('./newroutes/fcts')(router);
+require('./newroutes/visits')(router);
 require('./newroutes/import_fcts')(router);
 require('./newroutes/documentacion')(router);
 require('./newroutes/certificados')(router);
@@ -99,10 +100,10 @@ app
 // export app for testing
 module.exports.app = app;
 module.exports.router = router;
-module.exports.startServer = function() {
+module.exports.startServer = function () {
     return app.listen(3000);
 };
-module.exports.stopServer = function(server) {
+module.exports.stopServer = function (server) {
     return new Promise((resolve) => {
         server.close(() => {
             resolve();
