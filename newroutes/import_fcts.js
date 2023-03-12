@@ -15,9 +15,20 @@ module.exports = function(router) {
         // Title
 	col.title = "Importar FCTs de SAO";
         
+        // Type
+        col.type = "template";
+
         // href
 	col.href = router.url('import_fcts', ctx.params);
-        
+
+        // Links
+        col.links = [
+            ctx.buildLink('fcts', 'Listado de FCTs', {}, { curso: c, periodo: p }),
+            ctx.buildLink('import_fcts', 'Importar FCTs'),
+            ctx.buildLink('fm34s', 'FM34s'),
+            ctx.buildLink('documentacion', 'Documentación', {}, { curso: c, periodo: p }),
+        ];
+
 	// Template
 	var data = [];
 	
@@ -25,6 +36,7 @@ module.exports = function(router) {
 	    prompt: "Introduzca el curso que desea importar",
 	    name: "curso",
             type: "select",
+            value: cps.getCursoActual(),
             suggest: "cursos"
 	};
 
@@ -32,6 +44,7 @@ module.exports = function(router) {
 	    prompt: "Introduzca el período que desea importar",
 	    name: "periodo",
             type: "select",
+            value: cps.getPeriodoActual(),
             suggest: "periodos",
 	};
 	
@@ -100,12 +113,6 @@ module.exports = function(router) {
                 // href
 	        col.href = router.url('fcts', ctx.params);
 
-		// Collection Links
-		// var l = req.buildLink('fcts');
-		// l.href += "?curso=" + curso + "&periodo=" + periodo;
-		// col.links.push(req.buildLink('type_mensajes'));
-		
-		// col.links.push(l);
 		var item = {};
 		item.data = [];
 		var d = {};
@@ -121,8 +128,5 @@ module.exports = function(router) {
                 return next();
                 
 	    })
-	    .catch(error => {
-                console.log(error);
-            });
     });
 }
