@@ -63,6 +63,11 @@ module.exports = function(router) {
 	var p_actual = cps.getPeriodoActual();
 	col.queries = [];
 	// TODO: queda pendiente problema con valores actuales cuando campos vacíos
+
+        col.related = {};
+        col.related.periodos = cps.getperiodoslist();
+        col.related.cursos = cps.getcursoslist();
+
 	col.queries.push(
 	    {
 	        href: router.url('fcts', ctx.params),
@@ -79,13 +84,15 @@ module.exports = function(router) {
 			name: "curso",
 			value: (typeof ctx.request.query.curso!== 'undefined' && ctx.request.query.curso !== "") ? ctx.request.query.curso : c_actual,
 			prompt: "Curso",
-			options: cps.getcursoslist()
+                        type: "select",
+			suggest: 'cursos'
 		    },
 		    {
 			name: "periodo",
 			value: (typeof ctx.request.query.periodo!== 'undefined' && ctx.request.query.periodo !== "") ? ctx.request.query.periodo : p_actual,
 			prompt: "Período",
-			options: cps.getperiodoslist()
+                        type: "select",
+			suggest: 'periodos'
 		    }
 		    
 		]
