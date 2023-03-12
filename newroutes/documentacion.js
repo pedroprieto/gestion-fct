@@ -35,6 +35,7 @@ module.exports = function(router) {
 
         d1 = ctx.buildLink('docs_fct', 'Certificados de alumnado', {doc_name: 'cert_alumno' }, {curso: c, periodo: p}),
 	item.links.push(d1);
+        item.readOnly = true;
 	col.items.push(item);
 
 	item = {};
@@ -47,6 +48,7 @@ module.exports = function(router) {
 	item.links = [];
         d1 = ctx.buildLink('docs_fct', 'Certificados de instructor', {doc_name: 'cert_instructor'}, {curso: c, periodo: p}),
 	item.links.push(d1);
+        item.readOnly = true;
 	col.items.push(item);
 
 	item = {};
@@ -59,6 +61,7 @@ module.exports = function(router) {
 	item.links = [];
         d1 = ctx.buildLink('docs_fct', 'FM18s', {doc_name: 'fm18'}, {curso: c, periodo: p}),
 	item.links.push(d1);
+        item.readOnly = true;
 	col.items.push(item);
 
 	item = {};
@@ -71,6 +74,7 @@ module.exports = function(router) {
 	item.links = [];
         d1 = ctx.buildLink('docs_fct', 'Etiquetas', {doc_name: 'etiqueta'}, {curso: c, periodo: p}),
 	item.links.push(d1);
+        item.readOnly = true;
 	col.items.push(item);
         
 	// Queries
