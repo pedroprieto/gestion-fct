@@ -84,7 +84,6 @@ describe('Crear Visita en FCT', function () {
             res = await request(url, {method: 'POST', data: testTemplateVisitInicial});
             expect(res.status).to.equal(201);
         } catch(error) {
-            console.log(error.response.status);
             expect(error).to.not.exist;
         }
     });
