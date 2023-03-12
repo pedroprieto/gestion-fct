@@ -75,4 +75,8 @@ describe('Crear FCT', function () {
         expect((await FCT.getFCTSByUsuarioCursoPeriodo(userName, cursoTest, periodoTest)).length).to.equal(0);
         await app.stopServer(server);
     });
+    afterEach(async function () {
+        if (server)
+            await app.stopServer(server);
+  });
 });
