@@ -30,10 +30,10 @@ module.exports = {
         fecha_fin: "2023-06-30",
         horas: 400
     },
-    visit_test: {
+    testVisit: {
         template: {
             data: [
-                { name: "tipo", value: "inicial" },
+                { name: "tipo", value: "otra" },
                 { name: "distancia", value: "30" },
                 { name: "fecha", value: new Date().toString() },
                 { name: "hora_salida", value: "11:00" },

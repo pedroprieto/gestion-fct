@@ -8,10 +8,12 @@ let users = [
 ];
 
 let fcts = [];
+let visits = [];
 
 module.exports = {
     async clearDB() {
         fcts = [];
+        visits = [];
     },
     async getUser(username) {
         return users.find(user => user.name == username);
@@ -32,7 +34,11 @@ module.exports = {
         return fcts.filter(fct => {
             return (fct.usuario == userName) && (fct.curso == curso) && (periodos.includes(fct.periodo));
         });
-
+    },
+    async getFCTSByUsuarioCursoPeriodoEmpresa(userName, curso, periodos, empresa) {
+        return fcts.filter(fct => {
+            return (fct.usuario == userName) && (fct.curso == curso) && (periodos.includes(fct.periodo)) && (fct.empresa == empresa);
+        });
     },
     async saveFCT(fct) {
         let foundFCT = fcts.find(f => (f.alumno == fct.alumno) && (f.empresa == fct.empresa));
@@ -50,7 +56,19 @@ module.exports = {
     async deleteFCT(FCTId) {
         fcts = fcts.filter(f => f.id != FCTId);
     },
+    async deleteVisit(visitId) {
+        visits = visits.filter(v => v.id != visitId);
+    },
     async getFCTById(id) {
         return fcts.find(fct => fct.id == id);
+    },
+    async getVisitasByFCTId(fctId) {
+        return visits.filter(visit => visit.fctId == fctId);
+    },
+    async saveVisit(visitData) {
+        visits.push({
+            ...visitData,
+            id: uuidv4()
+        });
     },
 }

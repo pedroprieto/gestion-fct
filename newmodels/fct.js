@@ -15,7 +15,7 @@ async function getFCTSByUsuarioCursoPeriodo(userName, curso, periodo) {
 
 let createFCT = function (FCTdata, userName) {
     let d = Object.create(FCT);
-    d = Object.assign(d, FCTdata, { usuario: userName });
+    d = Object.assign(d, FCTdata, { usuario: userName, visitas:[] });
     return d;
 };
 
@@ -25,12 +25,40 @@ let getFCTById = async function(id) {
     return Object.assign(fct, fctData);
 }
 
+let getFCTConVisitasById = async function(fctId) {
+    let fctData = await db.getFCTById(fctId);
+    let fct = Object.create(FCT);
+    fct = Object.assign(fct, fctData);
+    fct.visitas = await db.getVisitasByFCTId(fctId);
+    console.log(fct.visitas);
+    return fct;
+}
+
+FCT.getFCTsMismaEmpresa = async function() {
+    let fctlist = await db.getFCTSByUsuarioCursoPeriodoEmpresa(this.usuario, this.curso, this.periodo, this.empresa);
+    return fctlist.map(fct => {
+        return createFCT(fct, this.usuario);
+    });
+}
+
 FCT.save = async function () {
     await db.saveFCT(this);
 }
 
+FCT.saveVisit = async function (visitData) {
+    await db.saveVisit({...visitData, fctId: this.id});
+}
+
 FCT.delete = async function () {
     await db.deleteFCT(this.id);
+}
+
+FCT.deleteVisits = async function () {
+    let promises = [];
+    for (let v of this.visitas) {
+        promises.push(db.deleteVisit(v.id));
+    }
+    return Promise.all(promises);
 }
 
 FCT.showFechaInicio = function () {
@@ -53,8 +81,51 @@ FCT.dataToCJ = function () {
     ];
 }
 
+FCT.visitToCJ = function (visitData) {
+    return [
+        { name: 'tipo', prompt: 'Tipo', value: visitData.tipo, type: 'hidden' },
+        { name: 'distancia', prompt: 'Distancia', value: visitData.distancia || 0, type: 'number' },
+        { name: 'fecha', prompt: 'Fecha', value: new Date(visitData.fecha).toLocaleDateString('es'), type: 'text' },
+        { name: 'salida', prompt: 'Salida', value: visitData.salida, type: 'time' },
+        { name: 'regreso', prompt: 'Regreso', value: visitData.regreso, type: 'time' },
+        { name: 'localidad', prompt: 'Localidad', value: visitData.localidad, type: 'text' },
+        { name: 'impresion', prompt: 'Impresión', value: visitData.impresion, type: 'textarea' },
+        { name: 'presencial', prompt: 'Presencial', value: visitData.presencial ? 'Sí' : 'No', type: 'text' },
+    ];
+}
+
+FCT.genTemplateVisit = function(tipo, related) {
+    let template = {
+            data: [
+                { name: 'tipo', prompt: 'Tipo', value: tipo, type: 'hidden' },
+                { name: 'distancia', prompt: 'Distancia', value: this.distancia || 0, type: 'number' },
+                { name: 'fecha', prompt: 'Fecha', value: new Date().toISOString(), type: 'date' },
+                { name: 'salida', prompt: 'Salida', value: undefined, type: 'time' },
+                { name: 'regreso', prompt: 'Regreso', value: undefined, type: 'time' },
+                { name: 'localidad', prompt: 'Localidad', value: this.localidad, type: 'text' },
+                { name: 'impresion', prompt: 'Impresión', value: '', type: 'textarea' },
+                { name: 'presencial', prompt: 'Presencial', value: tipo == 'otra' ? false : true, type: 'checkbox' },
+            ]
+    };
+
+    // Añadimos FCTs relacionadas en el campo 'related' de la plantilla
+    if ((typeof related) && (related.length > 0)) {
+	for (let fct of related) {
+	    template.data.push({
+		name : `related-${fct.id}`,
+		value : true,
+		prompt : `${fct.empresa}-${fct.alumno}`,
+                type: 'checkbox'
+	    });
+	}
+    }
+
+    return template;
+}
+
 module.exports = {
     createFCT,
     getFCTById,
+    getFCTConVisitasById,
     getFCTSByUsuarioCursoPeriodo,
 }
