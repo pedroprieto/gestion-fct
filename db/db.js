@@ -62,6 +62,9 @@ module.exports = {
     async getFCTById(id) {
         return fcts.find(fct => fct.id == id);
     },
+    async getVisitById(id) {
+        return visits.find(v=> v.id == id);
+    },
     async getVisitasByFCTId(fctId) {
         return visits.filter(visit => visit.fctId == fctId);
     },

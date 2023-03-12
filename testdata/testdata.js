@@ -30,7 +30,7 @@ module.exports = {
         fecha_fin: "2023-06-30",
         horas: 400
     },
-    testVisit: {
+    testTemplateVisit: {
         template: {
             data: [
                 { name: "tipo", value: "otra" },
@@ -43,5 +43,19 @@ module.exports = {
                 { name: "presencial", value: "true" }
             ]
         }
-    }
+    },
+    testTemplateVisitInicial: {
+        template: {
+            data: [
+                { name: "tipo", value: "inicial" },
+                { name: "distancia", value: "30" },
+                { name: "fecha", value: new Date().toString() },
+                { name: "hora_salida", value: "11:00" },
+                { name: "hora_regreso", value: "12:00" },
+                { name: "localidad", value: "Localidad test" },
+                { name: "impresion", value: "Impresión de la visita test" },
+                { name: "presencial", value: "true" }
+            ]
+        }
+    },
 }

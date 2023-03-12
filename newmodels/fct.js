@@ -25,6 +25,10 @@ let getFCTById = async function(id) {
     return Object.assign(fct, fctData);
 }
 
+let getVisitById = async function(visitId) {
+    return await db.getVisitById(visitId);
+}
+
 let getFCTConVisitasById = async function(fctId) {
     let fctData = await db.getFCTById(fctId);
     let fct = Object.create(FCT);
@@ -126,6 +130,7 @@ FCT.genTemplateVisit = function(tipo, related) {
 module.exports = {
     createFCT,
     getFCTById,
+    getVisitById,
     getFCTConVisitasById,
     getFCTSByUsuarioCursoPeriodo,
 }

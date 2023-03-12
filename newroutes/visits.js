@@ -88,7 +88,6 @@ module.exports = function (router) {
 
         // Template para creación
         let related_fcts = await fct.getFCTsMismaEmpresa();
-        console.log(related_fcts);
 
         // Quitamos la fct actual y las relacionadas si ya tienen una visita de tipo distinto de 'otra' que coincida con el tipo de visita que estemos creando
         related_fcts = related_fcts.filter(function (fct) {
@@ -115,8 +114,11 @@ module.exports = function (router) {
 
         let fct = await FCT.getFCTById(ctx.params.fct);
 
-        if ((visitData.tipo != 'otra') && (fct[visitData.tipo]))
-            throw new Error(`No se pueden crear más visitas de tipo ${datos.tipo}`);
+        if ((visitData.tipo != 'otra') && (fct[visitData.tipo])) {
+            let err = new Error(`No se pueden crear más visitas de tipo ${visitData.tipo}`);
+            err.status = 400;
+            throw err;
+        }
 
         // Si no se envía el campo 'presencial', se considera que es 'false'
         visitData.presencial = visitData.presencial || false;
@@ -165,6 +167,10 @@ module.exports = function (router) {
     });
 
     router.delete('visit', '/api/users/:user/fcts/items/:fct/visits/item/:visit', async (ctx, next) => {
+        let fct = await FCT.getFCTById(ctx.params.fct);
+        let visita = await FCT.getVisitById(ctx.params.visit);
+        fct[visita.tipo] = false;
+        await fct.save();
         await db.deleteVisit(ctx.params.visit);
         ctx.status = 200;
         return next();
