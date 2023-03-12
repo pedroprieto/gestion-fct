@@ -161,4 +161,12 @@ module.exports = function(router) {
                                  
         ctx.body = {collection: col};
     });
+
+    router.delete('fct', '/api/users/:user/fcts/items/:fct', async (ctx, next) => {
+        let fct = await FCT.getFCTConVisitasById(ctx.params.fct);
+        await fct.deleteVisits();
+        await fct.delete();
+        ctx.status = 200;
+        return next();
+    });
 }

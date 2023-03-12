@@ -30,7 +30,7 @@ FCT.save = async function () {
 }
 
 FCT.delete = async function () {
-    await db.deleteFCT(this);
+    await db.deleteFCT(this.id);
 }
 
 FCT.showFechaInicio = function () {
