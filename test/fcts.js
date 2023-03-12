@@ -58,9 +58,10 @@ describe('Crear FCT', function () {
         expect(res.data.collection.items[0].data[0].name).to.not.equal('mensaje');
         expect(res.data.collection.items[0].data.find(d => d.name == 'empresa').value).to.equal(testFCT.empresa);
         expect(res.data.collection.items[0].links.length).to.equal(5);
+        await app.stopServer(server);
     });
 
-    it.only('Borrar FCT en API', async function () {
+    it('Borrar FCT en API', async function () {
         db.clearDB();
         let fct = FCT.createFCT(testFCT, userName);
         await fct.save();
@@ -72,10 +73,6 @@ describe('Crear FCT', function () {
         expect(res.status).to.equal(200);
 
         expect((await FCT.getFCTSByUsuarioCursoPeriodo(userName, cursoTest, periodoTest)).length).to.equal(0);
-    });
-
-    after(async function () {
-        // Cerrar servidor
         await app.stopServer(server);
     });
 });
