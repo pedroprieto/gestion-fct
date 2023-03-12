@@ -19,7 +19,7 @@
     "uuid": "^9.0.0"
   },
   "scripts": {
-    "start": "node fct.js",
+    "start": "node start_app.js",
     "test": "NODE_ENV=test mocha"
   },
   "devDependencies": {

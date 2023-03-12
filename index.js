@@ -96,8 +96,16 @@ app
     .use(router.routes())
     .use(router.allowedMethods());
 
-// Start server and export for testing
-var server = module.exports.server = app.listen(3000);
-
 // export app for testing
 module.exports.app = app;
+module.exports.router = router;
+module.exports.startServer = function() {
+    return app.listen(3000);
+};
+module.exports.stopServer = function(server) {
+    return new Promise((resolve) => {
+        server.close(() => {
+            resolve();
+        });
+    });
+}
