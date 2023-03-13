@@ -107,7 +107,6 @@ module.exports = function (router) {
         return next();
     });
 
-    // GET - Templates para crear visitas     
     router.post('/api/users/:user/fcts/items/:fct/visits', async (ctx, next) => {
 
         var visitData = ctx.parseCJTemplate();

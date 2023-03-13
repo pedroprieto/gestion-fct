@@ -40,7 +40,7 @@ module.exports = {
                 { name: "hora_regreso", value: "12:00" },
                 { name: "localidad", value: "Localidad test" },
                 { name: "impresion", value: "Impresión de la visita test" },
-                { name: "presencial", value: "true" }
+                { name: "presencial", value: true }
             ]
         }
     },
@@ -54,7 +54,7 @@ module.exports = {
                 { name: "hora_regreso", value: "12:00" },
                 { name: "localidad", value: "Localidad test" },
                 { name: "impresion", value: "Impresión de la visita test" },
-                { name: "presencial", value: "true" }
+                { name: "presencial", value: true }
             ]
         }
     },
