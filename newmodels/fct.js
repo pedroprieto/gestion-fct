@@ -29,6 +29,10 @@ let getVisitById = async function(visitId) {
     return await db.getVisitById(visitId);
 }
 
+let updateVisit = async function(visitData) {
+    return await db.updateVisit(visitData);
+}
+
 let getFCTConVisitasById = async function(fctId) {
     let fctData = await db.getFCTById(fctId);
     let fct = Object.create(FCT);
@@ -131,6 +135,7 @@ module.exports = {
     createFCT,
     getFCTById,
     getVisitById,
+    updateVisit,
     getFCTConVisitasById,
     getFCTSByUsuarioCursoPeriodo,
 }

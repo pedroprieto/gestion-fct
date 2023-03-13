@@ -132,6 +132,36 @@ describe('Crear Visita en FCT', function () {
         expect(fctWithVisits2.visitas.length).to.equal(0);
     });
 
+    it('Actualización de visitas', async function () {
+        db.clearDB();
+        let fct = FCT.createFCT(testFCT, userName);
+        await fct.save();
+
+        let fcts = await FCT.getFCTSByUsuarioCursoPeriodo(userName, cursoTest, periodoTest);
+        let url = app.router.url('visits', { user: userName, fct: fcts[0].id });
+
+        server = app.startServer();
+        let res = await request(url, { method: 'POST', data: testTemplateVisitInicial });
+
+        let fctWithVisits = await FCT.getFCTConVisitasById(fcts[0].id);
+        let valor = testTemplateVisit.template.data[5].value;
+        expect(fctWithVisits.visitas.length).to.equal(1);
+        expect(fctWithVisits.visitas[0].localidad).to.equal(valor);
+
+        url = app.router.url('visit', { user: userName, fct: fcts[0].id, visit: fctWithVisits.visitas[0].id });
+
+        let newVisitData = JSON.parse(JSON.stringify(testTemplateVisitInicial));
+        let nuevoValor = "Nueva localidad";
+        newVisitData.template.data[5].value = nuevoValor;
+        res = await request(url, { method: 'PUT', data: newVisitData });
+        expect(res.status).to.equal(200);
+
+        fctWithVisits = await FCT.getFCTConVisitasById(fcts[0].id);
+        expect(fctWithVisits.visitas.length).to.equal(1);
+        expect(fctWithVisits.visitas[0].localidad).to.equal(nuevoValor);
+
+    });
+
     afterEach(async function () {
         if (server)
             await app.stopServer(server);

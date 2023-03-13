@@ -74,4 +74,9 @@ module.exports = {
             id: uuidv4()
         });
     },
+    async updateVisit(visitData) {
+        let foundVisit = visits.find(v => v.id == visitData.id);
+        foundVisit = Object.assign(foundVisit, visitData);
+        console.log(foundVisit);
+    },
 }

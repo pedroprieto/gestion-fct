@@ -174,4 +174,14 @@ module.exports = function (router) {
         ctx.status = 200;
         return next();
     });
+
+    router.put('/api/users/:user/fcts/items/:fct/visits/item/:visit', async (ctx, next) => {
+        var visitData = ctx.parseCJTemplate();
+        visitData.id = ctx.params.visit;
+        visitData.fctId = ctx.params.fct;
+        delete visitData.tipo;
+        await FCT.updateVisit(visitData);
+        ctx.status = 200;
+        return next();
+    });
 }
