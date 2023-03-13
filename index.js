@@ -79,6 +79,7 @@ app.use(async (ctx, next) => {
             err_col.message = err.message;
 
             ctx.body.collection.error = err_col;
+            console.log(err);
         }
         // ctx.app.emit('error', err, ctx);
     }
@@ -91,6 +92,7 @@ require('./newroutes/visits')(router);
 require('./newroutes/import_fcts')(router);
 require('./newroutes/documentacion')(router);
 require('./newroutes/certificados')(router);
+require('./newroutes/fm34s')(router);
 
 
 app

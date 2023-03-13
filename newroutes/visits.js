@@ -128,6 +128,10 @@ module.exports = function (router) {
         // Añadimos la empresa (no está puesta en el template)
         visitData.empresa = fct.empresa;
 
+        // Añadimos ciclo y tutor
+        visitData.ciclo = fct.ciclo;
+        visitData.tutor = fct.tutor;
+
         // Comprobamos si se quieren crear visitas relacionadas
         // Las propiedades 'related-ID' indican, con valor booleano, si se quiere crear
         // una visita en la FCT con identificador ID relacionada
@@ -141,7 +145,6 @@ module.exports = function (router) {
 
         // Añadimos la FCT actual
         list_fcts.push(ctx.params.fct);
-        console.log(list_fcts);
 
         let fcts = await FCT.getFCTSByUsuarioCursoPeriodo(ctx.state.user.name, fct.curso, fct.periodo);
         fcts = fcts.filter(fct => {

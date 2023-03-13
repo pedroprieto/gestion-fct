@@ -65,6 +65,15 @@ module.exports = {
     async getVisitById(id) {
         return visits.find(v=> v.id == id);
     },
+    async getVisitsByUserFromTo(userName, start, end) {
+        return visits.filter(visit => {
+            let cond = (visit.usuario == userName) && (new Date(visit.fecha) >= start);
+            if (end) {
+                cond = cond && (new Date(visit.fecha) <= end);
+            }
+            return cond;
+        });
+    },
     async getVisitasByFCTId(fctId) {
         return visits.filter(visit => visit.fctId == fctId);
     },
@@ -77,6 +86,5 @@ module.exports = {
     async updateVisit(visitData) {
         let foundVisit = visits.find(v => v.id == visitData.id);
         foundVisit = Object.assign(foundVisit, visitData);
-        console.log(foundVisit);
     },
 }

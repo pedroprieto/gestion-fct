@@ -29,6 +29,10 @@ let getVisitById = async function(visitId) {
     return await db.getVisitById(visitId);
 }
 
+let getVisitsByUserFromTo = async function(username, start, end) {
+    return await db.getVisitsByUserFromTo(username, start, end);
+}
+
 let updateVisit = async function(visitData) {
     return await db.updateVisit(visitData);
 }
@@ -38,7 +42,6 @@ let getFCTConVisitasById = async function(fctId) {
     let fct = Object.create(FCT);
     fct = Object.assign(fct, fctData);
     fct.visitas = await db.getVisitasByFCTId(fctId);
-    console.log(fct.visitas);
     return fct;
 }
 
@@ -135,6 +138,7 @@ module.exports = {
     createFCT,
     getFCTById,
     getVisitById,
+    getVisitsByUserFromTo,
     updateVisit,
     getFCTConVisitasById,
     getFCTSByUsuarioCursoPeriodo,

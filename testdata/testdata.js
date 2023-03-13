@@ -35,7 +35,7 @@ module.exports = {
             data: [
                 { name: "tipo", value: "otra" },
                 { name: "distancia", value: "30" },
-                { name: "fecha", value: new Date().toString() },
+                { name: "fecha", value: new Date().toISOString() },
                 { name: "hora_salida", value: "11:00" },
                 { name: "hora_regreso", value: "12:00" },
                 { name: "localidad", value: "Localidad test" },
@@ -49,7 +49,7 @@ module.exports = {
             data: [
                 { name: "tipo", value: "inicial" },
                 { name: "distancia", value: "30" },
-                { name: "fecha", value: new Date().toString() },
+                { name: "fecha", value: new Date().toISOString() },
                 { name: "hora_salida", value: "11:00" },
                 { name: "hora_regreso", value: "12:00" },
                 { name: "localidad", value: "Localidad test" },
