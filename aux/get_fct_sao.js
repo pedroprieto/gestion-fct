@@ -25,8 +25,8 @@ module.exports = function (data, idFCT) {
             var finicio_part = fecha_inicio.split("/");
             var ffin_part = fecha_fin.split("/");
 
-            fecha_inicio = new Date(finicio_part[2], (finicio_part[1] - 1), finicio_part[0]);
-            fecha_fin = new Date(ffin_part[2], (ffin_part[1] - 1), ffin_part[0]);
+            fecha_inicio = new Date(finicio_part[2], (finicio_part[1] - 1), finicio_part[0]).toISOString();
+            fecha_fin = new Date(ffin_part[2], (ffin_part[1] - 1), ffin_part[0]).toISOString();
 
             var datos_alumno = $('#celdaDatosAlumno td');
             var datos_empresa = $('#celdaDatosEmpresa td');

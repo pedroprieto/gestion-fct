@@ -6,6 +6,7 @@ require("./auth/auth.js");
 const CJUtils = require('./aux/CJUtils.js');
 const render = require("@koa/ejs");
 const path = require("path");
+const cors = require("@koa/cors");
 
 
 // Timezone para UTC y que no haya problemas con fechas
@@ -13,6 +14,7 @@ process.env.TZ = 'UTC';
 
 const app = new Koa();
 app.use(koaBody());
+app.use(cors());
 render(app, {
     layout: false,
     root: path.join(__dirname, "views"),
