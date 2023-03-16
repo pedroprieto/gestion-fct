@@ -1,4 +1,4 @@
-const FCT = require("../models/fct");
+const FCT = require("../db/db_dynamo");
 var auth_sao = require('../auth/auth_sao');
 var get_fcts_sao = require('../aux/get_fcts_sao');
 var detallesFCT = require('../aux/get_fct_sao');

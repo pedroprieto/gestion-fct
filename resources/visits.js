@@ -1,4 +1,4 @@
-const FCT = require("../models/fct");
+const FCT = require("../db/db_dynamo");
 
 module.exports = function (router) {
     router.post('visits', '/api/users/:user/fcts/items/:fct/visits', async (ctx, next) => {
@@ -22,7 +22,7 @@ module.exports = function (router) {
     });
 
     router.delete('visit', '/api/users/:user/fcts/items/:fct/visits/item/:visit', async (ctx, next) => {
-        await FCT.deleteVisita(ctx.params.visit);
+        await FCT.deleteItem(ctx.params.visit);
         ctx.status = 200;
         return next();
     });

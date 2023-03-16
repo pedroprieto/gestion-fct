@@ -12,7 +12,7 @@ async function getItemsByFCTId(fctId) {
         var params = {
             ExpressionAttributeValues: {
                 ':usuCursoPeriodo': usuCursoPeriodo,
-                ':SK': SK.substring(0, SK.length-4)
+                ':SK': SK.substring(0, SK.length - 4)
             },
             TableName: process.env.table,
             KeyConditionExpression: 'usuCursoPeriodo= :usuCursoPeriodo and begins_with(SK, :SK)'
@@ -20,13 +20,15 @@ async function getItemsByFCTId(fctId) {
 
         var response = await ddb.query(params).promise();
         return response.Items || [];
+
+
     } catch (e) {
         console.log(e);
         throw new Error("Error al buscar los items");
     }
 }
 
-async function getFCTsByUsuariorCursoPeriodo (usuario, curso, periodo) {
+async function getFCTsByUsuarioCursoPeriodo(usuario, curso, periodo) {
     try {
         var params = {
             ExpressionAttributeValues: {
@@ -37,7 +39,27 @@ async function getFCTsByUsuariorCursoPeriodo (usuario, curso, periodo) {
         };
 
         var response = await ddb.query(params).promise();
-        return response.Items || [];
+        return (response.Items || []).map(item => {
+            let it = {};
+            let [usuario, curso, periodo] = item.usuCursoPeriodo.split('_');
+            let [nif_alumno, empresa, type, visita_tipo] = item.SK.split('_');
+            // item.usuario = usuario
+            it.id = item.usuCursoPeriodo + "*" + item.SK;
+            it.type = type;
+            it = Object.assign(it, item);
+            it.empresa = empresa;
+            if (type == "FCT") {
+                it.curso = curso;
+                it.periodo = periodo;
+                it.nif_alumno = nif_alumno;
+            } else {
+                it.tipo = visita_tipo;
+                it.fctId = `${item.usuCursoPeriodo}*${nif_alumno}_${empresa}_FCT`;
+            }
+            delete it.usuCursoPeriodo;
+            delete it.SK;
+            return it;
+        });
     } catch (e) {
         throw new Error("Error al buscar las FCTs");
     }
@@ -58,12 +80,12 @@ function addFCT(usuario, curso, periodo, fctData) {
 }
 
 
-function deleteFCT(fctId) {
+async function deleteFCT(fctId) {
     let items = await getItemsByFCTId(fctId);
     let promesas = [];
 
     for (let item of items) {
-        promesas.push(db.deleteItem(item.usuCursoPeriodo + "*" + item.SK));
+        promesas.push(deleteItem(item.usuCursoPeriodo + "*" + item.SK));
     }
     return Promise.all(promesas)
 };
@@ -85,7 +107,7 @@ function addVisita(usuario, fctId, visitData) {
     let v = {};
 
     let keys = fctId.split('*');
-    let fctKey = keys[1].substring(0, keys[1].length-4);
+    let fctKey = keys[1].substring(0, keys[1].length - 4);
     let it = {};
     it.usuCursoPeriodo = keys[0];
 
@@ -138,6 +160,6 @@ module.exports = {
     deleteFCT,
     updateVisita,
     addVisita,
-    getFCTsByUsuariorCursoPeriodo,
+    getFCTsByUsuarioCursoPeriodo,
     getItemsByFCTId
 }

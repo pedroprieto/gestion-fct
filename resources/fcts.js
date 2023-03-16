@@ -1,5 +1,5 @@
 var cps = require('../aux/cursoperiodofct');
-const FCT = require("../models/fct");
+const FCT = require("../db/db_dynamo");
 
 module.exports = function(router) {
     router.get('fcts', '/api/users/:user/fcts', async (ctx, next) => {
@@ -10,7 +10,7 @@ module.exports = function(router) {
 	//col.href = router.url('fcts', ctx.params);
         
         // FCTs
-        let fcts = await FCT.getFCTSByUsuarioCursoPeriodo(ctx.state.user.name, c, p); 
+        let fcts = await FCT.getFCTsByUsuarioCursoPeriodo(ctx.state.user.name, c, p);
         ctx.body = fcts;
 
         return next();
@@ -21,6 +21,7 @@ module.exports = function(router) {
         try {
             await FCT.deleteFCT(ctx.params.fct);
         } catch (error) {
+            console.log(error);
             throw new Error("Error al borrar la FCT.");
         }
         ctx.status = 200;
