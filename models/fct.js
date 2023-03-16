@@ -12,14 +12,13 @@ async function getFCTSByUsuarioCursoPeriodo(userName, curso, periodo) {
         it.id = item.usuCursoPeriodo + "*" + item.SK;
         it.type = type;
         it = Object.assign(it, item);
+        it.empresa = empresa;
         if (type == "FCT") {
             it.curso = curso;
             it.periodo = periodo;
             it.nif_alumno = nif_alumno;
-            it.empresa = empresa;
         } else {
             it.tipo = visita_tipo;
-            it.empresa = empresa;
             it.fctId = `${item.usuCursoPeriodo}*${nif_alumno}_${empresa}_FCT`;
         }
         delete it.usuCursoPeriodo;
@@ -29,16 +28,9 @@ async function getFCTSByUsuarioCursoPeriodo(userName, curso, periodo) {
 }
 
 async function deleteFCT(fctId) {
-    let items = await db.getItemsByFCTId(fctId);
-    let promesas = [];
-
-    for (let item of items) {
-        promesas.push(db.deleteItem(item.usuCursoPeriodo + "*" + item.SK));
-    }
-
-    return Promise.all(promesas).then(res => {
-    });
+    return db.deleteFCT(fctId);
 }
+
 function addFCT(userName, curso, periodo, fct) {
     return db.addFCT(userName, curso, periodo, fct);
 }

@@ -43,22 +43,33 @@ async function getFCTsByUsuariorCursoPeriodo (usuario, curso, periodo) {
     }
 }
 
-function addFCT(usuario, curso, periodo, fct) {
-        let f = {};
-        f.usuCursoPeriodo = `${usuario}_${curso}_${periodo}`;
-        f.SK = `${fct.nif_alumno}_${fct.empresa}_FCT`;
-        const campos = (({ tutor, ciclo, dir_empresa, localidad, instructor, nif_instructor, alumno, grupo, fecha_inicio, fecha_fin, horas, distancia }) => ({ tutor, ciclo, dir_empresa, localidad, instructor, nif_instructor, alumno, grupo, fecha_inicio, fecha_fin, horas, distancia }))(fct);
-        f = Object.assign(f, campos);
+function addFCT(usuario, curso, periodo, fctData) {
+    let f = {};
+    f.usuCursoPeriodo = `${usuario}_${curso}_${periodo}`;
+    f.SK = `${fctData.nif_alumno}_${fctData.empresa}_FCT`;
+    const campos = (({ tutor, ciclo, dir_empresa, localidad, instructor, nif_instructor, alumno, grupo, fecha_inicio, fecha_fin, horas, distancia }) => ({ tutor, ciclo, dir_empresa, localidad, instructor, nif_instructor, alumno, grupo, fecha_inicio, fecha_fin, horas, distancia }))(fctData);
+    f = Object.assign(f, campos);
 
-        var params = {
-            Item: f,
-            TableName: process.env.table,
-        };
-        return ddb.put(params).promise();
+    var params = {
+        Item: f,
+        TableName: process.env.table,
+    };
+    return ddb.put(params).promise();
 }
 
+
+function deleteFCT(fctId) {
+    let items = await getItemsByFCTId(fctId);
+    let promesas = [];
+
+    for (let item of items) {
+        promesas.push(db.deleteItem(item.usuCursoPeriodo + "*" + item.SK));
+    }
+    return Promise.all(promesas)
+};
+
 function deleteItem(itemId) {
-        let f = {};
+    let f = {};
     let keys = itemId.split('*');
     f.usuCursoPeriodo = keys[0];
     f.SK = keys[1];
@@ -124,6 +135,7 @@ function updateVisita(visita) {
 module.exports = {
     addFCT,
     deleteItem,
+    deleteFCT,
     updateVisita,
     addVisita,
     getFCTsByUsuariorCursoPeriodo,
