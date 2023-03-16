@@ -7,18 +7,21 @@ async function getItemsByFCTId(fctId) {
     try {
         let keys = fctId.split('*');
         let usuCursoPeriodo = keys[0];
+        let SK = keys[1];
 
         var params = {
             ExpressionAttributeValues: {
-                ':usuCursoPeriodo': usuCursoPeriodo
+                ':usuCursoPeriodo': usuCursoPeriodo,
+                ':SK': SK.substring(0, SK.length-4)
             },
             TableName: process.env.table,
-            KeyConditionExpression: 'usuCursoPeriodo= :usuCursoPeriodo'
+            KeyConditionExpression: 'usuCursoPeriodo= :usuCursoPeriodo and begins_with(SK, :SK)'
         };
 
         var response = await ddb.query(params).promise();
         return response.Items || [];
     } catch (e) {
+        console.log(e);
         throw new Error("Error al buscar los items");
     }
 }
@@ -43,7 +46,7 @@ async function getFCTsByUsuariorCursoPeriodo (usuario, curso, periodo) {
 function addFCT(usuario, curso, periodo, fct) {
         let f = {};
         f.usuCursoPeriodo = `${usuario}_${curso}_${periodo}`;
-        f.SK = `FCT_${fct.nif_alumno}_${fct.empresa}`;
+        f.SK = `${fct.nif_alumno}_${fct.empresa}_FCT`;
         const campos = (({ tutor, ciclo, dir_empresa, localidad, instructor, nif_instructor, alumno, grupo, fecha_inicio, fecha_fin, horas, distancia }) => ({ tutor, ciclo, dir_empresa, localidad, instructor, nif_instructor, alumno, grupo, fecha_inicio, fecha_fin, horas, distancia }))(fct);
         f = Object.assign(f, campos);
 
@@ -71,14 +74,14 @@ function addVisita(usuario, fctId, visitData) {
     let v = {};
 
     let keys = fctId.split('*');
-    let fctKey = keys[1].substring(4, keys[1].length);
+    let fctKey = keys[1].substring(0, keys[1].length-4);
     let it = {};
     it.usuCursoPeriodo = keys[0];
 
     let tipo = visitData.tipo;
     if (tipo == 'adicional')
         tipo += `_${uuidv4()}`;
-    it.SK = `VIS_${fctKey}_${tipo}`;
+    it.SK = `${fctKey}_VIS_${tipo}`;
 
 
     it = Object.assign(it, visitData);

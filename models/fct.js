@@ -7,7 +7,7 @@ async function getFCTSByUsuarioCursoPeriodo(userName, curso, periodo) {
     return fctlist.map(item => {
         let it = {};
         let [usuario, curso, periodo] = item.usuCursoPeriodo.split('_');
-        let [type, nif_alumno, empresa, visita_tipo] = item.SK.split('_');
+        let [nif_alumno, empresa, type, visita_tipo] = item.SK.split('_');
         // item.usuario = usuario
         it.id = item.usuCursoPeriodo + "*" + item.SK;
         it.type = type;
@@ -20,7 +20,7 @@ async function getFCTSByUsuarioCursoPeriodo(userName, curso, periodo) {
         } else {
             it.tipo = visita_tipo;
             it.empresa = empresa;
-            it.fctId = `${item.usuCursoPeriodo}*FCT_${nif_alumno}_${empresa}`;
+            it.fctId = `${item.usuCursoPeriodo}*${nif_alumno}_${empresa}_FCT`;
         }
         delete it.usuCursoPeriodo;
         delete it.SK;
@@ -28,7 +28,7 @@ async function getFCTSByUsuarioCursoPeriodo(userName, curso, periodo) {
     });
 }
 
-function deleteFCT(fctId) {
+async function deleteFCT(fctId) {
     let items = await db.getItemsByFCTId(fctId);
     let promesas = [];
 
