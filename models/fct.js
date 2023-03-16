@@ -37,8 +37,6 @@ function deleteFCT(fctId) {
     }
 
     return Promise.all(promesas).then(res => {
-        ctx.status = 200;
-        return next();
     });
 }
 function addFCT(userName, curso, periodo, fct) {
