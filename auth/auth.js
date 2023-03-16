@@ -2,7 +2,7 @@
 const passport = require('koa-passport');
 const BasicStrategy = require('passport-http').BasicStrategy;
 const options = {};
-const Users = require("../newmodels/user");
+const Users = require("../models/user");
 var auth_sao = require('./auth_sao');
 
 passport.use(new BasicStrategy(options, function (username, password, done) {
