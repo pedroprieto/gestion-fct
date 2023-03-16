@@ -10,7 +10,6 @@ module.exports = {
             password: process.env.APP_PASSWORD
         }
     }),
-    userName: "47061241K",
     cursoTest: cursoTest,
     periodoTest: periodoTest,
     testFCT: {
@@ -30,32 +29,14 @@ module.exports = {
         fecha_fin: "2023-06-30",
         horas: 400
     },
-    testTemplateVisit: {
-        template: {
-            data: [
-                { name: "tipo", value: "otra" },
-                { name: "distancia", value: "30" },
-                { name: "fecha", value: new Date().toISOString() },
-                { name: "hora_salida", value: "11:00" },
-                { name: "hora_regreso", value: "12:00" },
-                { name: "localidad", value: "Localidad test" },
-                { name: "impresion", value: "Impresión de la visita test" },
-                { name: "presencial", value: true }
-            ]
-        }
-    },
-    testTemplateVisitInicial: {
-        template: {
-            data: [
-                { name: "tipo", value: "inicial" },
-                { name: "distancia", value: "30" },
-                { name: "fecha", value: new Date().toISOString() },
-                { name: "hora_salida", value: "11:00" },
-                { name: "hora_regreso", value: "12:00" },
-                { name: "localidad", value: "Localidad test" },
-                { name: "impresion", value: "Impresión de la visita test" },
-                { name: "presencial", value: true }
-            ]
-        }
+    testVisit: {
+        tipo: "otra",
+        distancia: 30,
+        fecha: new Date().toISOString(),
+        hora_salida: "11:00",
+        hora_regreso: "12:00",
+        localidad: "Localidad test",
+        impresion: "Impresión de la visita test",
+        presencial: true
     },
 }

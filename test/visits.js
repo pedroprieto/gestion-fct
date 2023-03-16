@@ -1,169 +1,201 @@
 var expect = require('chai').expect;
-var FCT = require('../newmodels/fct');
-var db = require('../db/db');
+var db = require('../db/db_dynamo');
 let app = require('../index');
-let { request, userName, cursoTest, periodoTest, testFCT, testTemplateVisit, testTemplateVisitInicial } = require('../testdata/testdata');
+let { request, userName, cursoTest, periodoTest, testFCT, testVisit } = require('../testdata/testdata');
 
 let server;
 
-describe('Crear Visita en FCT', function () {
+describe('Crear visitas, duplicados y borrar FCT con visitas', function () {
+    it('Crear visitas', async function () {
+        this.timeout(15000);
+        await db.clearTable();
+        await db.addFCT(process.env.APP_USER, cursoTest, periodoTest, testFCT);
 
-    it('Debe crearse la visita en API correctamente', async function () {
-        db.clearDB();
-        let fct = FCT.createFCT(testFCT, userName);
-        await fct.save();
-
-        let fcts = await FCT.getFCTSByUsuarioCursoPeriodo(userName, cursoTest, periodoTest);
-        let url = app.router.url('visits', { user: userName, fct: fcts[0].id });
-
+        let url = app.router.url('fcts', { user: process.env.APP_USER});
         server = app.startServer();
-        let res = await request(url, { method: 'POST', data: testTemplateVisit });
-        expect(res.status).to.equal(201);
 
-        let fctWithVisits = await FCT.getFCTConVisitasById(fcts[0].id);
-        expect(fctWithVisits.visitas.length).to.equal(1);
-    });
+        // Petición a curso-período de la FCT
+        url = app.router.url('fcts', { user: process.env.APP_USER}, { query: { curso: cursoTest, periodo: periodoTest } });
+        res = await request(url);
+        expect(res.data).to.exist;
+        expect(res.data.length).to.equal(1);
+        
+        
+        // Crear visita
+        let urlVisits = res.data[0].hrefVisit;
+        res = await request(urlVisits, {method: 'POST', data: testVisit});
 
-    it('Borrar Visita en API', async function () {
-        db.clearDB();
-        let fct = FCT.createFCT(testFCT, userName);
-        await fct.save();
-
-        let fcts = await FCT.getFCTSByUsuarioCursoPeriodo(userName, cursoTest, periodoTest);
-        let url = app.router.url('visits', { user: userName, fct: fcts[0].id });
-
-        server = app.startServer();
-        let res = await request(url, { method: 'POST', data: testTemplateVisit });
-        expect(res.status).to.equal(201);
-
-        res = await request(url, { method: 'POST', data: testTemplateVisit });
-        expect(res.status).to.equal(201);
-
-        let fctWithVisits = await FCT.getFCTConVisitasById(fcts[0].id);
-        expect(fctWithVisits.visitas.length).to.equal(2);
-
-        url = app.router.url('visit', { user: userName, fct: fcts[0].id, visit: fctWithVisits.visitas[0].id });
-        res = await request(url, { method: 'DELETE' });
-        expect(res.status).to.equal(200);
-
-        fctWithVisits = await FCT.getFCTConVisitasById(fcts[0].id);
-        expect(fctWithVisits.visitas.length).to.equal(1);
-    });
-
-    it('No deben crearse dos visitas del mismo tipo', async function () {
-        db.clearDB();
-        let fct = FCT.createFCT(testFCT, userName);
-        await fct.save();
-
-        let fcts = await FCT.getFCTSByUsuarioCursoPeriodo(userName, cursoTest, periodoTest);
-        let url = app.router.url('visits', { user: userName, fct: fcts[0].id });
-
-        server = app.startServer();
-        let res;
-
+        // Petición a curso-período de la FCT
+        url = app.router.url('fcts', { user: process.env.APP_USER}, { query: { curso: cursoTest, periodo: periodoTest } });
+        res = await request(url);
+        expect(res.data).to.exist;
+        expect(res.data.length).to.equal(2);
+        expect(res.data[0].type).to.equal("FCT");
+        expect(res.data[1].type).to.equal("VIS");
+        let otraVisita = JSON.parse(JSON.stringify(testVisit));
+        
+        // Nueva visita
+        otraVisita.tipo = 'inicial';
+        res = await request(urlVisits, {method: 'POST', data: otraVisita});
+        url = app.router.url('fcts', { user: process.env.APP_USER}, { query: { curso: cursoTest, periodo: periodoTest } });
+        res = await request(url);
+        expect(res.data).to.exist;
+        expect(res.data.length).to.equal(3);
+        
+        // No se deben crear visitas del mismo tipo (inicial)
         try {
-            res = await request(url, { method: 'POST', data: testTemplateVisitInicial });
-            expect(res.status).to.equal(201);
-            res = await request(url, { method: 'POST', data: testTemplateVisitInicial });
+            res = await request(urlVisits, {method: 'POST', data: otraVisita});
+            url = app.router.url('fcts', { user: process.env.APP_USER}, { query: { curso: cursoTest, periodo: periodoTest } });
+            res = await request(url);
+            expect(res).to.not.exist;
         } catch (error) {
             expect(error.response.status).to.equal(400);
         }
+        
+        res = await request(url);
+        expect(res.data).to.exist;
+        expect(res.data.length).to.equal(3);
 
+        // Sí que se debe crear otra visita de tipo adicional
+        otraVisita.tipo = 'adicional';
+        res = await request(urlVisits, {method: 'POST', data: otraVisita});
+        url = app.router.url('fcts', { user: process.env.APP_USER}, { query: { curso: cursoTest, periodo: periodoTest } });
+        res = await request(url);
+        expect(res.data).to.exist;
+        expect(res.data.length).to.equal(4);
+        
+        // // Borrar FCT con visitas
+        url = res.data[0].href;
+        res = await request(url, {method: 'DELETE'});
+        
+        // // Petición a curso-período de la FCT
+        url = app.router.url('fcts', { user: process.env.APP_USER}, { query: { curso: cursoTest, periodo: periodoTest } });
+        res = await request(url);
+        expect(res.data.length).to.equal(0);
+    });
+    
+    it('Borrar Visita en API', async function () {
+        this.timeout(15000);
+        await db.clearTable();
+        
+        await db.addFCT(process.env.APP_USER, cursoTest, periodoTest, testFCT);
+        server = app.startServer();
 
-        let fctWithVisits = await FCT.getFCTConVisitasById(fcts[0].id);
-        expect(fctWithVisits.visitas.length).to.equal(1);
-
-        url = app.router.url('visit', { user: userName, fct: fcts[0].id, visit: fctWithVisits.visitas[0].id });
-        res = await request(url, { method: 'DELETE' });
+        // Petición a curso-período de la FCT
+        let url = app.router.url('fcts', { user: process.env.APP_USER}, { query: { curso: cursoTest, periodo: periodoTest } });
+        res = await request(url);
+        expect(res.data).to.exist;
+        expect(res.data.length).to.equal(1);
+        let fct = res.data[0];
+        
+        // Crear visita
+        let urlVisits = fct.hrefVisit;
+        res = await request(urlVisits, {method: 'POST', data: testVisit});
+        res = await request(url);
+        expect (res.data.length).to.equal(2);
+        let visit = res.data.find(it => it.type == 'VIS');
+        res = await request(visit.href, { method: 'DELETE' });
         expect(res.status).to.equal(200);
-
-        fctWithVisits = await FCT.getFCTConVisitasById(fcts[0].id);
-        expect(fctWithVisits.visitas.length).to.equal(0);
-        try {
-            url = app.router.url('visits', { user: userName, fct: fcts[0].id });
-            res = await request(url, { method: 'POST', data: testTemplateVisitInicial });
-            expect(res.status).to.equal(201);
-        } catch (error) {
-            expect(error).to.not.exist;
-        }
+        res = await request(url);
+        expect(res.data).to.exist;
+        expect(res.data.length).to.equal(1);
+        expect(res.data.find(it => it.type == 'VIS')).to.not.exist;
+        expect(res.data.find(it => it.type == 'FCT')).to.exist;
     });
 
+    it('Actualizar visita en API', async function () {
+        this.timeout(15000);
+        await db.clearTable();
+        
+        await db.addFCT(process.env.APP_USER, cursoTest, periodoTest, testFCT);
+        server = app.startServer();
+
+        // Petición a curso-período de la FCT
+        let url = app.router.url('fcts', { user: process.env.APP_USER}, { query: { curso: cursoTest, periodo: periodoTest } });
+        res = await request(url);
+        expect(res.data).to.exist;
+        expect(res.data.length).to.equal(1);
+        let fct = res.data[0];
+        
+        // Crear visita
+        let urlVisits = fct.hrefVisit;
+        res = await request(urlVisits, {method: 'POST', data: testVisit});
+        res = await request(url);
+        expect (res.data.length).to.equal(2);
+        let visit = res.data.find(it => it.type == 'VIS');
+        let visitData = JSON.parse(JSON.stringify(testVisit));
+        let nuevaDistancia = 50;
+        visitData.distancia = nuevaDistancia;
+        let nuevaFecha = new Date("2020-01-02").toISOString();
+        visitData.fecha = nuevaFecha;
+        let nuevaImpresion = "nueva impresión";
+        visitData.impresion = nuevaImpresion;
+        let nuevaHoraSalida = "13:00";
+        visitData.hora_salida = nuevaHoraSalida;
+        let nuevaHoraRegreso = "18:00";
+        visitData.hora_regreso= nuevaHoraRegreso;
+        let nuevaLocalidad = "nueva localidad"
+        visitData.localidad = nuevaLocalidad;
+        let nuevoPresencial = false;
+        visitData.presencial = nuevoPresencial;
+        res = await request(visit.href, { method: 'PUT', data: visitData });
+        expect(res.status).to.equal(200);
+        res = await request(url);
+        expect(res.data).to.exist;
+        expect(res.data.length).to.equal(2);
+        let actualizada = res.data.find(it => it.type == 'VIS');
+        expect(actualizada).to.exist;
+        expect(actualizada.localidad).to.equal(nuevaLocalidad);
+        expect(actualizada.fecha).to.equal(nuevaFecha);
+        expect(actualizada.distancia).to.equal(nuevaDistancia);
+        expect(actualizada.hora_salida).to.equal(nuevaHoraSalida);
+        expect(actualizada.hora_regreso).to.equal(nuevaHoraRegreso);
+        expect(actualizada.presencial).to.equal(nuevoPresencial);
+        expect(actualizada.impresion).to.equal(nuevaImpresion);
+
+    });
+
+    // Visitas relacionadas
     it('Visitas relacionadas', async function () {
-        db.clearDB();
-        let fct = FCT.createFCT(testFCT, userName);
-        await fct.save();
-
-        let fctMismaEmpresa = FCT.createFCT(testFCT, userName);
-        fctMismaEmpresa.alumno = "alumno2";
-        await fctMismaEmpresa.save();
-
-        let fctDistintaEmpresa = FCT.createFCT(testFCT, userName);
-        fctDistintaEmpresa.alumno = "alumno3";
-        fctDistintaEmpresa.empresa = "otra empresa";
-        await fctDistintaEmpresa.save();
-
-        let fcts = await FCT.getFCTSByUsuarioCursoPeriodo(userName, cursoTest, periodoTest);
-        let fct1 = fcts.find(fct => fct.alumno == 'alumno test');
-        let fct2 = fcts.find(fct => fct.alumno == 'alumno2');
-        let fct3 = fcts.find(fct => fct.alumno == 'alumno3');
-
-        let url = app.router.url('visits', { user: userName, fct: fct1.id });
+        this.timeout(15000);
+        await db.clearTable();
+        await db.addFCT(process.env.APP_USER, cursoTest, periodoTest, testFCT);
+        testFCT.nif_alumno = "nuevoNif1";
+        await db.addFCT(process.env.APP_USER, cursoTest, periodoTest, testFCT);
+        testFCT.nif_alumno = "nuevoNif2";
+        await db.addFCT(process.env.APP_USER, cursoTest, periodoTest, testFCT);
 
         server = app.startServer();
-        let res;
 
-        let templateVisit = JSON.parse(JSON.stringify(testTemplateVisitInicial));
-        templateVisit.template.data.push({
-            name: `related-${fct2.id}`,
-            value: true
-        });
+        // Petición a curso-período de la FCT
+        url = app.router.url('fcts', { user: process.env.APP_USER}, { query: { curso: cursoTest, periodo: periodoTest } });
+        res = await request(url);
+        expect(res.data).to.exist;
+        expect(res.data.length).to.equal(3);
+        let [fct1, fct2, fct3] = res.data;
+        
+        
+        // Crear visita relacionada: fct1 y fct3
+        let urlVisits = fct1.hrefVisit;
+        let visit = JSON.parse(JSON.stringify(testVisit));
+        visit.related = [fct3.id];
+        res = await request(urlVisits, {method: 'POST', data: visit});
 
-        res = await request(url, { method: 'POST', data: templateVisit });
-        expect(res.status).to.equal(201);
-
-
-        let fctWithVisits0 = await FCT.getFCTConVisitasById(fct1.id);
-        expect(fctWithVisits0.visitas.length).to.equal(1);
-
-        let fctWithVisits1 = await FCT.getFCTConVisitasById(fct2.id);
-        expect(fctWithVisits1.visitas.length).to.equal(1);
-
-        let fctWithVisits2 = await FCT.getFCTConVisitasById(fct3.id);
-        expect(fctWithVisits2.visitas.length).to.equal(0);
-    });
-
-    it('Actualización de visitas', async function () {
-        db.clearDB();
-        let fct = FCT.createFCT(testFCT, userName);
-        await fct.save();
-
-        let fcts = await FCT.getFCTSByUsuarioCursoPeriodo(userName, cursoTest, periodoTest);
-        let url = app.router.url('visits', { user: userName, fct: fcts[0].id });
-
-        server = app.startServer();
-        let res = await request(url, { method: 'POST', data: testTemplateVisitInicial });
-
-        let fctWithVisits = await FCT.getFCTConVisitasById(fcts[0].id);
-        let valor = testTemplateVisit.template.data[5].value;
-        expect(fctWithVisits.visitas.length).to.equal(1);
-        expect(fctWithVisits.visitas[0].localidad).to.equal(valor);
-
-        url = app.router.url('visit', { user: userName, fct: fcts[0].id, visit: fctWithVisits.visitas[0].id });
-
-        let newVisitData = JSON.parse(JSON.stringify(testTemplateVisitInicial));
-        let nuevoValor = "Nueva localidad";
-        newVisitData.template.data[5].value = nuevoValor;
-        res = await request(url, { method: 'PUT', data: newVisitData });
-        expect(res.status).to.equal(200);
-
-        fctWithVisits = await FCT.getFCTConVisitasById(fcts[0].id);
-        expect(fctWithVisits.visitas.length).to.equal(1);
-        expect(fctWithVisits.visitas[0].localidad).to.equal(nuevoValor);
+        // Petición a curso-período de la FCT
+        url = app.router.url('fcts', { user: process.env.APP_USER}, { query: { curso: cursoTest, periodo: periodoTest } });
+        res = await request(url);
+        expect(res.data).to.exist;
+        expect(res.data.length).to.equal(5);
+        let visits = res.data.filter(it => it.type == 'VIS');
+        expect(visits.length).to.equal(2);
+        expect(visits.find(v => v.fctId == fct1.id)).to.exist;
+        expect(visits.find(v => v.fctId == fct2.id)).to.not.exist;
+        expect(visits.find(v => v.fctId == fct3.id)).to.exist;
 
     });
 
     afterEach(async function () {
         if (server)
             await app.stopServer(server);
-    });
+  });
 });

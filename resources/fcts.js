@@ -2,28 +2,59 @@ var cps = require('../aux/cursoperiodofct');
 const FCT = require("../db/db_dynamo");
 
 module.exports = function(router) {
+    router.all('/api/users/:user/fcts/items/:curso/:periodo/:nif_alumno/:empresa/:visits?/:tipo?', async (ctx, next) => {
+        ctx.state.key = FCT.getKey(ctx.params.user, ctx.params.curso, ctx.params.periodo, ctx.params.nif_alumno, ctx.params.empresa, ctx.params.tipo);
+        return next();
+    });
+
     router.get('fcts', '/api/users/:user/fcts', async (ctx, next) => {
 	var c = ctx.request.query.curso || cps.getCursoActual();
 	var p = ctx.request.query.periodo || cps.getPeriodoActual();
-        
+
         // href
 	//col.href = router.url('fcts', ctx.params);
+
+        let response = await FCT.getFCTsByUsuarioCursoPeriodo(ctx.params.user, c, p);
         
-        // FCTs
-        let fcts = await FCT.getFCTsByUsuarioCursoPeriodo(ctx.state.user.name, c, p);
-        ctx.body = fcts;
+        let items = (response.Items || []).map(item => {
+            let it = {};
+            it = Object.assign(it, item);
+            let [usuario, curso, periodo, nif_alumno, empresa, type, visita_tipo] = FCT.getDataFromKey({usuCursoPeriodo: item.usuCursoPeriodo, SK: item.SK});
+
+            it = Object.assign(it, item);
+            it.empresa = empresa;
+            it.type = type;
+            it.id = `${item.usuCursoPeriodo}*${item.SK}`;
+            it.user = ctx.state.user.name;
+            it.curso = curso;
+            it.periodo = periodo;
+            it.nif_alumno = nif_alumno;
+            if (type == "FCT") {
+                it.href = router.url('fct', it);
+                it.hrefVisit = router.url('visits', it);
+            } else {
+                it.tipo = visita_tipo;
+                let fctKey = FCT.getKey(usuario, curso, periodo, nif_alumno, empresa);
+                it.fctId = `${fctKey.usuCursoPeriodo}*${fctKey.SK}`;
+                it.href = router.url('visit', it);
+                delete it.curso;
+                delete it.periodo;
+                delete it.nif_alumno;
+            }
+            delete it.user;
+            delete it.usuCursoPeriodo;
+            delete it.SK;
+            return it;
+        });
+
+        ctx.body = items;
 
         return next();
         
     });
 
-    router.delete('fct', '/api/users/:user/fcts/items/:fct', async (ctx, next) => {
-        try {
-            await FCT.deleteFCT(ctx.params.fct);
-        } catch (error) {
-            console.log(error);
-            throw new Error("Error al borrar la FCT.");
-        }
+    router.delete('fct', '/api/users/:user/fcts/items/:curso/:periodo/:nif_alumno/:empresa', async (ctx, next) => {
+        await FCT.deleteFCT(ctx.state.key);
         ctx.status = 200;
         return next();
     });
