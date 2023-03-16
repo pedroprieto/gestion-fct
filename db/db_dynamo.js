@@ -3,6 +3,26 @@ const AWS = require('aws-sdk');
 AWS.config.update({ region: process.env.REGION });
 var ddb = new AWS.DynamoDB.DocumentClient();
 
+async function getItemsByFCTId(fctId) {
+    try {
+        let keys = fctId.split('*');
+        let usuCursoPeriodo = keys[0];
+
+        var params = {
+            ExpressionAttributeValues: {
+                ':usuCursoPeriodo': usuCursoPeriodo
+            },
+            TableName: process.env.table,
+            KeyConditionExpression: 'usuCursoPeriodo= :usuCursoPeriodo'
+        };
+
+        var response = await ddb.query(params).promise();
+        return response.Items || [];
+    } catch (e) {
+        throw new Error("Error al buscar los items");
+    }
+}
+
 async function getFCTsByUsuariorCursoPeriodo (usuario, curso, periodo) {
     try {
         var params = {
@@ -34,35 +54,21 @@ function addFCT(usuario, curso, periodo, fct) {
         return ddb.put(params).promise();
 }
 
-function deleteFCT(fctId) {
+function deleteItem(itemId) {
         let f = {};
-        let keys = fctId.split('*');
-        f.usuCursoPeriodo = keys[0];
-        f.SK = keys[1];
+    let keys = itemId.split('*');
+    f.usuCursoPeriodo = keys[0];
+    f.SK = keys[1];
     var params = {
-            Key: f,
-            TableName: process.env.table,
-            ConditionExpression: 'attribute_exists(usuCursoPeriodo)'
-        };
-        return ddb.delete(params).promise();
-}
-
-function deleteVisita(visitaId) {
-        let v = {};
-        let keys = visitaId.split('*');
-        v.usuCursoPeriodo = keys[0];
-        v.SK = keys[1];
-
-        var params = {
-            Key: v,
-            TableName: process.env.table,
-            ConditionExpression: 'attribute_exists(usuCursoPeriodo)'
-        };
+        Key: f,
+        TableName: process.env.table,
+        ConditionExpression: 'attribute_exists(usuCursoPeriodo)'
+    };
     return ddb.delete(params).promise();
 }
 
 function addVisita(usuario, fctId, visitData) {
-        let v = {};
+    let v = {};
 
     let keys = fctId.split('*');
     let fctKey = keys[1].substring(4, keys[1].length);
@@ -73,51 +79,50 @@ function addVisita(usuario, fctId, visitData) {
     if (tipo == 'adicional')
         tipo += `_${uuidv4()}`;
     it.SK = `VIS_${fctKey}_${tipo}`;
-    
-    
+
+
     it = Object.assign(it, visitData);
 
 
-        var params = {
-            Item: it,
-            TableName: process.env.table,
-            ConditionExpression: 'attribute_not_exists(usuCursoPeriodo)'
-        };
+    var params = {
+        Item: it,
+        TableName: process.env.table,
+        ConditionExpression: 'attribute_not_exists(usuCursoPeriodo)'
+    };
     return ddb.put(params).promise();
 }
 
 function updateVisita(visita) {
-        let v = {};
-        let keys = visita.id.split('*');
-        v.usuCursoPeriodo = keys[0];
-        v.SK = keys[1];
+    let v = {};
+    let keys = visita.id.split('*');
+    v.usuCursoPeriodo = keys[0];
+    v.SK = keys[1];
 
 
-        var params = {
-            Key: v,
-            UpdateExpression: "set empresa = :empresa, distancia = :distancia, fecha = :fecha, hora_salida = :hora_salida, hora_regreso = :hora_regreso, localidad = :localidad, impresion = :impresion, presencial = :presencial",
-            ExpressionAttributeValues: {
-                ":empresa": visita.empresa,
-                ":distancia": visita.distancia,
-                ":fecha": visita.fecha,
-                ":hora_salida": visita.hora_salida,
-                ":hora_regreso": visita.hora_regreso,
-                ":localidad": visita.localidad,
-                ":impresion": visita.impresion,
-                ":presencial": visita.presencial
-            },
-            ConditionExpression: 'attribute_exists(usuCursoPeriodo)',
-            TableName: process.env.table,
-        };
+    var params = {
+        Key: v,
+        UpdateExpression: "set empresa = :empresa, distancia = :distancia, fecha = :fecha, hora_salida = :hora_salida, hora_regreso = :hora_regreso, localidad = :localidad, impresion = :impresion, presencial = :presencial",
+        ExpressionAttributeValues: {
+            ":empresa": visita.empresa,
+            ":distancia": visita.distancia,
+            ":fecha": visita.fecha,
+            ":hora_salida": visita.hora_salida,
+            ":hora_regreso": visita.hora_regreso,
+            ":localidad": visita.localidad,
+            ":impresion": visita.impresion,
+            ":presencial": visita.presencial
+        },
+        ConditionExpression: 'attribute_exists(usuCursoPeriodo)',
+        TableName: process.env.table,
+    };
     return ddb.update(params).promise();
 }
 
 module.exports = {
     addFCT,
-    deleteFCT,
-    deleteVisita,
+    deleteItem,
     updateVisita,
     addVisita,
-    getFCTsByUsuariorCursoPeriodo
-    
+    getFCTsByUsuariorCursoPeriodo,
+    getItemsByFCTId
 }

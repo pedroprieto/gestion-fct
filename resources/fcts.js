@@ -3,7 +3,6 @@ const FCT = require("../models/fct");
 
 module.exports = function(router) {
     router.get('fcts', '/api/users/:user/fcts', async (ctx, next) => {
-        
 	var c = ctx.request.query.curso || cps.getCursoActual();
 	var p = ctx.request.query.periodo || cps.getPeriodoActual();
         
@@ -18,7 +17,6 @@ module.exports = function(router) {
         
     });
 
-    // TODO: falta borrar visitas asociadas
     router.delete('fct', '/api/users/:user/fcts/items/:fct', async (ctx, next) => {
         try {
             await FCT.deleteFCT(ctx.params.fct);

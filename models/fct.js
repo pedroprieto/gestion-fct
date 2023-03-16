@@ -29,7 +29,17 @@ async function getFCTSByUsuarioCursoPeriodo(userName, curso, periodo) {
 }
 
 function deleteFCT(fctId) {
-    return db.deleteFCT(fctId);
+    let items = await db.getItemsByFCTId(fctId);
+    let promesas = [];
+
+    for (let item of items) {
+        promesas.push(db.deleteItem(item.usuCursoPeriodo + "*" + item.SK));
+    }
+
+    return Promise.all(promesas).then(res => {
+        ctx.status = 200;
+        return next();
+    });
 }
 function addFCT(userName, curso, periodo, fct) {
     return db.addFCT(userName, curso, periodo, fct);
@@ -40,7 +50,7 @@ function addVisita(userName, fctId, visitData) {
 }
 
 function deleteVisita(visitaId) {
-    return db.deleteVisita(visitaId);
+    return db.deleteItem(visitaId);
 }
 
 function updateVisita(visita) {

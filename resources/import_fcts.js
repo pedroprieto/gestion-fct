@@ -35,7 +35,7 @@ module.exports = function(router) {
 	    })
 	    .then(function(fcts_data) {
 		var fcts = [];
-		fcts_data.forEach(function(f) {
+		fcts_data.forEach(function(fct) {
 		    // Hacemos un upsert: si existe FCT con mismo NIF de alumno y nombre de empresa, se actualiza;
                     fcts.push(FCT.addFCT(ctx.state.user.name, data.curso, data.periodo, fct));
 		});
