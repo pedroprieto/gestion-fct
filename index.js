@@ -38,7 +38,6 @@ app.use(async (ctx, next) => {
 
 // Resources
 require('./resources/fcts')(router);
-require('./resources/visits')(router);
 require('./resources/import_fcts')(router);
 
 
