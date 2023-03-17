@@ -1,13 +1,18 @@
 var cps = require('../aux/cursoperiodofct');
 const FCT = require("../db/db_dynamo");
 
+let fctsRoute = '/api/users/:user/fcts';
+let fctRoute = '/api/users/:user/fcts/items/:curso/:periodo/:nif_alumno/:empresa';
+let visitsRoute = '/api/users/:user/fcts/items/:curso/:periodo/:nif_alumno/:empresa/visits';
+let visitRoute = '/api/users/:user/fcts/items/:curso/:periodo/:nif_alumno/:empresa/visits/:tipo';
+
 module.exports = function(router) {
     router.all('/api/users/:user/fcts/items/:curso/:periodo/:nif_alumno/:empresa/:visits?/:tipo?', async (ctx, next) => {
         ctx.state.key = FCT.getKey(ctx.params.user, ctx.params.curso, ctx.params.periodo, ctx.params.nif_alumno, ctx.params.empresa, ctx.params.tipo);
         return next();
     });
 
-    router.get('fcts', '/api/users/:user/fcts', async (ctx, next) => {
+    router.get('fcts', fctsRoute, async (ctx, next) => {
 	var c = ctx.request.query.curso || cps.getCursoActual();
 	var p = ctx.request.query.periodo || cps.getPeriodoActual();
 
@@ -53,13 +58,13 @@ module.exports = function(router) {
         
     });
 
-    router.delete('fct', '/api/users/:user/fcts/items/:curso/:periodo/:nif_alumno/:empresa', async (ctx, next) => {
+    router.delete('fct', fctRoute, async (ctx, next) => {
         await FCT.deleteFCT(ctx.state.key);
         ctx.status = 200;
         return next();
     });
 
-    router.post('visits', '/api/users/:user/fcts/items/:curso/:periodo/:nif_alumno/:empresa/visits', async (ctx, next) => {
+    router.post('visits', visitsRoute, async (ctx, next) => {
 
         var visitData = ctx.request.body;
         
@@ -84,13 +89,13 @@ module.exports = function(router) {
         });;
     });
 
-    router.delete('visit', '/api/users/:user/fcts/items/:curso/:periodo/:nif_alumno/:empresa/visits/:tipo', async (ctx, next) => {
+    router.delete('visit', visitRoute, async (ctx, next) => {
         await FCT.deleteItem(ctx.state.key);
         ctx.status = 200;
         return next();
     });
 
-    router.put('/api/users/:user/fcts/items/:curso/:periodo/:nif_alumno/:empresa/visits/:tipo', async (ctx, next) => {
+    router.put(visitRoute, async (ctx, next) => {
         var visitData = ctx.request.body;
         await FCT.updateVisita(ctx.state.key, visitData);
         ctx.status = 200;
