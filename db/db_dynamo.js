@@ -2,6 +2,7 @@ const { v4: uuidv4 } = require('uuid');
 const AWS = require('aws-sdk');
 AWS.config.update({ region: process.env.REGION });
 var ddb = new AWS.DynamoDB.DocumentClient();
+const crypto = require('crypto');
 
 async function clearTable() {
     var params = {
@@ -10,40 +11,43 @@ async function clearTable() {
 
     var response = await ddb.scan(params).promise();
     for (let item of response.Items) {
-        await deleteItem({usuCursoPeriodo: item.usuCursoPeriodo, SK: item.SK});
+        await deleteItem(item.usuCursoPeriodo, item.SK );
     }
     return;
 }
 
-function getKey(usuario, curso, periodo, nif_alumno, empresa, tipo) {
-    let usuCursoPeriodo = `${usuario}_${curso}_${periodo}`;
-    let SK = `${nif_alumno}_${empresa}`;
+function getPK(usuario, curso, periodo) {
+    return `${usuario}_${curso}_${periodo}`;
+}
+
+function getDataFromPK(usuCursoPeriodo) {
+    return usuCursoPeriodo.split('_');
+}
+
+function getDataFromSK(fctIdTipo) {
+    return fctIdTipo.split('_');
+}
+
+function getFctId(nif_alumno, empresa) {
+    let shasum = crypto.createHash('sha1');
+    shasum.update(`${nif_alumno}_${empresa}`);
+    return shasum.digest('hex');
+}
+
+function getSK(fctId, tipo) {
     if (!tipo) {
-        SK += "_FCT";
+        return `${fctId}_FCT`;
     } else {
-        SK += `_VIS_${tipo}`;
+        return `${fctId}_VIS_${tipo}`;
     }
-    return {
-        usuCursoPeriodo,
-        SK
-    };
 }
 
-function getDataFromKey(key) {
-    let [usuario, curso, periodo] = key.usuCursoPeriodo.split('_');
-    let [nif_alumno, empresa, type, visita_tipo] = key.SK.split('_');
-    // item.usuario = usuario
-    return [
-        usuario, curso, periodo, nif_alumno, empresa, type, visita_tipo
-    ]
-}
-
-async function getItemsByFCTKey(fctKey) {
+async function getItemsByFCTUsuCursoPeriodoId(usuCursoPeriodo, fctId) {
     try {
         var params = {
             ExpressionAttributeValues: {
-                ':usuCursoPeriodo': fctKey.usuCursoPeriodo,
-                ':SK': fctKey.SK.substring(0, fctKey.SK.length - 4)
+                ':usuCursoPeriodo': usuCursoPeriodo,
+                ':SK': fctId 
             },
             TableName: process.env.table,
             KeyConditionExpression: 'usuCursoPeriodo= :usuCursoPeriodo and begins_with(SK, :SK)'
@@ -61,10 +65,9 @@ async function getItemsByFCTKey(fctKey) {
 
 async function getFCTsByUsuarioCursoPeriodo(userName, c, p) {
     try {
-        let key = getKey(userName, c, p);
         var params = {
             ExpressionAttributeValues: {
-                ':usuCursoPeriodo': key.usuCursoPeriodo
+                ':usuCursoPeriodo': getPK(userName, c, p)
             },
             TableName: process.env.table,
             KeyConditionExpression: 'usuCursoPeriodo= :usuCursoPeriodo'
@@ -79,8 +82,10 @@ async function getFCTsByUsuarioCursoPeriodo(userName, c, p) {
 
 async function addFCT(usuario, curso, periodo, fctData) {
     try {
-        let f = getKey(usuario, curso, periodo, fctData.nif_alumno, fctData.empresa);
-        const campos = (({ tutor, ciclo, dir_empresa, localidad, instructor, nif_instructor, alumno, grupo, fecha_inicio, fecha_fin, horas, distancia }) => ({ tutor, ciclo, dir_empresa, localidad, instructor, nif_instructor, alumno, grupo, fecha_inicio, fecha_fin, horas, distancia }))(fctData);
+        let f = {};
+        f.usuCursoPeriodo = getPK(usuario, curso, periodo);
+        f.SK = getSK(getFctId(fctData.nif_alumno, fctData.empresa));
+        const campos = (({ tutor, ciclo, empresa, nif_alumno, dir_empresa, localidad, instructor, nif_instructor, alumno, grupo, fecha_inicio, fecha_fin, horas, distancia }) => ({ tutor, ciclo, empresa, nif_alumno, dir_empresa, localidad, instructor, nif_instructor, alumno, grupo, fecha_inicio, fecha_fin, horas, distancia }))(fctData);
         f = Object.assign(f, campos);
 
         var params = {
@@ -95,37 +100,38 @@ async function addFCT(usuario, curso, periodo, fctData) {
 }
 
 
-async function deleteFCT(key) {
-    let items = await getItemsByFCTKey(key);
+async function deleteFCT(usuCursoPeriodo, fctId) {
+    let items = await getItemsByFCTUsuCursoPeriodoId(usuCursoPeriodo, fctId)
     let promesas = [];
-
+    
     for (let item of items) {
-        promesas.push(deleteItem({ usuCursoPeriodo: item.usuCursoPeriodo, SK: item.SK }));
+        promesas.push(deleteItem( usuCursoPeriodo, item.SK));
     }
     return Promise.all(promesas)
 };
 
-function deleteItem(key) {
+function deleteVisita(usuCursoPeriodo, fctId, tipo ) {
+    return deleteItem(usuCursoPeriodo, getSK(fctId, tipo));
+}
+
+function deleteItem(usuCursoPeriodo, SK ) {
     var params = {
-        Key: key,
+        Key: {usuCursoPeriodo, SK},
         TableName: process.env.table,
         ConditionExpression: 'attribute_exists(usuCursoPeriodo)'
     };
     return ddb.delete(params).promise();
 }
 
-function addVisita(fctKey, visitData) {
-
+function addVisita(usuCursoPeriodo, fctId,  visitData) {
     let it = {};
-    it.usuCursoPeriodo = fctKey.usuCursoPeriodo;
-    it.SK = fctKey.SK.substring(0, fctKey.SK.length - 4)
-    
+    it.usuCursoPeriodo = usuCursoPeriodo;
 
     let tipo = visitData.tipo;
     if (tipo == 'adicional')
         tipo += `_${uuidv4()}`;
-    it.SK = `${it.SK}_VIS_${tipo}`;
-
+    
+    it.SK = getSK(fctId, tipo);
 
     it = Object.assign(it, visitData);
 
@@ -138,10 +144,10 @@ function addVisita(fctKey, visitData) {
     return ddb.put(params).promise();
 }
 
-function updateVisita(key, visita) {
+function updateVisita(usuCursoPeriodo, fctId, tipo, visita) {
 
     var params = {
-        Key: key,
+        Key: {usuCursoPeriodo, SK: getSK(fctId, tipo)},
         UpdateExpression: "set distancia = :distancia, fecha = :fecha, hora_salida = :hora_salida, hora_regreso = :hora_regreso, localidad = :localidad, impresion = :impresion, presencial = :presencial",
         ExpressionAttributeValues: {
             ":distancia": visita.distancia,
@@ -161,11 +167,13 @@ function updateVisita(key, visita) {
 module.exports = {
     clearTable,
     addFCT,
-    deleteItem,
+    deleteVisita,
     deleteFCT,
     updateVisita,
     addVisita,
     getFCTsByUsuarioCursoPeriodo,
-    getDataFromKey,
-    getKey,
+    getDataFromPK,
+    getDataFromSK,
+    getPK,
+    getSK
 }

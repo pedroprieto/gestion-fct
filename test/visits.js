@@ -30,11 +30,14 @@ describe('Crear visitas, duplicados y borrar FCT con visitas', function () {
         res = await request(url);
         expect(res.data).to.exist;
         expect(res.data.length).to.equal(2);
-        expect(res.data[0].type).to.equal("FCT");
-        expect(res.data[1].type).to.equal("VIS");
-        let otraVisita = JSON.parse(JSON.stringify(testVisit));
+        let f = res.data.find(el => el.type=='FCT');
+        let v = res.data.find(el => el.type=='VIS');
+        expect(f).to.exist;
+        expect(v).to.exist;
+        expect(v.fctId).to.equal(f.id);
         
         // Nueva visita
+        let otraVisita = JSON.parse(JSON.stringify(testVisit));
         otraVisita.tipo = 'inicial';
         res = await request(urlVisits, {method: 'POST', data: otraVisita});
         url = app.router.url('fcts', { user: process.env.APP_USER}, { query: { curso: cursoTest, periodo: periodoTest } });

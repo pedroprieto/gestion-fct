@@ -2,6 +2,7 @@ var expect = require('chai').expect;
 var db = require('../db/db_dynamo');
 let app = require('../index');
 let { request, userName, cursoTest, periodoTest, testFCT } = require('../testdata/testdata');
+const crypto = require('crypto');
 
 let server;
 
@@ -23,9 +24,13 @@ describe('Crear FCT', function () {
         res = await request(url);
         expect(res.data).to.exist;
         expect(res.data.length).to.equal(1);
-        expect(res.data[0].id).to.equal('123456789k_empresa test_FCT');
-        expect(res.data[0].href).to.equal('/api/users/47061241K/fcts/items/2013-2014/5/123456789k/empresa%20test');
-        expect(res.data[0].hrefVisit).to.equal('/api/users/47061241K/fcts/items/2013-2014/5/123456789k/empresa%20test/visits');
+
+        let shasum = crypto.createHash('sha1');
+        shasum.update(`${testFCT.nif_alumno}_${testFCT.empresa}`);
+        let fctId = shasum.digest('hex');
+        expect(res.data[0].id).to.equal(fctId);
+        expect(res.data[0].href).to.equal(`/api/users/47061241K/fcts/items/2013-2014/5/${fctId}`);
+        expect(res.data[0].hrefVisit).to.equal(`/api/users/47061241K/fcts/items/2013-2014/5/${fctId}/visits`);
         
         // Crear una nueva
         testFCT.empresa = "Otra empresa nueva";
