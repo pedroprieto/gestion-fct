@@ -29,7 +29,7 @@ module.exports = function(router) {
             it = Object.assign(it, item);
             it.empresa = empresa;
             it.type = type;
-            it.id = `${item.usuCursoPeriodo}*${item.SK}`;
+            it.id = item.SK;
             it.user = ctx.state.user.name;
             it.curso = curso;
             it.periodo = periodo;
@@ -40,7 +40,7 @@ module.exports = function(router) {
             } else {
                 it.tipo = visita_tipo;
                 let fctKey = FCT.getKey(usuario, curso, periodo, nif_alumno, empresa);
-                it.fctId = `${fctKey.usuCursoPeriodo}*${fctKey.SK}`;
+                it.fctId = fctKey.SK;
                 it.href = router.url('visit', it);
                 delete it.curso;
                 delete it.periodo;
@@ -68,13 +68,13 @@ module.exports = function(router) {
 
         var visitData = ctx.request.body;
         
-        let related_fctKeys = visitData.related || [];
+        let related_fctSKs = visitData.related || [];
 
         let promesas = [];
 
-        for (let fctKey of related_fctKeys) {
+        for (let fctSK of related_fctSKs) {
             // TODO: update distancia FCT
-            promesas.push(FCT.addVisita(FCT.getKeyFromId(fctKey), visitData));
+            promesas.push(FCT.addVisita({usuCursoPeriodo: ctx.state.key.usuCursoPeriodo, SK: fctSK}, visitData));
         }
         // Añadimos la FCT actual
         promesas.push(FCT.addVisita(ctx.state.key, visitData));

@@ -23,7 +23,7 @@ describe('Crear FCT', function () {
         res = await request(url);
         expect(res.data).to.exist;
         expect(res.data.length).to.equal(1);
-        expect(res.data[0].id).to.equal('47061241K_2013-2014_5*123456789k_empresa test_FCT');
+        expect(res.data[0].id).to.equal('123456789k_empresa test_FCT');
         expect(res.data[0].href).to.equal('/api/users/47061241K/fcts/items/2013-2014/5/123456789k/empresa%20test');
         expect(res.data[0].hrefVisit).to.equal('/api/users/47061241K/fcts/items/2013-2014/5/123456789k/empresa%20test/visits');
         

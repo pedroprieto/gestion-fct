@@ -15,11 +15,6 @@ async function clearTable() {
     return;
 }
 
-function getKeyFromId(id) {
-    let [usuCursoPeriodo, SK] = id.split("*");
-    return {usuCursoPeriodo, SK};
-}
-
 function getKey(usuario, curso, periodo, nif_alumno, empresa, tipo) {
     let usuCursoPeriodo = `${usuario}_${curso}_${periodo}`;
     let SK = `${nif_alumno}_${empresa}`;
@@ -173,5 +168,4 @@ module.exports = {
     getFCTsByUsuarioCursoPeriodo,
     getDataFromKey,
     getKey,
-    getKeyFromId
 }
