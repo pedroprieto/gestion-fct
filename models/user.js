@@ -1,4 +1,4 @@
-const db = require("../db/db");
+const db = require("../db/db_dynamo");
 
 const crypto = require('crypto');
 const iterations = 1000;
@@ -22,7 +22,7 @@ function User(name, password, salt) {
 
 User.prototype.updatePass = function(plainPassword) {
     // generate a salt
-    var salt = crypto.randomBytes(128).toString('hex');
+    var salt = crypto.randomBytes(32).toString('hex');
     const hash = crypto.pbkdf2Sync(plainPassword, salt, iterations, keylen, digest).toString('hex');
     this.password = hash;
     this.salt = salt;

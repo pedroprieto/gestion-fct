@@ -16,6 +16,46 @@ async function clearTable() {
     return;
 }
 
+function saveUser(user) {
+    let it = {
+        usuCursoPeriodo: user.name,
+        SK: "USER",
+        password: user.password,
+        salt: user.salt
+    }
+
+    var params = {
+        Item: it,
+        TableName: process.env.table,
+    };
+    return ddb.put(params).promise();
+}
+
+async function getUser(userName) {
+    try {
+        var params = {
+            ExpressionAttributeValues: {
+                ':usuCursoPeriodo': userName,
+                ':SK': 'USER'
+            },
+            TableName: process.env.table,
+            KeyConditionExpression: 'usuCursoPeriodo= :usuCursoPeriodo and SK= :SK'
+        };
+
+        var response = await ddb.query(params).promise();
+        if (response.Items && response.Items.length) {
+            let user = response.Items[0];
+            user.name = user.usuCursoPeriodo;
+            return user;
+        } else {
+            return null;
+        }
+    } catch (e) {
+        console.log(e);
+        throw new Error("Error al buscar el usuario");
+    }
+}
+
 function getPK(usuario, curso, periodo) {
     return `${usuario}_${curso}_${periodo}`;
 }
@@ -165,6 +205,8 @@ function updateVisita(usuCursoPeriodo, fctId, tipo, visita) {
 }
 
 module.exports = {
+    getUser,
+    saveUser,
     clearTable,
     addFCT,
     deleteVisita,
