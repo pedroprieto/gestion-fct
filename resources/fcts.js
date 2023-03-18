@@ -7,9 +7,16 @@ let visitsRoute = '/api/users/:user/fcts/items/:curso/:periodo/:fctId/visits';
 let visitRoute = '/api/users/:user/fcts/items/:curso/:periodo/:fctId/visits/:tipo?';
 
 module.exports = function(router) {
+    router.all('/api/users/:user/(.*)', async(ctx, next) => {
+        if (ctx.state.user.name != ctx.params.user) {
+            ctx.status = 401;
+            return;
+        }
+        return next();
+    });
+
     router.all('/api/users/:user/fcts/items/:curso/:periodo/:fctId/:visits?/:tipo?', async (ctx, next) => {
         ctx.state.usuCursoPeriodo =FCT.getPK(ctx.params.user, ctx.params.curso, ctx.params.periodo);
-        
         return next();
     });
 

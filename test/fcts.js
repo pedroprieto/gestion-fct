@@ -7,6 +7,18 @@ const crypto = require('crypto');
 let server;
 
 describe('Crear FCT', function () {
+    it('Acceso a recursos de otro usuario', async function () {
+        let url = app.router.url('fcts', { user: 'usuarioDistinto'});
+        server = app.startServer();
+        try {
+            let res = await request(url);
+            expect(res).to.not.exist;
+            expect(res.data).to.not.exist;
+        } catch (error) {
+            expect(error.response.status).to.equal(401);
+        }
+    });
+
     it('Get FCTs en API y borrado', async function () {
         this.timeout(15000);
         await db.clearTable();
