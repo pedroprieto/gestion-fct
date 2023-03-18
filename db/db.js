@@ -1,11 +1,6 @@
 const { v4: uuidv4 } = require('uuid');
 
-let users = [
-    {
-        name: "test",
-        password: "$2a$10$n6aq.wD2JoHgO5BrvMmJnORuWxzZA5l4xAXUelcTj3FjW9He.YF56" // 1234
-    }
-];
+let users = [];
 
 let fcts = [];
 let visits = [];
@@ -23,10 +18,12 @@ module.exports = {
         if (foundUser) {
             foundUser.name = user.name;
             foundUser.password = user.password;
+            foundUser.salt = user.salt;
         } else {
             users.push({
                 name: user.name,
-                password: user.password
+                password: user.password,
+                salt: user.salt
             });
         }
     },
