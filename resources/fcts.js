@@ -46,7 +46,7 @@ module.exports = function(router) {
                 it.hrefVisit = router.url('visits', it);
                 delete it.fctId;
             } else {
-                it.tipo = visita_tipo;
+                it.tipo = visita_tipo.split('-')[0];
                 it.href = router.url('visit', it);
                 delete it.curso;
                 delete it.periodo;

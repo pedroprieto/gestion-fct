@@ -169,7 +169,7 @@ function addVisita(usuCursoPeriodo, fctId,  visitData) {
 
     let tipo = visitData.tipo;
     if (tipo == 'adicional')
-        tipo += `_${uuidv4()}`;
+        tipo += `-${uuidv4()}`;
     
     it.SK = getSK(fctId, tipo);
 
