@@ -30,7 +30,7 @@ module.exports = {
         horas: 400
     },
     testVisit: {
-        tipo: "otra",
+        tipo: "adicional",
         distancia: 30,
         fecha: new Date().toISOString(),
         hora_salida: "11:00",
