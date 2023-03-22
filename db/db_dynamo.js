@@ -181,7 +181,9 @@ function addVisita(usuCursoPeriodo, fctId,  visitData) {
         TableName: process.env.table,
         ConditionExpression: 'attribute_not_exists(usuCursoPeriodo)'
     };
-    return ddb.put(params).promise();
+    return ddb.put(params).promise().then(() => {
+        return it;
+    });
 }
 
 function updateVisita(usuCursoPeriodo, fctId, tipo, visita) {

@@ -6,6 +6,36 @@ let fctRoute = '/api/users/:user/fcts/items/:curso/:periodo/:fctId';
 let visitsRoute = '/api/users/:user/fcts/items/:curso/:periodo/:fctId/visits';
 let visitRoute = '/api/users/:user/fcts/items/:curso/:periodo/:fctId/visits/:tipo?';
 
+function responseItem(item, ctx) {
+    let it = {};
+    it = Object.assign(it, item);
+    let [usuario, curso, periodo] = FCT.getDataFromPK(item.usuCursoPeriodo);
+    let [fctId, type, visita_tipo] = FCT.getDataFromSK(item.SK);
+
+    it.type = type;
+    it.id = fctId;
+    it.user = ctx.state.user.name;
+    it.curso = curso;
+    it.periodo = periodo;
+    it.fctId = fctId;
+    if (type == "FCT") {
+        it.href = ctx.router.url('fct', it);
+        it.hrefVisit = ctx.router.url('visits', it);
+        delete it.fctId;
+    } else {
+        it.tipo = visita_tipo;
+        it.href = ctx.router.url('visit', it);
+        it.tipo = visita_tipo.split('-')[0];
+        delete it.curso;
+        delete it.periodo;
+        delete it.nif_alumno;
+    }
+    delete it.user;
+    delete it.usuCursoPeriodo;
+    delete it.SK;
+    return it;
+}
+
 module.exports = function(router) {
     router.all('/api/users/:user/(.*)', async(ctx, next) => {
         if (ctx.state.user.name != ctx.params.user) {
@@ -30,32 +60,7 @@ module.exports = function(router) {
         let response = await FCT.getFCTsByUsuarioCursoPeriodo(ctx.params.user, c, p);
         
         let items = (response.Items || []).map(item => {
-            let it = {};
-            it = Object.assign(it, item);
-            let [usuario, curso, periodo] = FCT.getDataFromPK(item.usuCursoPeriodo);
-            let [fctId, type, visita_tipo] = FCT.getDataFromSK(item.SK);
-
-            it.type = type;
-            it.id = fctId;
-            it.user = ctx.state.user.name;
-            it.curso = curso;
-            it.periodo = periodo;
-            it.fctId = fctId;
-            if (type == "FCT") {
-                it.href = router.url('fct', it);
-                it.hrefVisit = router.url('visits', it);
-                delete it.fctId;
-            } else {
-                it.tipo = visita_tipo.split('-')[0];
-                it.href = router.url('visit', it);
-                delete it.curso;
-                delete it.periodo;
-                delete it.nif_alumno;
-            }
-            delete it.user;
-            delete it.usuCursoPeriodo;
-            delete it.SK;
-            return it;
+            return responseItem(item, ctx);
         });
 
         ctx.body = items;
@@ -76,6 +81,9 @@ module.exports = function(router) {
         
         let related_fctIds = visitData.related || [];
 
+        // Quito campo para que no se guarde en la BD
+        delete visitData.related;
+
         let promesas = [];
         
         for (let fctId of related_fctIds) {
@@ -85,10 +93,16 @@ module.exports = function(router) {
         // Añadimos la FCT actual
         promesas.push(FCT.addVisita(ctx.state.usuCursoPeriodo, ctx.params.fctId, visitData));
 
-        return Promise.all(promesas).then(res => {
+        return Promise.all(promesas).then(visits => {
+            let data = [];
+            for (let v of visits) {
+                data.push(responseItem(v, ctx));
+            }
+            ctx.body = data;
             ctx.status = 201;
             return next();
         }).catch(error => {
+            console.log(error);
             let err = new Error("No se ha podido crear la visita");
             err.status = 400;
             throw err;
