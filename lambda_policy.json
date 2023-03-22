@@ -16,7 +16,7 @@
           "dynamodb:PutItem"
       ],
       "Effect": "Allow",
-      "Resource": "arn:aws:dynamodb:*:*:table/gestionfct-test"
+      "Resource": "arn:aws:dynamodb:*:*:table/gestionfct"
     }
   ]
 }

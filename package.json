@@ -5,7 +5,7 @@
     "private": true,
     "main": "index.js",
     "config": {
-        "tableName": "gestionfct-test",
+        "tableName": "gestionfct",
         "region": "eu-west-1"
     },
     "dependencies": {
