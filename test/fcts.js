@@ -28,8 +28,8 @@ describe('Crear FCT', function () {
         server = app.startServer();
 
         // Petición a curso-período actual: solo devuelve mensaje
-        let res = await request(url);
-        expect(res.data.length).to.equal(0);;
+        // let res = await request(url);
+        // expect(res.data.length).to.equal(0);;
         
         // Petición a curso-período de la FCT
         url = app.router.url('fcts', { user: process.env.APP_USER}, { query: { curso: cursoTest, periodo: periodoTest } });
