@@ -1,0 +1,10 @@
+{
+  "lambda": {
+    "role": "appfct-executor",
+    "name": "appfct",
+    "region": "eu-west-1"
+  },
+  "api": {
+    "id": "5qnmr7tmzk"
+  }
+}

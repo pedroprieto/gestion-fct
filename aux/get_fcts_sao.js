@@ -1,9 +1,7 @@
 // Función para obtener las FCTs del sistema SAO
+var axios = require('axios');
 
-var request = require('request');
-var Promise = require('bluebird');
-
-module.exports = Promise.promisify(function(data, curso, periodo, callback) {
+module.exports = function (data, curso, periodo) {
 
     // Curso: p. ej. 2014-2015
     // Periodo:
@@ -14,42 +12,36 @@ module.exports = Promise.promisify(function(data, curso, periodo, callback) {
 
     // Cambio el parámetro periodo, que viene para "todos" como "1,2", por -1
     if (periodo == "1,2")
-	periodo = -1;
-    
+        periodo = -1;
+
     var options = {
-	url: 'https://foremp.edu.gva.es/inc/ajax/fcts/rellenar_fct.php?prof=' + data.idSAO +  '&curso=' + curso + '&periodo=' + periodo,
-	method: 'GET',
+        url: 'https://foremp.edu.gva.es/inc/ajax/fcts/rellenar_fct.php?prof=' + data.idSAO + '&curso=' + curso + '&periodo=' + periodo,
+        method: 'GET',
         timeout: 2000,
-	headers: {
-	    'Cookie': data.cookiesSAO,
-            'Che': data.cheHeader
-	}
+        headers: {
+            'Cookie': data.cookiesSAO,
+            'che': data.cheHeader
+        }
     };
 
+    return axios(options).then(response => {
+        if (response.statusText == 'OK') {
 
-    function retorno(error, response, body) {
-	if (!error && response.statusCode == 200) {
+            var res = response.data.match(/javascript:verDetallesFCT\('(\d+)'\)/g);
 
-	    var res = body.match(/javascript:verDetallesFCT\('(\d+)'\)/g);
+            if (res === null) {
+                var er = new Error("No se han encontrado datos del curso " + curso + " período " + periodo + " en el SAO.");
+                er.status = 404;
+                er.name = "Error de importación";
+                throw er;
+            }
 
-	    // Mejorar? No enviar error y hacer otra cosa?
-	    if (res === null) {
-		var er = new Error("No se han encontrado datos del curso " + curso + " período " + periodo + " en el SAO.");
-		er.status = 404;
-		er.name = "Error de importación";
-		return callback(er);
-	    }
-
-	    for (i=0;i<res.length;i++) {
-		res[i] = res[i].match(/(\d+)/g);
-	    }
-
-	    callback(null, res);
-	} else {
-	    callback(new Error("Error"));
-	}
-    }
-    
-    request(options, retorno);
-
-});
+            for (i = 0; i < res.length; i++) {
+                res[i] = res[i].match(/(\d+)/g);
+            }
+            return res;
+        } else {
+            throw new Error("Error");
+        }
+    });
+};

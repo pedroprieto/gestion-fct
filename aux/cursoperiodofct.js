@@ -1,24 +1,22 @@
-var moment = require('moment');
-
-module.exports.getcursoslist =  function() {
+module.exports.getcursoslist = function () {
     var curso_inicial = 2012;
-    var now = moment();
-    var curso_final = now.year();
-    var mes_actual = now.month();
+    var now = new Date();
+    var curso_final = now.getFullYear();
+    var mes_actual = now.getMonth() + 1;
 
     var cps = [];
     var cp;
 
-    for (var i=curso_inicial; i<=curso_final; i++) {
-	cp = {};
-	cp.value = cp.prompt = (i - 1) + '-' + (i);
-	cps.push(cp);
+    for (var i = curso_inicial; i <= curso_final; i++) {
+        cp = {};
+        cp.value = cp.text = (i - 1) + '-' + (i);
+        cps.push(cp);
     }
 
     if (mes_actual >= 7) {
-	cp = {};
-	cp.value = cp.prompt = (curso_final) + '-' + (curso_final + 1);
-	cps.push(cp);
+        cp = {};
+        cp.value = cp.text = (curso_final) + '-' + (curso_final + 1);
+        cps.push(cp);
     }
 
     return cps;
@@ -28,56 +26,55 @@ function getperiodoslist() {
     //return [1,2];
     // Cambian a 5, 6 y -1 (todos)
     var ps = [];
-    
+
     var c1 = {};
     c1.value = "5";
-    c1.prompt = "Ordinario";
+    c1.text = "Ordinario";
 
     var c2 = {};
     c2.value = "6";
-    c2.prompt = "Extraordinario";
+    c2.text = "Extraordinario";
 
     var todos = {};
     todos.value = "-1";
-    todos.prompt = "Todos";
+    todos.text = "Todos";
 
     ps.push(c1);
     ps.push(c2);
     ps.push(todos);
 
     return ps;
-    
+
 }
 
 module.exports.getperiodoslist = getperiodoslist;
 
-module.exports.getCursoActual = function() {
-    var now = moment();
-    var curso_final = now.year();
-    var mes_actual = now.month();
+module.exports.getCursoActual = function () {
+    var now = new Date();
+    var curso_final = now.getFullYear();
+    var mes_actual = now.getMonth() + 1;
 
     if (mes_actual >= 7) {
-	return (curso_final) + '-' + (curso_final + 1);
+        return (curso_final) + '-' + (curso_final + 1);
     } else {
-	return (curso_final - 1) + '-' + (curso_final);
+        return (curso_final - 1) + '-' + (curso_final);
     }
 }
 
-module.exports.getPeriodoActual = function() {
-    var now = moment();
-    var curso_final = now.year();
-    var mes_actual = now.month();
-    
+module.exports.getPeriodoActual = function () {
+    var now = new Date();
+    var mes_actual = now.getMonth() + 1;
+
     if (mes_actual >= 7) {
-	return 6;
+        return 6;
     } else {
-	return 5;
+        return 5;
     }
 }
 
-module.exports.getNombrePeriodo = function(codigo) {
-    return getperiodoslist().filter(function(el) {
+module.exports.getNombrePeriodo = function (codigo) {
+    return getperiodoslist().filter(function (el) {
         return el.value == codigo;
-    })[0].prompt;
+    })[0].text;
 
 }
