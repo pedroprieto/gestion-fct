@@ -25,7 +25,7 @@
         "test": "NODE_ENV=test mocha -r dotenv/config",
         "dev": "node -r dotenv/config start_app.js",
         "deployLambda": "claudia create --handler lambda.handler --deploy-proxy-api --region $npm_package_config_region --policies lambda_policy.json --set-env table=$npm_package_config_tableName,REGION=$npm_package_config_region",
-        "updateLambda": "claudia update --timeout 8",
+        "updateLambda": "claudia update --timeout 20",
         "destroyLambda": "claudia destroy"
     },
     "devDependencies": {
