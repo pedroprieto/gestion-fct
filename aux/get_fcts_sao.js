@@ -14,6 +14,8 @@ module.exports = function (data, curso, periodo) {
     if (periodo == "1,2")
         periodo = -1;
 
+    let periodoNombre = (periodo == 5) ? 'ordinario' : 'extraordinario';
+
     var options = {
         url: 'https://foremp.edu.gva.es/inc/ajax/fcts/rellenar_fct.php?prof=' + data.idSAO + '&curso=' + curso + '&periodo=' + periodo,
         method: 'GET',
@@ -30,7 +32,7 @@ module.exports = function (data, curso, periodo) {
             var res = response.data.match(/javascript:verDetallesFCT\('(\d+)'\)/g);
 
             if (res === null) {
-                var er = new Error("No se han encontrado datos del curso " + curso + " período " + periodo + " en el SAO.");
+                var er = new Error("No se han encontrado datos del curso " + curso + " período " + periodoNombre + " en el SAO.");
                 er.status = 404;
                 er.name = "Error de importación";
                 throw er;
