@@ -8,7 +8,7 @@ module.exports = function (data, idFCT) {
     var options = {
         url: 'https://foremp.edu.gva.es/index.php?accion=10&idFct=' + idFCT,
         method: 'GET',
-        timeout: 2000,
+        timeout: 5000,
         headers: {
             'Cookie': data.cookiesSAO,
             'Che': data.cheHeader
