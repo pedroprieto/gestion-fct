@@ -1,0 +1,103 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Gestión FCT
+Transform:
+  - AWS::Serverless-2016-10-31
+Parameters:
+  Stage:
+    Type: String
+    AllowedValues:
+      - staging
+      - production
+  ApiName:
+    Type: String
+    Default: gestionfct
+Resources:
+  GestionFCTApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: !Sub "${ApiName}-${Stage}"
+      StageName: !Ref Stage
+      Variables:
+        LAMBDA_ALIAS: !Ref Stage
+  lambdaFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub "${Stage}-gestion-fct"
+      AutoPublishAlias: !Ref Stage
+      Handler: handler.handler
+      CodeUri: ./
+      Runtime: nodejs18.x
+      Architectures:
+        - x86_64
+      MemorySize: 256
+      Timeout: 20
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref FCTTable
+      Environment:
+        Variables:
+          table: !Ref FCTTable
+          REGION: !Ref "AWS::Region"
+          stage: !Ref Stage
+      Events:
+        ProxyApiRoot:
+          Type: Api
+          Properties:
+            RestApiId: !Ref GestionFCTApi
+            Path: /
+            Method: ANY
+        ProxyApiGreedy:
+          Type: Api
+          Properties:
+            RestApiId: !Ref GestionFCTApi
+            Path: /{proxy+}
+            Method: ANY
+  FCTTable:
+    Type: AWS::DynamoDB::Table
+    DeletionPolicy: Retain
+    Properties:
+      TableName: !Sub "${Stage}-gestion-fct"
+      DeletionProtectionEnabled: true
+      AttributeDefinitions:
+        - AttributeName: usuCursoPeriodo
+          AttributeType: S
+        - AttributeName: SK
+          AttributeType: S
+      KeySchema:
+        - AttributeName: usuCursoPeriodo
+          KeyType: HASH
+        - AttributeName: SK
+          KeyType: RANGE
+      BillingMode: PAY_PER_REQUEST
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+  FCTTableTest:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub "${Stage}-gestion-fct-test"
+      AttributeDefinitions:
+        - AttributeName: usuCursoPeriodo
+          AttributeType: S
+        - AttributeName: SK
+          AttributeType: S
+      KeySchema:
+        - AttributeName: usuCursoPeriodo
+          KeyType: HASH
+        - AttributeName: SK
+          KeyType: RANGE
+      BillingMode: PAY_PER_REQUEST
+Globals:
+  Function:
+    Tags:
+      project: gestionfct
+      environment: !Ref Stage
+  Api:
+    OpenApiVersion: 3.0.1 # to avoid default stage creation
+    Cors:
+      AllowMethods: "'GET,POST,OPTIONS'"
+      AllowHeaders: "'Content-Type,Authorization'"
+      AllowOrigin: "'*'"
+Outputs:
+  ApiEndpoint:
+    Description: "API endpoint"
+    Value: !Sub "https://${GestionFCTApi}.execute-api.${AWS::Region}.amazonaws.com/${Stage}/"
