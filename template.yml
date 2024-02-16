@@ -94,7 +94,7 @@ Globals:
   Api:
     OpenApiVersion: 3.0.1 # to avoid default stage creation
     Cors:
-      AllowMethods: "'GET,POST,OPTIONS'"
+      AllowMethods: "'GET,DELETE,PUT,POST,OPTIONS'"
       AllowHeaders: "'Content-Type,Authorization'"
       AllowOrigin: "'*'"
 Outputs:
