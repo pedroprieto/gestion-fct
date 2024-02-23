@@ -19,6 +19,8 @@ Resources:
       StageName: !Ref Stage
       Variables:
         LAMBDA_ALIAS: !Ref Stage
+      Tags:
+        project: gestionfct
   lambdaFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -71,6 +73,9 @@ Resources:
       BillingMode: PAY_PER_REQUEST
       PointInTimeRecoverySpecification:
         PointInTimeRecoveryEnabled: true
+      Tags:
+        - Key: project
+          Value: gestionfct
   FCTTableTest:
     Type: AWS::DynamoDB::Table
     Properties:
@@ -86,6 +91,9 @@ Resources:
         - AttributeName: SK
           KeyType: RANGE
       BillingMode: PAY_PER_REQUEST
+      Tags:
+        - Key: project
+          Value: gestionfct
 Globals:
   Function:
     Tags:
