@@ -125,7 +125,7 @@ async function addFCT(usuario, curso, periodo, fctData) {
         let f = {};
         f.usuCursoPeriodo = getPK(usuario, curso, periodo);
         f.SK = getSK(getFctId(fctData.nif_alumno, fctData.empresa));
-        const campos = (({ tutor, ciclo, empresa, nif_alumno, dir_empresa, localidad, instructor, nif_instructor, alumno, grupo, fecha_inicio, fecha_fin, horas, distancia }) => ({ tutor, ciclo, empresa, nif_alumno, dir_empresa, localidad, instructor, nif_instructor, alumno, grupo, fecha_inicio, fecha_fin, horas, distancia }))(fctData);
+      const campos = (({ tutor, ciclo, empresa, nif_alumno, nif_alumno_dni, dir_empresa, localidad, instructor, nif_instructor, alumno, grupo, fecha_inicio, fecha_fin, horas, distancia }) => ({ tutor, ciclo, empresa, nif_alumno, nif_alumno_dni, dir_empresa, localidad, instructor, nif_instructor, alumno, grupo, fecha_inicio, fecha_fin, horas, distancia }))(fctData);
         f = Object.assign(f, campos);
 
         var params = {
