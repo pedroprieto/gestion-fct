@@ -32,7 +32,7 @@ Resources:
       Architectures:
         - x86_64
       MemorySize: 256
-      Timeout: 20
+      Timeout: 40
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref FCTTable
