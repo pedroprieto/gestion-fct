@@ -25,6 +25,17 @@ module.exports = function (data, curso, periodo) {
             'che': data.cheHeader
         }
     };
+    var options2 = {
+        url: 'https://foremp.edu.gva.es/inc/ajax/fcts/rellenar_fct.php?prof=' + data.idSAO + '&curso=' + curso + '&periodo=' + periodo + '&pag=2',
+        method: 'GET',
+        timeout: 5000,
+        headers: {
+            'Cookie': data.cookiesSAO,
+            'che': data.cheHeader
+        }
+    };
+
+    let listado;
 
     return axios(options).then(response => {
         if (response.statusText == 'OK') {
@@ -41,9 +52,27 @@ module.exports = function (data, curso, periodo) {
             for (i = 0; i < res.length; i++) {
                 res[i] = res[i].match(/(\d+)/g);
             }
-            return res;
+            listado = res;
+            return axios(options2);
         } else {
             throw new Error("Error");
         }
-    });
+    }).then(response => {
+        if (response.statusText == 'OK') {
+
+            var res = response.data.match(/javascript:verDetallesFCT\('(\d+)'\)/g);
+
+            if (res === null) {
+              return listado;
+            }
+
+            for (i = 0; i < res.length; i++) {
+                res[i] = res[i].match(/(\d+)/g);
+            }
+            listado = listado.concat(res);
+            return listado;
+        } else {
+            throw new Error("Error");
+        }
+    })
 };
