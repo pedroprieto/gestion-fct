@@ -1,3 +1,5 @@
+const AWS = require('aws-sdk');
+const s3 = new AWS.S3();
 var cps = require('../aux/cursoperiodofct');
 const FCT = require("../db/db_dynamo");
 
@@ -5,6 +7,8 @@ let fctsRoute = '/api/users/:user/fcts';
 let fctRoute = '/api/users/:user/fcts/items/:curso/:periodo/:fctId';
 let visitsRoute = '/api/users/:user/fcts/items/:curso/:periodo/:fctId/visits';
 let visitRoute = '/api/users/:user/fcts/items/:curso/:periodo/:fctId/visits/:tipo?';
+let visitTicket = '/api/users/:user/fcts/items/:curso/:periodo/:fctId/visits/:tipo?/ticket';
+let getTicket = '/api/users/:user/fcts/items/:curso/:periodo/:fctId/visits/:tipo?/ticketget';
 
 function responseItem(item, ctx) {
     let it = {};
@@ -46,6 +50,11 @@ module.exports = function(router) {
     });
 
     router.all('/api/users/:user/fcts/items/:curso/:periodo/:fctId/:visits?/:tipo?', async (ctx, next) => {
+        ctx.state.usuCursoPeriodo =FCT.getPK(ctx.params.user, ctx.params.curso, ctx.params.periodo);
+        return next();
+    });
+
+  router.all('/api/users/:user/fcts/items/:curso/:periodo/:fctId/:visits?/:tipo?/ticket', async (ctx, next) => {
         ctx.state.usuCursoPeriodo =FCT.getPK(ctx.params.user, ctx.params.curso, ctx.params.periodo);
         return next();
     });
@@ -111,6 +120,42 @@ module.exports = function(router) {
 
     router.delete('visit', visitRoute, async (ctx, next) => {
         await FCT.deleteVisita(ctx.state.usuCursoPeriodo, ctx.params.fctId, ctx.params.tipo);
+        ctx.status = 200;
+        return next();
+    });
+
+    router.get('visitTicket', visitTicket, async (ctx, next) => {
+      const fileName = `${ctx.params.fctId}_${ctx.params.tipo}`;
+
+      const params = {
+        Bucket: process.env.BUCKET_NAME,
+        Key: fileName,
+        ContentType: ctx.query.type,
+        Expires: 300 // URL expires in 5 minutes
+      };
+      const url = await s3.getSignedUrlPromise('putObject', params);
+
+      ctx.body = url;
+      ctx.status = 200;
+      return next();
+    });
+
+    router.get('getTicket', getTicket, async (ctx, next) => {
+      const key = `${ctx.params.fctId}_${ctx.params.tipo}`;
+
+    const params = {
+      Bucket: process.env.BUCKET_NAME,
+        Key: key,
+        Expires: 300 // URL expires in 5 minutes
+      };
+      const url = await s3.getSignedUrlPromise('getObject', params);
+      ctx.body = url;
+      ctx.status = 200;
+      return next();
+    });
+
+    router.put(visitTicket, async (ctx, next) => {
+      await FCT.addComprobanteToVisita(ctx.state.usuCursoPeriodo, ctx.params.fctId, ctx.params.tipo );
         ctx.status = 200;
         return next();
     });

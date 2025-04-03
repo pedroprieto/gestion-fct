@@ -206,6 +206,19 @@ function updateVisita(usuCursoPeriodo, fctId, tipo, visita) {
     return ddb.update(params).promise();
 }
 
+function addComprobanteToVisita(usuCursoPeriodo, fctId, tipo) {
+    var params = {
+        Key: {usuCursoPeriodo, SK: getSK(fctId, tipo)},
+        UpdateExpression: "set comprobante = :valor",
+        ExpressionAttributeValues: {
+            ":valor": true
+        },
+        ConditionExpression: 'attribute_exists(usuCursoPeriodo)',
+        TableName: process.env.table,
+    };
+    return ddb.update(params).promise();
+}
+
 module.exports = {
     getUser,
     saveUser,
@@ -214,6 +227,7 @@ module.exports = {
     deleteVisita,
     deleteFCT,
     updateVisita,
+    addComprobanteToVisita,
     addVisita,
     getFCTsByUsuarioCursoPeriodo,
     getDataFromPK,
