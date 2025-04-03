@@ -3,7 +3,7 @@ version = 0.1
 stack_name = "gestion-fct"
 resolve_s3 = true
 s3_prefix = "gestion-fct"
-region = "eu-west-1"
+region = "eu-south-2"
 confirm_changeset = true
 capabilities = "CAPABILITY_IAM"
 parameter_overrides = "Stage=\"production\" ApiName=\"gestionfct\""
