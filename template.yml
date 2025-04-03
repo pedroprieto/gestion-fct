@@ -37,7 +37,7 @@ Resources:
         - DynamoDBCrudPolicy:
             TableName: !Ref FCTTable
         - S3CrudPolicy:
-            TableName: !Ref S3Bucket
+            BucketName: !Ref S3Bucket
       Environment:
         Variables:
           table: !Ref FCTTable
