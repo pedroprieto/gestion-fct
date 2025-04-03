@@ -94,13 +94,16 @@ module.exports = function(router) {
         delete visitData.related;
 
         let promesas = [];
+
+        // Añadimos la FCT actual
+        promesas.push(FCT.addVisita(ctx.state.usuCursoPeriodo, ctx.params.fctId, visitData));
+        // Quitamos la distancia a las relacionadas para que no cuente en el total
+        visitData.distancia = 0;
         
         for (let fctId of related_fctIds) {
             // TODO: update distancia FCT
             promesas.push(FCT.addVisita(ctx.state.usuCursoPeriodo, fctId, visitData));
         }
-        // Añadimos la FCT actual
-        promesas.push(FCT.addVisita(ctx.state.usuCursoPeriodo, ctx.params.fctId, visitData));
 
         return Promise.all(promesas).then(visits => {
             let data = [];
