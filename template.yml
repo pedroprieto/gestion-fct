@@ -36,9 +36,12 @@ Resources:
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref FCTTable
+        - S3CrudPolicy:
+            TableName: !Ref S3Bucket
       Environment:
         Variables:
           table: !Ref FCTTable
+          BUCKET_NAME: !Ref S3Bucket
           REGION: !Ref "AWS::Region"
           stage: !Ref Stage
       Events:
@@ -54,6 +57,23 @@ Resources:
             RestApiId: !Ref GestionFCTApi
             Path: /{proxy+}
             Method: ANY
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    Properties:
+      CorsConfiguration:
+        CorsRules:
+          - AllowedHeaders:
+              - 'Content-Type'
+              - 'x-amz-acl'
+              - 'x-amz-meta-*'
+            AllowedMethods:
+              - GET
+              - PUT
+            AllowedOrigins:
+              - '*'
+            Id: myCORSRuleId1
+            MaxAge: 3600
   FCTTable:
     Type: AWS::DynamoDB::Table
     DeletionPolicy: Retain
