@@ -158,7 +158,7 @@ module.exports = function(router) {
     });
 
     router.put(visitTicket, async (ctx, next) => {
-      await FCT.addComprobanteToVisita(ctx.state.usuCursoPeriodo, ctx.params.fctId, ctx.params.visitaId);
+      await FCT.addComprobanteToVisita(ctx.state.usuCursoPeriodo, ctx.params.fctId, ctx.params.visitaId, ctx.request.body.importe);
         ctx.status = 200;
         return next();
     });

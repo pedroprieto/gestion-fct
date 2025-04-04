@@ -206,12 +206,13 @@ function updateVisita(usuCursoPeriodo, fctId, tipo, visita) {
     return ddb.update(params).promise();
 }
 
-function addComprobanteToVisita(usuCursoPeriodo, fctId, tipo) {
+function addComprobanteToVisita(usuCursoPeriodo, fctId, tipo, importe) {
     var params = {
         Key: {usuCursoPeriodo, SK: getSK(fctId, tipo)},
-        UpdateExpression: "set comprobante = :valor",
+        UpdateExpression: "set comprobante = :valor, importe = :importe",
         ExpressionAttributeValues: {
-            ":valor": true
+          ":valor": true,
+          ":importe": importe
         },
         ConditionExpression: 'attribute_exists(usuCursoPeriodo)',
         TableName: process.env.table,
