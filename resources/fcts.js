@@ -12,6 +12,8 @@ let visitTicket =
   "/api/users/:user/fcts/items/:curso/:periodo/:fctId/visits/:visitaId?/ticket";
 let getTicket =
   "/api/users/:user/fcts/items/:curso/:periodo/:fctId/visits/:visitaId?/ticketget";
+let subirKmsImporteRoute = "/api/users/:user/kmsimporte/:curso/:periodo";
+let viewKmsImporteRoute = "/api/kmsimporte/:curso/:periodo";
 
 function responseItem(item, ctx) {
   let it = {};
@@ -66,6 +68,18 @@ module.exports = function (router) {
 
   router.all(
     "/api/users/:user/fcts/items/:curso/:periodo/:fctId/:visits?/:visitaId?/ticket",
+    async (ctx, next) => {
+      ctx.state.usuCursoPeriodo = FCT.getPK(
+        ctx.params.user,
+        ctx.params.curso,
+        ctx.params.periodo,
+      );
+      return next();
+    },
+  );
+
+  router.all(
+    "/api/users/:user/kmsimporte/:curso/:periodo",
     async (ctx, next) => {
       ctx.state.usuCursoPeriodo = FCT.getPK(
         ctx.params.user,
@@ -204,6 +218,32 @@ module.exports = function (router) {
       visitData,
     );
     ctx.status = 200;
+    return next();
+  });
+
+  router.put(subirKmsImporteRoute, async (ctx, next) => {
+    await FCT.addKmsImporte(
+      ctx.state.usuCursoPeriodo,
+      ctx.request.body.kms,
+      ctx.request.body.importe,
+    );
+    ctx.status = 200;
+    return next();
+  });
+
+  router.get("viewKmsImporteRoute", viewKmsImporteRoute, async (ctx, next) => {
+    let response = await FCT.getKmsImporteByCursoPeriodo(
+      ctx.params.curso,
+      ctx.params.periodo,
+      ctx.state.user.role != "admin" ? ctx.state.user.name : undefined,
+    );
+
+    let items = (response.Items || []).map((item) => {
+      return { usuario: item.SK, kms: item.kms, importe: item.importe };
+    });
+
+    ctx.body = items;
+
     return next();
   });
 };

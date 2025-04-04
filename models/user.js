@@ -10,14 +10,16 @@ async function getUser(username) {
     if (!loadedUser) {
         return null;
     } else {
-        return new User(loadedUser.name, loadedUser.password, loadedUser.salt);
+        return new User(loadedUser.name, loadedUser.password, loadedUser.salt, loadedUser.role);
     }
 }
 
-function User(name, password, salt) {
+function User(name, password, salt, role) {
     this.name = name;
     this.password = password;
     this.salt = salt;
+    if (role)
+      this.role = role
 }
 
 User.prototype.updatePass = function(plainPassword) {

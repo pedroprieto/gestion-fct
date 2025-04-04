@@ -251,6 +251,53 @@ function addComprobanteToVisita(usuCursoPeriodo, fctId, tipo, importe) {
   return ddb.update(params).promise();
 }
 
+function addKmsImporte(usuCursoPeriodo, kms, importe) {
+  let [usuario, curso, periodo] = getDataFromPK(usuCursoPeriodo);
+
+  let it = {
+    usuCursoPeriodo: `KMS-IMPORTE_${curso}_${periodo}`,
+    SK: usuario,
+    importe,
+    kms,
+  };
+
+  var params = {
+    Item: it,
+    TableName: process.env.table,
+  };
+  return ddb
+    .put(params)
+    .promise()
+    .then(() => {
+      return it;
+    });
+}
+
+async function getKmsImporteByCursoPeriodo(curso, periodo, usuario) {
+  try {
+    let KeyConditionExpression = "usuCursoPeriodo= :usuCursoPeriodo";
+    let ExpressionAttributeValues = {
+      ":usuCursoPeriodo": `KMS-IMPORTE_${curso}_${periodo}`,
+    };
+
+    if (usuario) {
+      KeyConditionExpression += " and SK= :SK";
+      ExpressionAttributeValues[":SK"] = usuario;
+    }
+
+    var params = {
+      ExpressionAttributeValues,
+      TableName: process.env.table,
+      KeyConditionExpression,
+    };
+
+    return await ddb.query(params).promise();
+  } catch (e) {
+    console.log(e);
+    throw new Error("Error al obtener los datos");
+  }
+}
+
 module.exports = {
   getUser,
   saveUser,
@@ -260,6 +307,8 @@ module.exports = {
   deleteFCT,
   updateVisita,
   addComprobanteToVisita,
+  addKmsImporte,
+  getKmsImporteByCursoPeriodo,
   addVisita,
   getFCTsByUsuarioCursoPeriodo,
   getDataFromPK,
