@@ -70,7 +70,9 @@ module.exports = async function cognitoAuth(ctx, next) {
       name: username, // NIF — used as DynamoDB PK (e.g. "12345678A_curso_periodo")
       email: claims.email,
       sub: claims.sub,
-      role: claims["custom:role"] || "user",
+      role: claims["cognito:groups"]
+        ? claims["cognito:groups"][0] || "user"
+        : "user",
     };
 
     return next();
