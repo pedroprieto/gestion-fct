@@ -1,4 +1,5 @@
 version = 0.1
+
 [default.deploy.parameters]
 stack_name = "gestion-fct"
 resolve_s3 = true
@@ -6,5 +7,15 @@ s3_prefix = "gestion-fct"
 region = "eu-south-2"
 confirm_changeset = true
 capabilities = "CAPABILITY_IAM"
-parameter_overrides = "Stage=\"production\" ApiName=\"gestionfct\""
+parameter_overrides = "Stage=\"production\" ApiName=\"gestionfct\" CallbackURL=\"https://gestionfct.iesmarenostrum.com/callback\" LogoutURL=\"https://gestionfct.iesmarenostrum.com\""
+image_repositories = []
+
+[staging.deploy.parameters]
+stack_name = "staging-gestion-fct"
+resolve_s3 = true
+s3_prefix = "staging-gestion-fct"
+region = "eu-south-2"
+confirm_changeset = true
+capabilities = "CAPABILITY_IAM"
+parameter_overrides = "Stage=\"staging\" ApiName=\"gestionfct\" CallbackURL=\"http://localhost:5173/callback\" LogoutURL=\"http://localhost:5173\""
 image_repositories = []

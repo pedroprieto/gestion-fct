@@ -11,7 +11,104 @@ Parameters:
   ApiName:
     Type: String
     Default: gestionfct
+  CallbackURL:
+    Type: String
+    Description: "URL the Hosted UI redirects to after login (your frontend)"
+  LogoutURL:
+    Type: String
+    Description: "URL the Hosted UI redirects to after logout (your frontend)"
 Resources:
+  # ── Cognito ──────────────────────────────────────────────────────────────────
+  CognitoUserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      UserPoolName: !Sub "${ApiName}-${Stage}"
+      # No UsernameAttributes: users sign in with an explicit username (NIF).
+      # Cognito enforces uniqueness on usernames within a pool automatically.
+      UsernameConfiguration:
+        CaseSensitive: false              # treat NIFs case-insensitively
+      AutoVerifiedAttributes:
+        - email
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 8
+          RequireUppercase: true
+          RequireLowercase: true
+          RequireNumbers: true
+          RequireSymbols: false
+      Schema:
+        - Name: email
+          AttributeDataType: String
+          Mutable: true
+          Required: true                  # email still required for verification/recovery
+      AdminCreateUserConfig:
+        AllowAdminCreateUserOnly: false   # users can self sign-up
+
+  UserPoolResourceServer:
+    Type: AWS::Cognito::UserPoolResourceServer
+    Properties:
+      UserPoolId: !Ref CognitoUserPool
+      Identifier: com.gestionfct
+      Name: GestionFCT
+      Scopes:
+        - ScopeName: "gestionfct"
+          ScopeDescription: "Acceso a API FCT"
+
+  CognitoUserPoolDomain:
+    Type: AWS::Cognito::UserPoolDomain
+    Properties:
+      Domain: !Sub "${ApiName}-${Stage}"
+      UserPoolId: !Ref CognitoUserPool
+      ManagedLoginVersion: 2              # opt in to the new Managed Login UI
+
+  CognitoManagedLoginBranding:
+    Type: AWS::Cognito::ManagedLoginBranding
+    Properties:
+      UserPoolId: !Ref CognitoUserPool
+      ClientId: !Ref CognitoUserPoolClient
+      UseCognitoProvidedValues: true      # start with Cognito defaults
+      # To customise, replace UseCognitoProvidedValues with Settings and Assets.
+      # Settings controls colors, fonts, and component styles (JSON object).
+      # Assets is a list of logo/favicon images (base64-encoded).
+      # See: https://docs.aws.amazon.com/cognito/latest/developerguide/managed-login-branding.html
+
+  CognitoUserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    DependsOn: UserPoolResourceServer
+    Properties:
+      ClientName: !Sub "${ApiName}-${Stage}-client"
+      UserPoolId: !Ref CognitoUserPool
+      GenerateSecret: false               # public client (SPA / mobile)
+      ExplicitAuthFlows:
+        - ALLOW_USER_SRP_AUTH
+        - ALLOW_REFRESH_TOKEN_AUTH
+        - ALLOW_USER_PASSWORD_AUTH        # convenient for testing with curl
+      PreventUserExistenceErrors: ENABLED
+      # ── Hosted UI / OAuth ──────────────────────────────────────────────────
+      AllowedOAuthFlows:
+        - code                            # Authorization Code Flow (recommended)
+      AllowedOAuthScopes:
+        - openid
+        - email
+        - profile
+        - com.gestionfct/gestionfct
+      AllowedOAuthFlowsUserPoolClient: true
+      SupportedIdentityProviders:
+        - COGNITO
+      CallbackURLs:
+        - !Ref CallbackURL
+      LogoutURLs:
+        - !Ref LogoutURL
+      # ── Token validity ─────────────────────────────────────────────────────
+      AccessTokenValidity: 1              # hours
+      IdTokenValidity: 1
+      RefreshTokenValidity: 30
+      TokenValidityUnits:
+        AccessToken: hours
+        IdToken: hours
+        RefreshToken: days
+
+  # ── API Gateway ──────────────────────────────────────────────────────────────
   GestionFCTApi:
     Type: AWS::Serverless::Api
     Properties:
@@ -19,8 +116,16 @@ Resources:
       StageName: !Ref Stage
       Variables:
         LAMBDA_ALIAS: !Ref Stage
-      Tags:
-        project: gestionfct
+      Auth:
+        DefaultAuthorizer: CognitoAuthorizer
+        AddDefaultAuthorizerToCorsPreflight: false   # don't require auth on OPTIONS
+        Authorizers:
+          CognitoAuthorizer:
+            UserPoolArn: !GetAtt CognitoUserPool.Arn
+            AuthorizationScopes:
+              - com.gestionfct/gestionfct
+
+  # ── Lambda ───────────────────────────────────────────────────────────────────
   lambdaFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -28,7 +133,7 @@ Resources:
       AutoPublishAlias: !Ref Stage
       Handler: handler.handler
       CodeUri: ./
-      Runtime: nodejs18.x
+      Runtime: nodejs22.x
       Architectures:
         - x86_64
       MemorySize: 256
@@ -44,6 +149,8 @@ Resources:
           BUCKET_NAME: !Ref S3Bucket
           REGION: !Ref "AWS::Region"
           stage: !Ref Stage
+          COGNITO_USER_POOL_ID: !Ref CognitoUserPool
+          COGNITO_CLIENT_ID: !Ref CognitoUserPoolClient
       Events:
         ProxyApiRoot:
           Type: Api
@@ -57,9 +164,12 @@ Resources:
             RestApiId: !Ref GestionFCTApi
             Path: /{proxy+}
             Method: ANY
+
+  # ── Storage ──────────────────────────────────────────────────────────────────
   S3Bucket:
     Type: AWS::S3::Bucket
     DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
     Properties:
       CorsConfiguration:
         CorsRules:
@@ -74,9 +184,11 @@ Resources:
               - '*'
             Id: myCORSRuleId1
             MaxAge: 3600
+
   FCTTable:
     Type: AWS::DynamoDB::Table
     DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
     Properties:
       TableName: !Sub "${Stage}-gestion-fct"
       DeletionProtectionEnabled: true
@@ -96,6 +208,7 @@ Resources:
       Tags:
         - Key: project
           Value: gestionfct
+
   FCTTableTest:
     Type: AWS::DynamoDB::Table
     Properties:
@@ -114,18 +227,29 @@ Resources:
       Tags:
         - Key: project
           Value: gestionfct
+
 Globals:
   Function:
     Tags:
       project: gestionfct
       environment: !Ref Stage
   Api:
-    OpenApiVersion: 3.0.1 # to avoid default stage creation
+    OpenApiVersion: 3.0.1   # avoids default stage creation
     Cors:
       AllowMethods: "'GET,DELETE,PUT,POST,OPTIONS'"
       AllowHeaders: "'Content-Type,Authorization'"
       AllowOrigin: "'*'"
+
 Outputs:
   ApiEndpoint:
     Description: "API endpoint"
     Value: !Sub "https://${GestionFCTApi}.execute-api.${AWS::Region}.amazonaws.com/${Stage}/"
+  UserPoolId:
+    Description: "Cognito User Pool ID"
+    Value: !Ref CognitoUserPool
+  UserPoolClientId:
+    Description: "Cognito User Pool Client ID"
+    Value: !Ref CognitoUserPoolClient
+  HostedUIUrl:
+    Description: "Cognito Managed Login URL (Spanish)"
+    Value: !Sub "https://${ApiName}-${Stage}.auth.${AWS::Region}.amazoncognito.com/login?client_id=${CognitoUserPoolClient}&response_type=code&scope=com.gestionfct%2Fgestionfct+openid+email+profile&redirect_uri=${CallbackURL}&lang=es"

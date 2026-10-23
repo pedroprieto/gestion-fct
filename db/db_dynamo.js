@@ -1,60 +1,22 @@
+"use strict";
+
 const { v4: uuidv4 } = require("uuid");
 const AWS = require("aws-sdk");
 AWS.config.update({ region: process.env.REGION });
 var ddb = new AWS.DynamoDB.DocumentClient();
 const crypto = require("crypto");
 
-async function clearTable() {
-  var params = {
-    TableName: process.env.table,
-  };
+// ── Test helper ──────────────────────────────────────────────────────────────
 
+async function clearTable() {
+  var params = { TableName: process.env.table };
   var response = await ddb.scan(params).promise();
   for (let item of response.Items) {
     await deleteItem(item.usuCursoPeriodo, item.SK);
   }
-  return;
 }
 
-function saveUser(user) {
-  let it = {
-    usuCursoPeriodo: user.name,
-    SK: "USER",
-    password: user.password,
-    salt: user.salt,
-  };
-
-  var params = {
-    Item: it,
-    TableName: process.env.table,
-  };
-  return ddb.put(params).promise();
-}
-
-async function getUser(userName) {
-  try {
-    var params = {
-      ExpressionAttributeValues: {
-        ":usuCursoPeriodo": userName,
-        ":SK": "USER",
-      },
-      TableName: process.env.table,
-      KeyConditionExpression: "usuCursoPeriodo= :usuCursoPeriodo and SK= :SK",
-    };
-
-    var response = await ddb.query(params).promise();
-    if (response.Items && response.Items.length) {
-      let user = response.Items[0];
-      user.name = user.usuCursoPeriodo;
-      return user;
-    } else {
-      return null;
-    }
-  } catch (e) {
-    console.log(e);
-    throw new Error("Error al buscar el usuario");
-  }
-}
+// ── Helpers ──────────────────────────────────────────────────────────────────
 
 function getPK(usuario, curso, periodo) {
   return `${usuario}_${curso}_${periodo}`;
@@ -82,25 +44,7 @@ function getSK(fctId, tipo) {
   }
 }
 
-async function getItemsByFCTUsuCursoPeriodoId(usuCursoPeriodo, fctId) {
-  try {
-    var params = {
-      ExpressionAttributeValues: {
-        ":usuCursoPeriodo": usuCursoPeriodo,
-        ":SK": fctId,
-      },
-      TableName: process.env.table,
-      KeyConditionExpression:
-        "usuCursoPeriodo= :usuCursoPeriodo and begins_with(SK, :SK)",
-    };
-
-    var response = await ddb.query(params).promise();
-    return response.Items || [];
-  } catch (e) {
-    console.log(e);
-    throw new Error("Error al buscar los items");
-  }
-}
+// ── FCTs ─────────────────────────────────────────────────────────────────────
 
 async function getFCTsByUsuarioCursoPeriodo(userName, c, p) {
   try {
@@ -111,7 +55,6 @@ async function getFCTsByUsuarioCursoPeriodo(userName, c, p) {
       TableName: process.env.table,
       KeyConditionExpression: "usuCursoPeriodo= :usuCursoPeriodo",
     };
-
     return await ddb.query(params).promise();
   } catch (e) {
     console.log(e);
@@ -173,24 +116,31 @@ async function addFCT(usuario, curso, periodo, fctData) {
 async function deleteFCT(usuCursoPeriodo, fctId) {
   let items = await getItemsByFCTUsuCursoPeriodoId(usuCursoPeriodo, fctId);
   let promesas = [];
-
   for (let item of items) {
     promesas.push(deleteItem(usuCursoPeriodo, item.SK));
   }
   return Promise.all(promesas);
 }
 
-function deleteVisita(usuCursoPeriodo, fctId, tipo) {
-  return deleteItem(usuCursoPeriodo, getSK(fctId, tipo));
-}
+// ── Visitas ───────────────────────────────────────────────────────────────────
 
-function deleteItem(usuCursoPeriodo, SK) {
-  var params = {
-    Key: { usuCursoPeriodo, SK },
-    TableName: process.env.table,
-    ConditionExpression: "attribute_exists(usuCursoPeriodo)",
-  };
-  return ddb.delete(params).promise();
+async function getItemsByFCTUsuCursoPeriodoId(usuCursoPeriodo, fctId) {
+  try {
+    var params = {
+      ExpressionAttributeValues: {
+        ":usuCursoPeriodo": usuCursoPeriodo,
+        ":SK": fctId,
+      },
+      TableName: process.env.table,
+      KeyConditionExpression:
+        "usuCursoPeriodo= :usuCursoPeriodo and begins_with(SK, :SK)",
+    };
+    var response = await ddb.query(params).promise();
+    return response.Items || [];
+  } catch (e) {
+    console.log(e);
+    throw new Error("Error al buscar los items");
+  }
 }
 
 function addVisita(usuCursoPeriodo, fctId, visitData) {
@@ -199,9 +149,7 @@ function addVisita(usuCursoPeriodo, fctId, visitData) {
 
   let tipo = visitData.tipo;
   if (tipo == "adicional") tipo += `-${uuidv4()}`;
-
   it.SK = getSK(fctId, tipo);
-
   it = Object.assign(it, visitData);
 
   var params = {
@@ -212,9 +160,7 @@ function addVisita(usuCursoPeriodo, fctId, visitData) {
   return ddb
     .put(params)
     .promise()
-    .then(() => {
-      return it;
-    });
+    .then(() => it);
 }
 
 function updateVisita(usuCursoPeriodo, fctId, tipo, visita) {
@@ -237,6 +183,10 @@ function updateVisita(usuCursoPeriodo, fctId, tipo, visita) {
   return ddb.update(params).promise();
 }
 
+function deleteVisita(usuCursoPeriodo, fctId, tipo) {
+  return deleteItem(usuCursoPeriodo, getSK(fctId, tipo));
+}
+
 function addComprobanteToVisita(usuCursoPeriodo, fctId, tipo, importe) {
   var params = {
     Key: { usuCursoPeriodo, SK: getSK(fctId, tipo) },
@@ -250,6 +200,8 @@ function addComprobanteToVisita(usuCursoPeriodo, fctId, tipo, importe) {
   };
   return ddb.update(params).promise();
 }
+
+// ── KMS / Importe ─────────────────────────────────────────────────────────────
 
 function addKmsImporte(usuCursoPeriodo, kms, importe) {
   let [usuario, curso, periodo] = getDataFromPK(usuCursoPeriodo);
@@ -268,9 +220,7 @@ function addKmsImporte(usuCursoPeriodo, kms, importe) {
   return ddb
     .put(params)
     .promise()
-    .then(() => {
-      return it;
-    });
+    .then(() => it);
 }
 
 async function getKmsImporteByCursoPeriodo(curso, periodo, usuario) {
@@ -298,9 +248,20 @@ async function getKmsImporteByCursoPeriodo(curso, periodo, usuario) {
   }
 }
 
+// ── Internal ──────────────────────────────────────────────────────────────────
+
+function deleteItem(usuCursoPeriodo, SK) {
+  var params = {
+    Key: { usuCursoPeriodo, SK },
+    TableName: process.env.table,
+    ConditionExpression: "attribute_exists(usuCursoPeriodo)",
+  };
+  return ddb.delete(params).promise();
+}
+
+// ── Exports ───────────────────────────────────────────────────────────────────
+
 module.exports = {
-  getUser,
-  saveUser,
   clearTable,
   addFCT,
   deleteVisita,
